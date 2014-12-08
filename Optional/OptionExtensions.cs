@@ -53,8 +53,10 @@ namespace Optional
             {
                 some(option.Value);
             }
-
-            none();
+            else
+            {
+                none();
+            }
         }
 
         /// <summary>
