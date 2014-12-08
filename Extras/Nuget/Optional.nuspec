@@ -1,11 +1,11 @@
-<?xml version="1.0"?>
+ï»¿<?xml version="1.0"?>
 <package >
   <metadata>
     <id>Optional</id>
     <version>0.1.0.0</version>
     <title>Optional</title>
-    <authors>Nils Lück</authors>
-    <owners>Nils Lück</owners>
+    <authors>Nils LÃ¼ck</authors>
+    <owners>Nils LÃ¼ck</owners>
     <projectUrl>https://github.com/nlkl/Optional</projectUrl>
     <iconUrl>https://dl.dropboxusercontent.com/u/4443766/optional.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
