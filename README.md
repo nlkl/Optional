@@ -95,6 +95,12 @@ var some = nullableWithValue.ToOption();
 
 Optional forces you to consider both cases, that is if a value is present or not. Therefore, there is no way to simply force a retrieval of the value (although you can of course implement one yourself).
 
+Firstly, it is possible to check if a value is actually present on an option:
+
+```csharp
+var hasValue = option.HasValue;
+```
+
 The most basic way to retrieve a value from an `Option<T>` is the following:
 
 ```csharp
