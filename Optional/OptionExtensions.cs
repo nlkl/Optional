@@ -8,11 +8,11 @@ namespace Optional
     public static class OptionExtensions
     {
         /// <summary>
-        /// Returns the wrapped value if present, and otherwise an alternative value.
+        /// Returns the existing value if present, and otherwise an alternative value.
         /// </summary>
         /// <param name="option">The Option&lt;T&gt; instance.</param>
         /// <param name="alternative">The alternative value.</param>
-        /// <returns>The wrapped or alternative value.</returns>
+        /// <returns>The existing or alternative value.</returns>
         public static T ValueOr<T>(this Option<T> option, T alternative)
         {
             if (option.HasValue)
@@ -21,6 +21,22 @@ namespace Optional
             }
 
             return alternative;
+        }
+
+        /// <summary>
+        /// Uses an alternative value, if no existing value is present.
+        /// </summary>
+        /// <param name="option">The Option&lt;T&gt; instance.</param>
+        /// <param name="alternative">The alternative value.</param>
+        /// <returns>A new Option&lt;T&gt; instance, containing either the existing or alternative value.</returns>
+        public static Option<T> Or<T>(this Option<T> option, T alternative)
+        {
+            if (option.HasValue)
+            {
+                return option;
+            }
+
+            return alternative.Some();
         }
 
         /// <summary>

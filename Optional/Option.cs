@@ -21,6 +21,62 @@ namespace Optional
             this.value = value;
             this.hasValue = hasValue;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Option<T>)
+            {
+                var other = (Option<T>)obj;
+
+                if (!hasValue && !other.hasValue)
+                {
+                    return true;
+                }
+                else if (hasValue && other.hasValue)
+                {
+                    if (value == null && other.value == null)
+                    {
+                        return true;
+                    }
+                    else if (value != null && other.value != null)
+                    {
+                        return value.Equals(other.value);
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            if (hasValue)
+            {
+                if (value == null)
+                {
+                    return 1;
+                }
+
+                return value.GetHashCode();
+            }
+
+            return 0;
+        }
+
+        public override string ToString()
+        {
+            if (hasValue)
+            {
+                if (value == null)
+                {
+                    return "Some(null)";
+                }
+
+                return string.Format("Some({0})", value);
+            }
+
+            return "None";
+        }
     }
 
     public static class Option
