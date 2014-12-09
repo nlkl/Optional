@@ -120,4 +120,50 @@ option.Match(
 
 ### Transforming and filtering values
 
+A few extension methods are provided to safely manipulate optional values.
+
+The `Map` function transforms the inner value of an option. If no value is present, `None` is simply propagated:
+
+```csharp
+var none = Option.None<int>();
+var stillNone = none.Map(x => x + 10);
+
+var some = 10.Some();
+var somePlus10 = some.Map(x => x + 10);
+```
+
+The `FlatMap` function chains several option values. It is similar to `Map`, but one must transform the value into a new optional value. The result of this mapping will be a nested `Option<T>`, but this will simply be flattened to a single one:
+
+```csharp
+var none = Option.None<int>();
+var stillNone = none.FlatMap(x => x.Some()); // Returns another Option<int>
+
+var some = 10.Some();
+var stillSome = some.FlatMap(x => x.Some()); 
+var nowNone = some.FlatMap(x => x.None()); // Returns None as the resulting option is empty
+```
+
+`FlatMap` is useful in combination with methods that return optional values themselves:
+
+```csharp
+public static Option<Person> FindPersonById(int id) { ... }
+public static Option<Hairstyle> GetHairstyle(Person person) { ... }
+
+var id = 10;
+var person = FindPersonById(id);
+var hairstyle = person.FlatMap(p => GetHairstyle(p));
+hairstyle.Match( ... );
+```
+
+Finally, it is possible to perform filtering. The `Filter` function returns none, if the specified predicate is not satisfied. If the option is already none, it is simply returned as is:
+
+```csharp
+var none = Option.None<int>();
+var stillNone = none.Filter(x => x > 10);
+
+var some = 10.Some();
+var stillSome = some.Filter(x => x == 10);
+var nowNone = some.Filter(x => x != 10);
+```
+
 ### Working with LINQ query syntax
