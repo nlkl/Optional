@@ -5,7 +5,7 @@ Optional is a simple option/maybe type for C#.
 
 Version: 0.1.5.0
 
-## Features
+## Features at a glance
 
 * Avoid null-reference exceptions, by using a type-safe alternative to null values.
 * Transform optional values safely, without the manual null-checks.
@@ -22,6 +22,18 @@ PM> Install-Package Optional
 ```
 
 Or visit: [https://www.nuget.org/packages/Optional/](https://www.nuget.org/packages/Optional/)
+
+## Core concepts
+
+The core concept behind Optional is that of an option/maybe type (known as `Option<T>` in Optional). 
+
+Many functional programming languages disallow null values, as null-references can introduce hard-to-find bugs. An option type is a type-safe alternative to null values.
+
+In general, an optional value can be in one of two states: Some (representing the presence of a value) and None (representing the lack of a value). Unlike null, an option type forces the user to check if a value is actually present, thereby mitigating many of the problems of null. In Optional, `Option<T>` is a struct, making it impossible to assign a null value to an option itself.
+
+Further, an option type is a lot more explicit than a null value, which can make APIs based on optional values a lot easier to understand.
+
+Finally, Optional offers several utility methods that make it easier to compose optional values, as compared large amounts of null checks.
 
 ## Usage
 
