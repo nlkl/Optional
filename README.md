@@ -3,7 +3,7 @@ Optional
 
 Optional is a simple option/maybe type for C#.
 
-Version: 0.1.0.0
+Version: 0.1.5.0
 
 ## Features
 
@@ -24,8 +24,6 @@ PM> Install-Package Optional
 Or visit: [https://www.nuget.org/packages/Optional/](https://www.nuget.org/packages/Optional/)
 
 ## Usage
-
-Is coming soon...
 
 ### Using the library
 
@@ -122,6 +120,13 @@ option.Match(
 
 A few extension methods are provided to safely manipulate optional values.
 
+The `Or` function makes it possible to specify an alternative value. If the option is none, a some instance will be returned:
+
+```csharp
+var none = Option.None<int>();
+var some = none.Or(10); // A some instance, with value 10
+```
+
 The `Map` function transforms the inner value of an option. If no value is present, `None` is simply propagated:
 
 ```csharp
@@ -167,3 +172,24 @@ var nowNone = some.Filter(x => x != 10);
 ```
 
 ### Working with LINQ query syntax
+
+Optional supports LINQ query syntax, to make the above transformations somewhat cleaner:
+
+```csharp
+var result =
+  from person in FindPersonById(10)
+  from hairstyle in GetHairstyle(person)
+  from color in ParseStringToColor("green")
+  where hairstyle.Color == color;
+```
+
+In general, this closely resembles a sequence of calls to `FlatMap` and `Filter`. However, using query syntax can be a lot easier to read in complex cases.
+
+### Equivalence
+
+Two optional values are equal if the following is satisfied:
+
+* The two options have the same type
+* Both are none, both contain null values, or the contained values are equal
+ 
+The generated hashcodes also reflect the semantics described above.
