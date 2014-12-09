@@ -176,11 +176,12 @@ var nowNone = some.Filter(x => x != 10);
 Optional supports LINQ query syntax, to make the above transformations somewhat cleaner:
 
 ```csharp
-var result =
+var personWithGreenHair =
   from person in FindPersonById(10)
   from hairstyle in GetHairstyle(person)
   from color in ParseStringToColor("green")
-  where hairstyle.Color == color;
+  where hairstyle.Color == color
+  select person;
 ```
 
 In general, this closely resembles a sequence of calls to `FlatMap` and `Filter`. However, using query syntax can be a lot easier to read in complex cases.
