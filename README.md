@@ -83,6 +83,41 @@ var some = nullableWithValue.ToOption();
 
 ### Retrieving values
 
+Optional forces you to consider both cases, that is if a value is present or not. Therefore, there is no way to simply force a retrieval of the value (although you can of course implement one yourself).
+
+The most basic way to retrieve a value from an `Option<T>` is the following:
+
+```csharp
+// Returns the value if present, or otherwise an alternative value (10)
+var value = option.ValueOr(10); 
+```
+
+In more elobarate scenarios, the `Match` method evaluates a specified function:
+
+```csharp
+// Evaluates one of the provided functions, and returns the result
+var value = option.Match(x => x + 1, () => 10); 
+
+// Or written in a more functional'ish style (think pattern matching)
+var value = option.Match(
+  some: x => x + 1, 
+  none: () => 10
+);
+```
+
+There is a similar `Match` function to simply induce side-effects:
+
+```csharp
+// Evaluates one of the provided actions
+option.Match(x => Console.WriteLine(x), () => Console.WriteLine(10)); 
+
+// Or pattern matching'ish as before
+option.Match(
+  some: x => Console.WriteLine(x), 
+  none: () => Console.WriteLine(10)
+);
+```
+
 ### Transforming and filtering values
 
 ### Working with LINQ query syntax
