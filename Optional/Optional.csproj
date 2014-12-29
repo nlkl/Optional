@@ -46,6 +46,8 @@
     <Compile Include="Option.cs" />
     <Compile Include="OptionExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Unsafe\OptionUnsafeExtensions.cs" />
+    <Compile Include="Unsafe\OptionValueMissingException.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
