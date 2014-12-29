@@ -3,7 +3,7 @@ Optional
 
 Optional is a simple option/maybe type for C#.
 
-Version: 0.1.5.0
+Version: 0.1.6.0
 
 ## Features at a glance
 
@@ -46,10 +46,11 @@ To use Optional, simply import the following namespace:
 using Optional;
 ```
 
-To use the LINQ query syntax, also import:
+A few auxiliary namespaces are provided:
 
 ```csharp
-using Optional.Linq;
+using Optional.Linq; // Linq query syntax support
+using Optional.Unsafe; // Unsafe value retrieval
 ```
 
 ### Creating optional values
@@ -134,6 +135,25 @@ option.Match(
 );
 ```
 
+### Retrieving values without safety
+
+In some cases you might be absolutely sure that an optional has a value. Alternatively, the lack of a value might be fatal to your program.
+
+In such scenarios Optional allows you to drive without a seatbelt However, to stress the lack safety, another namespace needs to be imported:
+
+```csharp
+using Optional.Unsafe;
+```
+
+When imported, values can be retrieved unsafely as:
+
+```csharp
+var value = option.ValueOrFailure();
+var anotherValue = option.ValueOrFailure("An error message"); 
+```
+
+In case of failure a `OptionValueMissingException` is thrown.
+
 ### Transforming and filtering values
 
 A few extension methods are provided to safely manipulate optional values.
@@ -191,7 +211,15 @@ var nowNone = some.Filter(x => x != 10);
 
 ### Working with LINQ query syntax
 
-Optional supports LINQ query syntax, to make the above transformations somewhat cleaner:
+Optional supports LINQ query syntax, to make the above transformations somewhat cleaner.
+
+To use LINQ query syntax you must import the following namespace:
+
+```csharp
+using Optional.Linq;
+```
+
+This allows you to do fancy stuff such as:
 
 ```csharp
 var personWithGreenHair =
