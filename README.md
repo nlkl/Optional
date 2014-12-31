@@ -29,17 +29,17 @@ The core concept behind Optional is that of an option/maybe type (known as `Opti
 
 Many functional programming languages disallow null values, as null-references can introduce hard-to-find bugs. An option type is a type-safe alternative to null values.
 
-In general, an optional value can be in one of two states: Some (representing the presence of a value) and None (representing the lack of a value). Unlike null, an option type forces the user to check if a value is actually present, thereby mitigating many of the problems of null. `Option<T>` is a struct in Optional, making it impossible to assign a null value to an option itself.
+In general, an optional value can be in one of two states: Some (representing the presence of a value) and None (representing the lack of a value). Unlike null, an option type forces the user to check if a value is actually present, thereby mitigating many of the problems of null values. `Option<T>` is a struct in Optional, making it impossible to assign a null value to an option itself.
 
 Further, an option type is a lot more explicit than a null value, which can make APIs based on optional values a lot easier to understand.
 
-Finally, Optional offers several utility methods that make it easier to compose optional values, as compared large amounts of null checks.
+Finally, Optional offers several utility methods that make it easier to compose optional values, as compared to large amounts of null checks.
 
 ## Usage
 
 ### Using the library
 
-To use Optional, simply import the following namespace:
+To use Optional simply import the following namespace:
 
 
 ```csharp
@@ -94,7 +94,7 @@ var some = nullableWithValue.ToOption();
 
 ### Retrieving values
 
-Optional forces you to consider both cases, that is if a value is present or not. Therefore, there is no way to simply force a retrieval of the value (although you can of course implement one yourself).
+When retrieving values, Optional forces you to consider both cases (that is if a value is present or not).
 
 Firstly, it is possible to check if a value is actually present:
 
@@ -112,7 +112,7 @@ var value = option.ValueOr(10);
 In more elobarate scenarios, the `Match` method evaluates a specified function:
 
 ```csharp
-// Evaluates one of the provided functions, and returns the result
+// Evaluates one of the provided functions and returns the result
 var value = option.Match(x => x + 1, () => 10); 
 
 // Or written in a more functional'ish style (think pattern matching)
@@ -137,9 +137,9 @@ option.Match(
 
 ### Retrieving values without safety
 
-In some cases you might be absolutely sure that an optional has a value. Alternatively, the lack of a value might be fatal to your program.
+In some cases you might be absolutely sure that a value is present. Alternatively, the lack of a value might be fatal to your program, in which case you just want to indicate such a failure.
 
-In such scenarios Optional allows you to drive without a seatbelt However, to stress the lack safety, another namespace needs to be imported:
+In such scenarios, Optional allows you to drive without a seatbelt. However, to stress the lack safety, another namespace needs to be imported:
 
 ```csharp
 using Optional.Unsafe;
@@ -152,7 +152,7 @@ var value = option.ValueOrFailure();
 var anotherValue = option.ValueOrFailure("An error message"); 
 ```
 
-In case of failure a `OptionValueMissingException` is thrown.
+In case of failure an `OptionValueMissingException` is thrown.
 
 ### Transforming and filtering values
 
@@ -165,7 +165,7 @@ var none = Option.None<int>();
 var some = none.Or(10); // A some instance, with value 10
 ```
 
-The `Map` function transforms the inner value of an option. If no value is present, `None` is simply propagated:
+The `Map` function transforms the inner value of an option. If no value is present none is simply propagated:
 
 ```csharp
 var none = Option.None<int>();
@@ -175,7 +175,7 @@ var some = 10.Some();
 var somePlus10 = some.Map(x => x + 10);
 ```
 
-The `FlatMap` function chains several option values. It is similar to `Map`, but one must transform the value into a new optional value. The result of this mapping will be a nested `Option<T>`, but this will simply be flattened to a single one:
+The `FlatMap` function chains several optional values. It is similar to `Map`, but the return type of the transformation must be another optional. If either the resulting or original optional value is none, a none instance is returned. Otherwise, a some instance is returned according to the specified transformation:
 
 ```csharp
 var none = Option.None<int>();
