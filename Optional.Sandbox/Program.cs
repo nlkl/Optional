@@ -2,6 +2,7 @@
 using Optional.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,6 +44,21 @@ namespace Optional.Sandbox
             Console.WriteLine(option5.ValueOr(-10));
             Console.WriteLine(option6.ValueOr(-10));
             Console.WriteLine(option7.ValueOr(-10));
+
+            var vals = Enumerable.Empty<int>();
+            var sw = Stopwatch.StartNew();
+            for (int i = 0; i < 10000000; i++)
+            {
+                try
+                {
+                    var v = vals.Take(1).ToArray();
+                }
+                catch (InvalidOperationException ex)
+                {
+
+                }
+            }
+            Console.WriteLine(sw.ElapsedMilliseconds);
 
             Console.Read();
         }

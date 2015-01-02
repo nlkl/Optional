@@ -40,8 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\QueryableLinqExtensions.cs" />
-    <Compile Include="Collections\ParallelEnumerableLinqExtensions.cs" />
     <Compile Include="Collections\EnumerableLinqExtensions.cs" />
+    <Compile Include="Internal\Guard.cs" />
     <Compile Include="Parse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
