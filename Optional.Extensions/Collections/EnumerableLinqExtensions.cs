@@ -1,4 +1,8 @@
-﻿using Optional.Extensions.Internal;
+﻿// Note: 
+// Implementation closely inspired by the official source code for FirstOrDefault, etc.
+// Refer to reference source for original source code: referencesource.microsoft.com
+
+using Optional.Extensions.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
