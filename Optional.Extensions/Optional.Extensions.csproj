@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\ParallelEnumerableLinqExtensions.cs" />
     <Compile Include="Collections\QueryableLinqExtensions.cs" />
     <Compile Include="Collections\EnumerableLinqExtensions.cs" />
     <Compile Include="Internal\Guard.cs" />

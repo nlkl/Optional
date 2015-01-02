@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Optional.Extensions.Collections
 {
-    public static class ParallelEnumerableEnumerableLinqExtensions
+    public static class EnumerableEnumerableLinqExtensions
     {
         public static Option<TSource> FirstOrNone<TSource>(this IEnumerable<TSource> source)
         {
