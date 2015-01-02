@@ -43,11 +43,16 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Timing.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Optional.Extensions\Optional.Extensions.csproj">
+      <Project>{83aa6caf-64aa-4e29-b0c0-74e50480c571}</Project>
+      <Name>Optional.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Optional\Optional.csproj">
       <Project>{4a4c60d5-c480-4816-bb61-1e2fbc243dd4}</Project>
       <Name>Optional</Name>
