@@ -3,7 +3,7 @@ Optional
 
 Optional is a simple option/maybe type for C#.
 
-Version: 0.1.6.0
+Version: 0.1.7.0
 
 ## Features at a glance
 
