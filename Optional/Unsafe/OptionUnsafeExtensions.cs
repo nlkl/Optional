@@ -12,6 +12,7 @@ namespace Optional.Unsafe
         /// </summary>
         /// <param name="option">The Option&lt;T&gt; instance.</param>
         /// <returns>The existing value.</returns>
+        /// <exception cref="Optional.Unsafe.OptionValueMissingException">Thrown when a value is not present.</exception>
         public static T ValueOrFailure<T>(this Option<T> option)
         {
             if (option.HasValue)
@@ -28,6 +29,7 @@ namespace Optional.Unsafe
         /// <param name="option">The Option&lt;T&gt; instance.</param>
         /// <param name="errorMessage">An error message to use in case of failure.</param>
         /// <returns>The existing value.</returns>
+        /// <exception cref="Optional.Unsafe.OptionValueMissingException">Thrown when a value is not present.</exception>
         public static T ValueOrFailure<T>(this Option<T> option, string errorMessage)
         {
             if (option.HasValue)
