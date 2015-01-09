@@ -5,7 +5,11 @@ using System.Text;
 
 namespace Optional
 {
-    public partial struct Option<T>
+    /// <summary>
+    /// Represents an optional value.
+    /// </summary>
+    /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
+    public struct Option<T>
     {
         private bool hasValue;
         private T value;
