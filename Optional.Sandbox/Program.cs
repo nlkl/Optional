@@ -1,5 +1,6 @@
 ﻿using Optional;
 using Optional.Linq;
+using Optional.Extensions;
 using Optional.Extensions.Collections;
 using System;
 using System.Collections.Generic;

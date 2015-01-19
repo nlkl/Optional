@@ -7,12 +7,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Optional.Extensions.Collections
 {
-    public static class EnumerableEnumerableLinqExtensions
+    public static class LinqEnumerableExtensions
     {
+        /// <summary>
+        /// Returns the first element of a sequence if such exists.
+        /// </summary>
+        /// <param name="source">The sequence to return the first element from.</param>
+        /// <returns>An Option&lt;T&gt; instance containing the first element if present.</returns>
         public static Option<TSource> FirstOrNone<TSource>(this IEnumerable<TSource> source)
         {
             Guard.NotNull(source, "source");
@@ -39,6 +43,13 @@ namespace Optional.Extensions.Collections
             return Option.None<TSource>();
         }
 
+        /// <summary>
+        /// Returns the first element of a sequence, satisfying a specified predicate, 
+        /// if such exists.
+        /// </summary>
+        /// <param name="source">The sequence to return the first element from.</param>
+        /// <param name="predicate">The predicate to filter by.</param>
+        /// <returns>An Option&lt;T&gt; instance containing the first element if present.</returns>
         public static Option<TSource> FirstOrNone<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
             Guard.NotNull(source, "source");
@@ -55,6 +66,11 @@ namespace Optional.Extensions.Collections
             return Option.None<TSource>();
         }
 
+        /// <summary>
+        /// Returns the last element of a sequence if such exists.
+        /// </summary>
+        /// <param name="source">The sequence to return the last element from.</param>
+        /// <returns>An Option&lt;T&gt; instance containing the last element if present.</returns>
         public static Option<TSource> LastOrNone<TSource>(this IEnumerable<TSource> source)
         {
             Guard.NotNull(source, "source");
@@ -88,6 +104,13 @@ namespace Optional.Extensions.Collections
             return Option.None<TSource>();
         }
 
+        /// <summary>
+        /// Returns the last element of a sequence, satisfying a specified predicate, 
+        /// if such exists.
+        /// </summary>
+        /// <param name="source">The sequence to return the last element from.</param>
+        /// <param name="predicate">The predicate to filter by.</param>
+        /// <returns>An Option&lt;T&gt; instance containing the last element if present.</returns>
         public static Option<TSource> LastOrNone<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
             Guard.NotNull(source, "source");
@@ -107,6 +130,12 @@ namespace Optional.Extensions.Collections
             return exists ? result.Some() : result.None();
         }
 
+        /// <summary>
+        /// Returns a single element from a sequence, if it exists 
+        /// and is the only element in the sequence.
+        /// </summary>
+        /// <param name="source">The sequence to return the element from.</param>
+        /// <returns>An Option&lt;T&gt; instance containing the element if present.</returns>
         public static Option<TSource> SingleOrNone<TSource>(this IEnumerable<TSource> source)
         {
             Guard.NotNull(source, "source");
@@ -140,6 +169,13 @@ namespace Optional.Extensions.Collections
             return Option.None<TSource>();
         }
 
+        /// <summary>
+        /// Returns a single element from a sequence, satisfying a specified predicate, 
+        /// if it exists and is the only element in the sequence.
+        /// </summary>
+        /// <param name="source">The sequence to return the element from.</param>
+        /// <param name="predicate">The predicate to filter by.</param>
+        /// <returns>An Option&lt;T&gt; instance containing the element if present.</returns>
         public static Option<TSource> SingleOrNone<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
             Guard.NotNull(source, "source");
@@ -164,6 +200,12 @@ namespace Optional.Extensions.Collections
             return count == 1 ? result.Some() : result.None();
         }
 
+        /// <summary>
+        /// Returns an element at a specified position in a sequence if such exists.
+        /// </summary>
+        /// <param name="source">The sequence to return the element from.</param>
+        /// <param name="index">The index in the sequence.</param>
+        /// <returns>An Option&lt;T&gt; instance containing the element if found.</returns>
         public static Option<TSource> ElementAtOrNone<TSource>(this IEnumerable<TSource> source, int index)
         {
             Guard.NotNull(source, "source");

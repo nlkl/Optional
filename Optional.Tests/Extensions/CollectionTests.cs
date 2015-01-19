@@ -12,6 +12,30 @@ namespace Optional.Tests.Extensions
     public class LinqTests
     {
         [TestMethod]
+        public void OptionToEnumerable()
+        {
+            var none = "a".None();
+            var some = "a".Some();
+
+            var noneAsEnumerable = none.ToEnumerable();
+            var someAsEnumerable = some.ToEnumerable();
+
+            foreach (var value in noneAsEnumerable)
+            {
+                Assert.Fail();
+            }
+
+            int count = 0;
+            foreach (var value in someAsEnumerable)
+            {
+                Assert.AreEqual(value, "a");
+                count += 1;
+            }
+
+            Assert.AreEqual(count, 1);
+        }
+
+        [TestMethod]
         public void FirstOperatorEnumerable()
         {
             var full = Enumerable.Range(0, 100);
