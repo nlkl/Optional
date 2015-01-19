@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Optional.Extensions</id>
+    <version>0.1.0.0</version>
+    <title>Optional.Extensions</title>
+    <authors>Nils Lück</authors>
+    <owners>Nils Lück</owners>
+    <projectUrl>https://github.com/nlkl/Optional</projectUrl>
+    <iconUrl>https://dl.dropboxusercontent.com/u/4443766/optional.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A simple option type.</description>
+    <copyright>Copyright 2014</copyright>
+    <tags>Maybe Option Null Monad Monadic</tags>
+    <dependencies>
+      <dependency id="Optional" version="0.1.7.0" />
+    </dependencies>
+  </metadata>
+</package>
