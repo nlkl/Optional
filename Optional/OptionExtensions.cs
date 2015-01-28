@@ -27,6 +27,16 @@ namespace Optional
             return Option.None<T>();
         }
 
+        public static Option<T, TOther> Some<T, TOther>(this T value)
+        {
+            return Option.Some<T, TOther>(value);
+        }
+
+        public static Option<T, TOther> Other<T, TOther>(this T value, TOther otherValue)
+        {
+            return Option.None<T, TOther>(otherValue);
+        }
+
         /// <summary>
         /// Creates an Option&lt;T&gt; instance from a specified value. 
         /// If the value is null, the returned Option&lt;T&gt; instance is empty.
