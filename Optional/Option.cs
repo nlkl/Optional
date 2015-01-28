@@ -125,11 +125,11 @@ namespace Optional
             return alternative.Some();
         }
 
-        public Option<T, THint> WithHint<THint>(THint hint)
+        public Option<T, TException> WithException<TException>(TException exception)
         {
             return Match(
-                some: value => Option.Some<T, THint>(value),
-                none: () => Option.None<T, THint>(hint)
+                some: value => Option.Some<T, TException>(value),
+                none: () => Option.None<T, TException>(exception)
             );
         }
 
@@ -215,24 +215,24 @@ namespace Optional
     /// Represents an optional value.
     /// </summary>
     /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
-    public struct Option<T, THint>
+    public struct Option<T, TException>
     {
         private bool hasValue;
         private T value;
-        private THint hint;
+        private TException exception;
 
         /// <summary>
         /// Checks if a value is present.
         /// </summary>
         public bool HasValue { get { return hasValue; } }
         internal T Value { get { return value; } }
-        internal THint Hint { get { return hint; } }
+        internal TException Exception { get { return exception; } }
 
-        internal Option(T value, THint hint, bool hasValue)
+        internal Option(T value, TException exception, bool hasValue)
         {
             this.value = value;
             this.hasValue = hasValue;
-            this.hint = hint;
+            this.exception = exception;
         }
 
         /// <summary>
@@ -242,13 +242,13 @@ namespace Optional
         /// <returns>A boolean indicating whether or not the instances are equal</returns>
         public override bool Equals(object obj)
         {
-            if (obj is Option<T, THint>)
+            if (obj is Option<T, TException>)
             {
-                var other = (Option<T, THint>)obj;
+                var other = (Option<T, TException>)obj;
 
                 if (!hasValue && !other.hasValue)
                 {
-                    return hint.Equals(other.hint);
+                    return exception.Equals(other.exception);
                 }
                 else if (hasValue && other.hasValue)
                 {
@@ -282,12 +282,12 @@ namespace Optional
                 return value.GetHashCode();
             }
 
-            if (hint == null)
+            if (exception == null)
             {
                 return 0;
             }
 
-            return hint.GetHashCode();
+            return exception.GetHashCode();
         }
 
         /// <summary>
@@ -306,12 +306,12 @@ namespace Optional
                 return string.Format("Some({0})", value);
             }
 
-            if (hint == null)
+            if (exception == null)
             {
                 return "None(null)";
             }
 
-            return string.Format("None({0})", hint);
+            return string.Format("None({0})", exception);
         }
 
         /// <summary>
@@ -334,17 +334,17 @@ namespace Optional
         /// </summary>
         /// <param name="alternative">The alternative value.</param>
         /// <returns>A new Option&lt;T&gt; instance, containing either the existing or alternative value.</returns>
-        public Option<T, THint> Or(T alternative)
+        public Option<T, TException> Or(T alternative)
         {
             if (HasValue)
             {
                 return this;
             }
 
-            return alternative.Some<T, THint>();
+            return alternative.Some<T, TException>();
         }
 
-        public Option<T> WithoutHint()
+        public Option<T> WithoutException()
         {
             return Match(
                 some: value => value.Some(),
@@ -358,14 +358,14 @@ namespace Optional
         /// <param name="some">The function to evaluate if the value is present.</param>
         /// <param name="none">The function to evaluate if the value is missing.</param>
         /// <returns>The result of the evaluated function.</returns>
-        public TResult Match<TResult>(Func<T, TResult> some, Func<THint, TResult> none)
+        public TResult Match<TResult>(Func<T, TResult> some, Func<TException, TResult> none)
         {
             if (HasValue)
             {
                 return some(Value);
             }
 
-            return none(Hint);
+            return none(Exception);
         }
 
         /// <summary>
@@ -373,7 +373,7 @@ namespace Optional
         /// </summary>
         /// <param name="some">The action to evaluate if the value is present.</param>
         /// <param name="none">The action to evaluate if the value is missing.</param>
-        public void Match(Action<T> some, Action<THint> none)
+        public void Match(Action<T> some, Action<TException> none)
         {
             if (HasValue)
             {
@@ -381,7 +381,7 @@ namespace Optional
             }
             else
             {
-                none(Hint);
+                none(Exception);
             }
         }
 
@@ -391,19 +391,19 @@ namespace Optional
         /// </summary>
         /// <param name="mapping">The transformation function.</param>
         /// <returns>The transformed Option&lt;T&gt; instance.</returns>
-        public Option<TResult, THint> Map<TResult>(Func<T, TResult> mapping)
+        public Option<TResult, TException> Map<TResult>(Func<T, TResult> mapping)
         {
             return Match(
-                some: value => Option.Some<TResult, THint>(mapping(value)),
-                none: hint => Option.None<TResult, THint>(hint)
+                some: value => Option.Some<TResult, TException>(mapping(value)),
+                none: exception => Option.None<TResult, TException>(exception)
             );
         }
 
-        public Option<T, THintResult> MapHint<THintResult>(Func<THint, THintResult> mapping)
+        public Option<T, TExceptionResult> MapException<TExceptionResult>(Func<TException, TExceptionResult> mapping)
         {
             return Match(
-                some: value => Option.Some<T, THintResult>(value),
-                none: hint => Option.None<T, THintResult>(mapping(hint))
+                some: value => Option.Some<T, TExceptionResult>(value),
+                none: exception => Option.None<T, TExceptionResult>(mapping(exception))
             );
         }
 
@@ -414,11 +414,11 @@ namespace Optional
         /// </summary>
         /// <param name="mapping">The transformation function.</param>
         /// <returns>The transformed Option&lt;T&gt; instance.</returns>
-        public Option<TResult, THint> FlatMap<TResult>(Func<T, Option<TResult, THint>> mapping)
+        public Option<TResult, TException> FlatMap<TResult>(Func<T, Option<TResult, TException>> mapping)
         {
             return Match(
                 some: value => mapping(value),
-                none: hint => Option.None<TResult, THint>(hint)
+                none: exception => Option.None<TResult, TException>(exception)
             );
         }
 
@@ -428,11 +428,11 @@ namespace Optional
         /// </summary>
         /// <param name="predicate">The predicate.</param>
         /// <returns>The filtered Option&lt;T&gt; instance.</returns>
-        public Option<T, THint> Filter(Func<T, bool> predicate, THint hint)
+        public Option<T, TException> Filter(Func<T, bool> predicate, TException exception)
         {
             var original = this;
             return Match(
-                some: value => predicate(value) ? original : Option.None<T, THint>(hint),
+                some: value => predicate(value) ? original : Option.None<T, TException>(exception),
                 none: _ => original
             );
         }
@@ -462,14 +462,14 @@ namespace Optional
             return new Option<T>(default(T), false);
         }
 
-        public static Option<T, THint> Some<T, THint>(T value)
+        public static Option<T, TException> Some<T, TException>(T value)
         {
-            return new Option<T, THint>(value, default(THint), true);
+            return new Option<T, TException>(value, default(TException), true);
         }
 
-        public static Option<T, THint> None<T, THint>(THint hint)
+        public static Option<T, TException> None<T, TException>(TException exception)
         {
-            return new Option<T, THint>(default(T), hint, false);
+            return new Option<T, TException>(default(T), exception, false);
         }
     }
 }

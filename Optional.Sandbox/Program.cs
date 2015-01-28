@@ -18,11 +18,11 @@ namespace Optional.Sandbox
             var someResult = "Yes!".Some();
             var noneResult = Option.None<string>();
 
-            var someWithHint = someResult.WithHint("Missing!");
-            var someWithoutHint = someWithHint.WithoutHint();
+            var someWithHint = someResult.WithException("Missing!");
+            var someWithoutHint = someWithHint.WithoutException();
 
-            var noneWithHint = noneResult.WithHint("Missing!");
-            var noneWithoutHint = noneWithHint.WithoutHint();
+            var noneWithHint = noneResult.WithException("Missing!");
+            var noneWithoutHint = noneWithHint.WithoutException();
 
             var success = GetResponse(someResult);
             var error = GetResponse(noneResult);
