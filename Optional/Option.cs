@@ -197,6 +197,19 @@ namespace Optional
         }
 
         /// <summary>
+        /// Transforms the inner value in an Option&lt;T&gt; instance
+        /// into another Option&lt;T&gt; instance. The result is flattened, 
+        /// and if either is empty, an empty instance is returned.
+        /// If the option contains an exception, it is removed.
+        /// </summary>
+        /// <param name="mapping">The transformation function.</param>
+        /// <returns>The transformed Option&lt;T&gt; instance.</returns>
+        public Option<TResult> FlatMap<TResult, TException>(Func<T, Option<TResult, TException>> mapping)
+        {
+            return FlatMap(value => mapping(value).WithoutException());
+        }
+
+        /// <summary>
         /// Empties an Option&lt;T&gt; instance, if a specified predicate
         /// is not satisfied.
         /// </summary>
@@ -422,6 +435,18 @@ namespace Optional
                 some: value => mapping(value),
                 none: exception => Option.None<TResult, TException>(exception)
             );
+        }
+
+        /// <summary>
+        /// Transforms the inner value in an Option&lt;T, TException&gt; instance
+        /// into another Option&lt;T, TException&gt; instance. The result is flattened, 
+        /// and if either is empty, an empty instance is returned.
+        /// </summary>
+        /// <param name="mapping">The transformation function.</param>
+        /// <returns>The transformed Option&lt;T, TException&gt; instance.</returns>
+        public Option<TResult, TException> FlatMap<TResult>(Func<T, Option<TResult>> mapping, TException exception)
+        {
+            return FlatMap(value => mapping(value).WithException(exception));
         }
 
         /// <summary>
