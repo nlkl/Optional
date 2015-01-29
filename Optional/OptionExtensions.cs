@@ -8,30 +8,41 @@ namespace Optional
     public static class OptionExtensions
     {
         /// <summary>
-        /// Wraps a value in an Option&lt;T&gt; instance.
+        /// Wraps an existing value in an Option&lt;T&gt; instance.
         /// </summary>
-        /// <param name="value">The value to wrap.</param>
-        /// <returns>The Option&lt;T&gt; instance.</returns>
+        /// <param name="value">The value to be wrapped.</param>
+        /// <returns>An optional containing the specified value.</returns>
         public static Option<T> Some<T>(this T value)
         {
             return Option.Some(value);
         }
 
         /// <summary>
-        /// Creates an empty Option&lt;T&gt; instance from a specified value.
+        /// Wraps an existing value in an Option&lt;T, TException&gt; instance.
         /// </summary>
-        /// <param name="value">A value determining the type of the Option&lt;T&gt; instance.</param>
-        /// <returns>The Option&lt;T&gt; instance.</returns>
-        public static Option<T> None<T>(this T value)
-        {
-            return Option.None<T>();
-        }
-
+        /// <param name="value">The value to be wrapped.</param>
+        /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> Some<T, TException>(this T value)
         {
             return Option.Some<T, TException>(value);
         }
 
+        /// <summary>
+        /// Creates an empty Option&lt;T&gt; instance from a specified value.
+        /// </summary>
+        /// <param name="value">A value determining the type of the optional.</param>
+        /// <returns>An empty optional.</returns>
+        public static Option<T> None<T>(this T value)
+        {
+            return Option.None<T>();
+        }
+
+        /// <summary>
+        /// Creates an empty Option&lt;T, TException&gt; instance, 
+        /// with a specified exceptional value.
+        /// </summary>
+        /// <param name="exception">The exceptional value.</param>
+        /// <returns>An empty optional.</returns>
         public static Option<T, TException> None<T, TException>(this T value, TException exception)
         {
             return Option.None<T, TException>(exception);
@@ -39,10 +50,10 @@ namespace Optional
 
         /// <summary>
         /// Creates an Option&lt;T&gt; instance from a specified value. 
-        /// If the value is null, the returned Option&lt;T&gt; instance is empty.
+        /// If the value is null, an empty optional is returned.
         /// </summary>
         /// <param name="value">The value to wrap.</param>
-        /// <returns>The Option&lt;T&gt; instance.</returns>
+        /// <returns>An optional containing the specified value.</returns>
         public static Option<T> SomeNotNull<T>(this T value)
         {
             if (value != null)
@@ -54,11 +65,13 @@ namespace Optional
         }
 
         /// <summary>
-        /// Creates an Option&lt;T, TException&gt; instance from a specified value. 
-        /// If the value is null, the returned Option&lt;T, TException&gt; instance is empty.
+        /// Creates an Option&lt;T&gt; instance from a specified value. 
+        /// If the value is null, an empty optional is returned, 
+        /// with a specified exceptional value.
         /// </summary>
         /// <param name="value">The value to wrap.</param>
-        /// <returns>The Option&lt;T, TException&gt; instance.</returns>
+        /// <param name="exception">The exceptional value.</param>
+        /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> SomeNotNull<T, TException>(this T value, TException exception)
         {
             if (value != null)
@@ -85,9 +98,11 @@ namespace Optional
         }
 
         /// <summary>
-        /// Converts a Nullable&lt;T&gt; to an Option&lt;T, TException&gt; instance.
+        /// Converts a Nullable&lt;T&gt; to an Option&lt;T, TException&gt; instance, 
+        /// with a specified exceptional value.
         /// </summary>
         /// <param name="value">The Nullable&lt;T&gt; instance.</param>
+        /// <param name="exception">The exceptional value.</param>
         /// <returns>The Option&lt;T, TException&gt; instance.</returns>
         public static Option<T, TException> ToOption<T, TException>(this Nullable<T> value, TException exception) where T : struct
         {

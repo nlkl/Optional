@@ -28,10 +28,10 @@ namespace Optional
         }
 
         /// <summary>
-        /// Determines whether two Option&lt;T&gt; instances are equal.
+        /// Determines whether two optionals are equal.
         /// </summary>
-        /// <param name="obj">The instance to compare with the current one.</param>
-        /// <returns>A boolean indicating whether or not the instances are equal</returns>
+        /// <param name="obj">The optional to compare with the current one.</param>
+        /// <returns>A boolean indicating whether or not the optionals are equal</returns>
         public override bool Equals(object obj)
         {
             if (obj is Option<T>)
@@ -59,9 +59,9 @@ namespace Optional
         }
 
         /// <summary>
-        /// Generates a hash code the current Option&lt;T&gt; instance.
+        /// Generates a hash code for the current optional.
         /// </summary>
-        /// <returns>A hash code for the current instance.</returns>
+        /// <returns>A hash code for the current optional.</returns>
         public override int GetHashCode()
         {
             if (hasValue)
@@ -78,9 +78,9 @@ namespace Optional
         }
 
         /// <summary>
-        /// Returns a string that represents the current Option&lt;T&gt; instance.
+        /// Returns a string that represents the current optional.
         /// </summary>
-        /// <returns>A string that represents the current instance.</returns>
+        /// <returns>A string that represents the current optional.</returns>
         public override string ToString()
         {
             if (hasValue)
@@ -115,7 +115,7 @@ namespace Optional
         /// Uses an alternative value, if no existing value is present.
         /// </summary>
         /// <param name="alternative">The alternative value.</param>
-        /// <returns>A new Option&lt;T&gt; instance, containing either the existing or alternative value.</returns>
+        /// <returns>A new optional, containing either the existing or alternative value.</returns>
         public Option<T> Or(T alternative)
         {
             if (HasValue)
@@ -126,6 +126,11 @@ namespace Optional
             return Option.Some(alternative);
         }
 
+        /// <summary>
+        /// Attaches an exceptional value to an empty optional.
+        /// </summary>
+        /// <param name="exception">The exceptional value to attach.</param>
+        /// <returns>An optional with an exceptional value.</returns>
         public Option<T, TException> WithException<TException>(TException exception)
         {
             return Match(
@@ -168,11 +173,11 @@ namespace Optional
         }
 
         /// <summary>
-        /// Transforms the inner value in an Option&lt;T&gt; instance.
-        /// If the instance is empty, an empty instance is returned.
+        /// Transforms the inner value in an optional.
+        /// If the instance is empty, an empty optional is returned.
         /// </summary>
         /// <param name="mapping">The transformation function.</param>
-        /// <returns>The transformed Option&lt;T&gt; instance.</returns>
+        /// <returns>The transformed optional.</returns>
         public Option<TResult> Map<TResult>(Func<T, TResult> mapping)
         {
             return Match(
@@ -182,12 +187,12 @@ namespace Optional
         }
 
         /// <summary>
-        /// Transforms the inner value in an Option&lt;T&gt; instance
-        /// into another Option&lt;T&gt; instance. The result is flattened, 
-        /// and if either is empty, an empty instance is returned.
+        /// Transforms the inner value in an optional
+        /// into another optional. The result is flattened, 
+        /// and if either is empty, an empty optional is returned.
         /// </summary>
         /// <param name="mapping">The transformation function.</param>
-        /// <returns>The transformed Option&lt;T&gt; instance.</returns>
+        /// <returns>The transformed optional.</returns>
         public Option<TResult> FlatMap<TResult>(Func<T, Option<TResult>> mapping)
         {
             return Match(
@@ -197,24 +202,24 @@ namespace Optional
         }
 
         /// <summary>
-        /// Transforms the inner value in an Option&lt;T&gt; instance
-        /// into another Option&lt;T&gt; instance. The result is flattened, 
-        /// and if either is empty, an empty instance is returned.
+        /// Transforms the inner value in an optional
+        /// into another optional. The result is flattened, 
+        /// and if either is empty, an empty optional is returned.
         /// If the option contains an exception, it is removed.
         /// </summary>
         /// <param name="mapping">The transformation function.</param>
-        /// <returns>The transformed Option&lt;T&gt; instance.</returns>
+        /// <returns>The transformed optional.</returns>
         public Option<TResult> FlatMap<TResult, TException>(Func<T, Option<TResult, TException>> mapping)
         {
             return FlatMap(value => mapping(value).WithoutException());
         }
 
         /// <summary>
-        /// Empties an Option&lt;T&gt; instance, if a specified predicate
+        /// Empties an optional, if a specified predicate
         /// is not satisfied.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <returns>The filtered Option&lt;T&gt; instance.</returns>
+        /// <returns>The filtered optional.</returns>
         public Option<T> Filter(Func<T, bool> predicate)
         {
             var original = this;
@@ -226,9 +231,10 @@ namespace Optional
     }
 
     /// <summary>
-    /// Represents an optional value.
+    /// Represents an optional value, along with a potential exceptional value.
     /// </summary>
     /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
+    /// <typeparam name="TException">A exceptional value describing the lack of an actual value.</typeparam>
     public struct Option<T, TException>
     {
         private bool hasValue;
@@ -251,10 +257,10 @@ namespace Optional
         }
 
         /// <summary>
-        /// Determines whether two Option&lt;T, TException&gt; instances are equal.
+        /// Determines whether two optionals are equal.
         /// </summary>
-        /// <param name="obj">The instance to compare with the current one.</param>
-        /// <returns>A boolean indicating whether or not the instances are equal</returns>
+        /// <param name="obj">The optional to compare with the current one.</param>
+        /// <returns>A boolean indicating whether or not the optionals are equal</returns>
         public override bool Equals(object obj)
         {
             if (obj is Option<T, TException>)
@@ -263,7 +269,14 @@ namespace Optional
 
                 if (!hasValue && !other.hasValue)
                 {
-                    return exception.Equals(other.exception);
+                    if (exception == null && other.exception == null)
+                    {
+                        return true;
+                    }
+                    else if (exception != null && other.exception != null)
+                    {
+                        return exception.Equals(other.exception);
+                    }
                 }
                 else if (hasValue && other.hasValue)
                 {
@@ -282,9 +295,9 @@ namespace Optional
         }
 
         /// <summary>
-        /// Generates a hash code the current Option&lt;T, TException&gt; instance.
+        /// Generates a hash code for the current optional.
         /// </summary>
-        /// <returns>A hash code for the current instance.</returns>
+        /// <returns>A hash code for the current optional.</returns>
         public override int GetHashCode()
         {
             if (hasValue)
@@ -306,9 +319,9 @@ namespace Optional
         }
 
         /// <summary>
-        /// Returns a string that represents the current Option&lt;T, TException&gt; instance.
+        /// Returns a string that represents the current optional.
         /// </summary>
-        /// <returns>A string that represents the current instance.</returns>
+        /// <returns>A string that represents the current optional.</returns>
         public override string ToString()
         {
             if (hasValue)
@@ -348,7 +361,7 @@ namespace Optional
         /// Uses an alternative value, if no existing value is present.
         /// </summary>
         /// <param name="alternative">The alternative value.</param>
-        /// <returns>A new Option&lt;T, TException&gt; instance, containing either the existing or alternative value.</returns>
+        /// <returns>A new optional, containing either the existing or alternative value.</returns>
         public Option<T, TException> Or(T alternative)
         {
             if (HasValue)
@@ -359,6 +372,10 @@ namespace Optional
             return Option.Some<T, TException>(alternative);
         }
 
+        /// <summary>
+        /// Forgets any attached exceptional value.
+        /// </summary>
+        /// <returns>An optional without an exceptional value.</returns>
         public Option<T> WithoutException()
         {
             return Match(
@@ -401,11 +418,11 @@ namespace Optional
         }
 
         /// <summary>
-        /// Transforms the inner value in an Option&lt;T, TException&gt; instance.
-        /// If the instance is empty, an empty instance is returned.
+        /// Transforms the inner value in an optional.
+        /// If the instance is empty, an empty optional is returned.
         /// </summary>
         /// <param name="mapping">The transformation function.</param>
-        /// <returns>The transformed Option&lt;T, TException&gt; instance.</returns>
+        /// <returns>The transformed optional.</returns>
         public Option<TResult, TException> Map<TResult>(Func<T, TResult> mapping)
         {
             return Match(
@@ -414,6 +431,12 @@ namespace Optional
             );
         }
 
+        /// <summary>
+        /// Transforms the exceptional value in an optional.
+        /// If the instance is not empty, no transformation is carried out.
+        /// </summary>
+        /// <param name="mapping">The transformation function.</param>
+        /// <returns>The transformed optional.</returns>
         public Option<T, TExceptionResult> MapException<TExceptionResult>(Func<TException, TExceptionResult> mapping)
         {
             return Match(
@@ -423,12 +446,12 @@ namespace Optional
         }
 
         /// <summary>
-        /// Transforms the inner value in an Option&lt;T, TException&gt; instance
-        /// into another Option&lt;T, TException&gt; instance. The result is flattened, 
-        /// and if either is empty, an empty instance is returned.
+        /// Transforms the inner value in an optional
+        /// into another optional. The result is flattened, 
+        /// and if either is empty, an empty optional is returned.
         /// </summary>
         /// <param name="mapping">The transformation function.</param>
-        /// <returns>The transformed Option&lt;T, TException&gt; instance.</returns>
+        /// <returns>The transformed optional.</returns>
         public Option<TResult, TException> FlatMap<TResult>(Func<T, Option<TResult, TException>> mapping)
         {
             return Match(
@@ -438,23 +461,26 @@ namespace Optional
         }
 
         /// <summary>
-        /// Transforms the inner value in an Option&lt;T, TException&gt; instance
-        /// into another Option&lt;T, TException&gt; instance. The result is flattened, 
-        /// and if either is empty, an empty instance is returned.
+        /// Transforms the inner value in an optional
+        /// into another optional. The result is flattened, 
+        /// and if either is empty, an empty optional is returned, 
+        /// with a specified exceptional value.
         /// </summary>
         /// <param name="mapping">The transformation function.</param>
-        /// <returns>The transformed Option&lt;T, TException&gt; instance.</returns>
+        /// <param name="exception">The exceptional value to attach.</param>
+        /// <returns>The transformed optional.</returns>
         public Option<TResult, TException> FlatMap<TResult>(Func<T, Option<TResult>> mapping, TException exception)
         {
             return FlatMap(value => mapping(value).WithException(exception));
         }
 
         /// <summary>
-        /// Empties an Option&lt;T, TException&gt; instance, if a specified predicate
-        /// is not satisfied.
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if a specified predicate is not satisfied.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <returns>The filtered Option&lt;T, TException&gt; instance.</returns>
+        /// <param name="exception">The exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
         public Option<T, TException> Filter(Func<T, bool> predicate, TException exception)
         {
             var original = this;
@@ -474,26 +500,37 @@ namespace Optional
         /// Wraps an existing value in an Option&lt;T&gt; instance.
         /// </summary>
         /// <param name="value">The value to be wrapped.</param>
-        /// <returns>An Option&lt;T&gt; instance containing the specified value.</returns>
+        /// <returns>An optional containing the specified value.</returns>
         public static Option<T> Some<T>(T value)
         {
             return new Option<T>(value, true);
         }
 
         /// <summary>
-        /// Creates an empty Option&lt;T&gt; instance.
+        /// Wraps an existing value in an Option&lt;T, TException&gt; instance.
         /// </summary>
-        /// <returns>An empty instance of Option&lt;T&gt;.</returns>
-        public static Option<T> None<T>()
-        {
-            return new Option<T>(default(T), false);
-        }
-
+        /// <param name="value">The value to be wrapped.</param>
+        /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> Some<T, TException>(T value)
         {
             return new Option<T, TException>(value, default(TException), true);
         }
 
+        /// <summary>
+        /// Creates an empty Option&lt;T&gt; instance.
+        /// </summary>
+        /// <returns>An empty optional.</returns>
+        public static Option<T> None<T>()
+        {
+            return new Option<T>(default(T), false);
+        }
+
+        /// <summary>
+        /// Creates an empty Option&lt;T, TException&gt; instance, 
+        /// with a specified exceptional value.
+        /// </summary>
+        /// <param name="exception">The exceptional value.</param>
+        /// <returns>An empty optional.</returns>
         public static Option<T, TException> None<T, TException>(TException exception)
         {
             return new Option<T, TException>(default(T), exception, false);

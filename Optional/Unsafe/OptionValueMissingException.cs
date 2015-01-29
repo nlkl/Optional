@@ -6,7 +6,7 @@ using System.Text;
 namespace Optional.Unsafe
 {
     /// <summary>
-    /// Indicates a failed retrieval of a value from an empty optional value.
+    /// Indicates a failed retrieval of a value from an empty optional.
     /// </summary>
     public class OptionValueMissingException : Exception
     {
