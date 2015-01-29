@@ -47,10 +47,26 @@ namespace Optional
         {
             if (value != null)
             {
-                return value.Some();
+                return Option.Some(value);
             }
 
             return Option.None<T>();
+        }
+
+        /// <summary>
+        /// Creates an Option&lt;T&gt; instance from a specified value. 
+        /// If the value is null, the returned Option&lt;T&gt; instance is empty.
+        /// </summary>
+        /// <param name="value">The value to wrap.</param>
+        /// <returns>The Option&lt;T&gt; instance.</returns>
+        public static Option<T, TException> SomeNotNull<T, TException>(this T value, TException exception)
+        {
+            if (value != null)
+            {
+                return Option.Some<T, TException>(value);
+            }
+
+            return Option.None<T, TException>(exception);
         }
 
         /// <summary>
@@ -62,10 +78,25 @@ namespace Optional
         {
             if (value.HasValue)
             {
-                return value.Value.Some();
+                return Option.Some(value.Value);
             }
 
             return Option.None<T>();
+        }
+
+        /// <summary>
+        /// Converts a Nullable&lt;T&gt; to an Option&lt;T&gt; instance.
+        /// </summary>
+        /// <param name="value">The Nullable&lt;T&gt; instance.</param>
+        /// <returns>The Option&lt;T&gt; instance.</returns>
+        public static Option<T, TException> ToOption<T, TException>(this Nullable<T> value, TException exception) where T : struct
+        {
+            if (value.HasValue)
+            {
+                return Option.Some<T, TException>(value.Value);
+            }
+
+            return Option.None<T, TException>(exception);
         }
     }
 }

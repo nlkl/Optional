@@ -18,6 +18,7 @@ namespace Optional
         /// Checks if a value is present.
         /// </summary>
         public bool HasValue { get { return hasValue; } }
+
         internal T Value { get { return value; } }
 
         internal Option(T value, bool hasValue)
@@ -104,7 +105,7 @@ namespace Optional
         {
             if (HasValue)
             {
-                return Value;
+                return value;
             }
 
             return alternative;
@@ -122,7 +123,7 @@ namespace Optional
                 return this;
             }
 
-            return alternative.Some();
+            return Option.Some(alternative);
         }
 
         public Option<T, TException> WithException<TException>(TException exception)
@@ -143,7 +144,7 @@ namespace Optional
         {
             if (HasValue)
             {
-                return some(Value);
+                return some(value);
             }
 
             return none();
@@ -158,7 +159,7 @@ namespace Optional
         {
             if (HasValue)
             {
-                some(Value);
+                some(value);
             }
             else
             {
@@ -175,7 +176,7 @@ namespace Optional
         public Option<TResult> Map<TResult>(Func<T, TResult> mapping)
         {
             return Match(
-                some: value => mapping(value).Some(),
+                some: value => Option.Some(mapping(value)),
                 none: () => Option.None<TResult>()
             );
         }
@@ -225,6 +226,7 @@ namespace Optional
         /// Checks if a value is present.
         /// </summary>
         public bool HasValue { get { return hasValue; } }
+
         internal T Value { get { return value; } }
         internal TException Exception { get { return exception; } }
 
@@ -323,7 +325,7 @@ namespace Optional
         {
             if (HasValue)
             {
-                return Value;
+                return value;
             }
 
             return alternative;
@@ -341,13 +343,13 @@ namespace Optional
                 return this;
             }
 
-            return alternative.Some<T, TException>();
+            return Option.Some<T, TException>(alternative);
         }
 
         public Option<T> WithoutException()
         {
             return Match(
-                some: value => value.Some(),
+                some: value => Option.Some(value),
                 none: _ => Option.None<T>()
             );
         }
@@ -362,10 +364,10 @@ namespace Optional
         {
             if (HasValue)
             {
-                return some(Value);
+                return some(value);
             }
 
-            return none(Exception);
+            return none(exception);
         }
 
         /// <summary>
@@ -377,11 +379,11 @@ namespace Optional
         {
             if (HasValue)
             {
-                some(Value);
+                some(value);
             }
             else
             {
-                none(Exception);
+                none(exception);
             }
         }
 

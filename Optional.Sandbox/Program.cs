@@ -27,6 +27,13 @@ namespace Optional.Sandbox
             var success = GetResponse(someResult);
             var error = GetResponse(noneResult);
 
+            var x =
+                from res in someWithHint.Some<Option<string, string>, string>()
+                from y in res
+                select res.ValueOr("a") + y;
+
+            Console.WriteLine(x.ValueOr("----"));
+
             Console.WriteLine(success);
             Console.WriteLine(error);
 
