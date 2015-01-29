@@ -238,7 +238,7 @@ namespace Optional
         }
 
         /// <summary>
-        /// Determines whether two Option&lt;T&gt; instances are equal.
+        /// Determines whether two Option&lt;T, TException&gt; instances are equal.
         /// </summary>
         /// <param name="obj">The instance to compare with the current one.</param>
         /// <returns>A boolean indicating whether or not the instances are equal</returns>
@@ -269,7 +269,7 @@ namespace Optional
         }
 
         /// <summary>
-        /// Generates a hash code the current Option&lt;T&gt; instance.
+        /// Generates a hash code the current Option&lt;T, TException&gt; instance.
         /// </summary>
         /// <returns>A hash code for the current instance.</returns>
         public override int GetHashCode()
@@ -293,7 +293,7 @@ namespace Optional
         }
 
         /// <summary>
-        /// Returns a string that represents the current Option&lt;T&gt; instance.
+        /// Returns a string that represents the current Option&lt;T, TException&gt; instance.
         /// </summary>
         /// <returns>A string that represents the current instance.</returns>
         public override string ToString()
@@ -335,7 +335,7 @@ namespace Optional
         /// Uses an alternative value, if no existing value is present.
         /// </summary>
         /// <param name="alternative">The alternative value.</param>
-        /// <returns>A new Option&lt;T&gt; instance, containing either the existing or alternative value.</returns>
+        /// <returns>A new Option&lt;T, TException&gt; instance, containing either the existing or alternative value.</returns>
         public Option<T, TException> Or(T alternative)
         {
             if (HasValue)
@@ -388,11 +388,11 @@ namespace Optional
         }
 
         /// <summary>
-        /// Transforms the inner value in an Option&lt;T&gt; instance.
+        /// Transforms the inner value in an Option&lt;T, TException&gt; instance.
         /// If the instance is empty, an empty instance is returned.
         /// </summary>
         /// <param name="mapping">The transformation function.</param>
-        /// <returns>The transformed Option&lt;T&gt; instance.</returns>
+        /// <returns>The transformed Option&lt;T, TException&gt; instance.</returns>
         public Option<TResult, TException> Map<TResult>(Func<T, TResult> mapping)
         {
             return Match(
@@ -410,12 +410,12 @@ namespace Optional
         }
 
         /// <summary>
-        /// Transforms the inner value in an Option&lt;T&gt; instance
-        /// into another Option&lt;T&gt; instance. The result is flattened, 
+        /// Transforms the inner value in an Option&lt;T, TException&gt; instance
+        /// into another Option&lt;T, TException&gt; instance. The result is flattened, 
         /// and if either is empty, an empty instance is returned.
         /// </summary>
         /// <param name="mapping">The transformation function.</param>
-        /// <returns>The transformed Option&lt;T&gt; instance.</returns>
+        /// <returns>The transformed Option&lt;T, TException&gt; instance.</returns>
         public Option<TResult, TException> FlatMap<TResult>(Func<T, Option<TResult, TException>> mapping)
         {
             return Match(
@@ -425,11 +425,11 @@ namespace Optional
         }
 
         /// <summary>
-        /// Empties an Option&lt;T&gt; instance, if a specified predicate
+        /// Empties an Option&lt;T, TException&gt; instance, if a specified predicate
         /// is not satisfied.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
-        /// <returns>The filtered Option&lt;T&gt; instance.</returns>
+        /// <returns>The filtered Option&lt;T, TException&gt; instance.</returns>
         public Option<T, TException> Filter(Func<T, bool> predicate, TException exception)
         {
             var original = this;

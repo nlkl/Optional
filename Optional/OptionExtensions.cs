@@ -27,14 +27,14 @@ namespace Optional
             return Option.None<T>();
         }
 
-        public static Option<T, TOther> Some<T, TOther>(this T value)
+        public static Option<T, TException> Some<T, TException>(this T value)
         {
-            return Option.Some<T, TOther>(value);
+            return Option.Some<T, TException>(value);
         }
 
-        public static Option<T, TOther> Other<T, TOther>(this T value, TOther otherValue)
+        public static Option<T, TException> None<T, TException>(this T value, TException exception)
         {
-            return Option.None<T, TOther>(otherValue);
+            return Option.None<T, TException>(exception);
         }
 
         /// <summary>
@@ -54,11 +54,11 @@ namespace Optional
         }
 
         /// <summary>
-        /// Creates an Option&lt;T&gt; instance from a specified value. 
-        /// If the value is null, the returned Option&lt;T&gt; instance is empty.
+        /// Creates an Option&lt;T, TException&gt; instance from a specified value. 
+        /// If the value is null, the returned Option&lt;T, TException&gt; instance is empty.
         /// </summary>
         /// <param name="value">The value to wrap.</param>
-        /// <returns>The Option&lt;T&gt; instance.</returns>
+        /// <returns>The Option&lt;T, TException&gt; instance.</returns>
         public static Option<T, TException> SomeNotNull<T, TException>(this T value, TException exception)
         {
             if (value != null)
@@ -85,10 +85,10 @@ namespace Optional
         }
 
         /// <summary>
-        /// Converts a Nullable&lt;T&gt; to an Option&lt;T&gt; instance.
+        /// Converts a Nullable&lt;T&gt; to an Option&lt;T, TException&gt; instance.
         /// </summary>
         /// <param name="value">The Nullable&lt;T&gt; instance.</param>
-        /// <returns>The Option&lt;T&gt; instance.</returns>
+        /// <returns>The Option&lt;T, TException&gt; instance.</returns>
         public static Option<T, TException> ToOption<T, TException>(this Nullable<T> value, TException exception) where T : struct
         {
             if (value.HasValue)
