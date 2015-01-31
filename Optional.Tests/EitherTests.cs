@@ -139,6 +139,11 @@ namespace Optional.Tests
             Assert.AreEqual(someNullableEmpty.ValueOr(-1), null);
             Assert.AreEqual(someClass.ValueOr("-1"), "1");
             Assert.AreEqual(someClassNull.ValueOr("-1"), null);
+
+            // Value or exception
+            Assert.AreEqual(noneClass.ValueOrException(), "ex");
+            Assert.AreEqual(someClass.ValueOrException(), "1");
+            Assert.AreEqual(someClassNull.ValueOrException(), null);
         }
 
         [TestMethod]

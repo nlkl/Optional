@@ -113,5 +113,21 @@ namespace Optional
 
             return Option.None<T, TException>(exception);
         }
+
+        /// <summary>
+        /// Returns the existing value if present, or the attached 
+        /// exceptional value.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <returns>The existing or exceptional value.</returns>
+        public static T ValueOrException<T>(this Option<T, T> option)
+        {
+            if (option.HasValue)
+            {
+                return option.Value;
+            }
+
+            return option.Exception;
+        }
     }
 }
