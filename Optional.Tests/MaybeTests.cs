@@ -33,74 +33,50 @@ namespace Optional.Tests
         [TestMethod]
         public void Maybe_Equality()
         {
+            // Basic equality
+            Assert.AreEqual(Option.None<string>(), Option.None<string>());
+
+            Assert.AreEqual(Option.Some<string>("val"), Option.Some<string>("val"));
+            Assert.AreEqual(Option.Some<string>(null), Option.Some<string>(null));
+            Assert.AreNotEqual(Option.Some<string>("val"), Option.Some<string>(null));
+            Assert.AreNotEqual(Option.Some<string>(null), Option.Some<string>("val"));
+            Assert.AreNotEqual(Option.Some<string>("val"), Option.Some<string>("val1"));
+
+            // Must have same types
+            Assert.AreNotEqual(Option.None<string>(), Option.None<object>());
+            Assert.AreNotEqual(Option.Some<string>("val"), Option.Some<object>("val"));
+
+            // Some and None are different
+            Assert.AreNotEqual(Option.Some<string>("ex"), Option.None<string>());
+            Assert.AreNotEqual(Option.Some<string>(null), Option.None<string>());
+
+            // Works for val. types, nullables and ref. types
             Assert.AreEqual(Option.None<int>(), Option.None<int>());
             Assert.AreEqual(Option.None<int?>(), Option.None<int?>());
             Assert.AreEqual(Option.None<string>(), Option.None<string>());
 
-            Assert.AreNotEqual(Option.None<int>(), Option.None<double>());
-            Assert.AreNotEqual(Option.None<int?>(), Option.None<double?>());
-            Assert.AreNotEqual(Option.None<string>(), Option.None<object>());
-
-            Assert.AreEqual(Option.Some(1), Option.Some(1));
+            Assert.AreEqual(Option.Some<int>(1), Option.Some<int>(1));
             Assert.AreEqual(Option.Some<int?>(1), Option.Some<int?>(1));
-            Assert.AreEqual(Option.Some<int?>(null), Option.Some<int?>(null));
-            Assert.AreEqual(Option.Some("1"), Option.Some("1"));
-            Assert.AreEqual(Option.Some<string>(null), Option.Some<string>(null));
-
-            Assert.AreNotEqual(Option.Some(1), Option.Some(2));
-            Assert.AreNotEqual(Option.Some<int?>(1), Option.Some<int?>(2));
-            Assert.AreNotEqual(Option.Some<int?>(1), Option.Some<int?>(null));
-            Assert.AreNotEqual(Option.Some("1"), Option.Some("2"));
-            Assert.AreNotEqual(Option.Some("2"), Option.Some<string>(null));
-
-            Assert.AreNotEqual(Option.Some(1), Option.Some<long>(1));
-            Assert.AreNotEqual(Option.Some<int?>(1), Option.Some<int>(1));
-            Assert.AreNotEqual(Option.Some<string>(null), Option.Some<int?>(null));
-            Assert.AreNotEqual(Option.Some("1"), Option.Some(DateTime.Now));
-            Assert.AreNotEqual(Option.Some<string>(null), Option.Some<object>(null));
+            Assert.AreEqual(Option.Some<string>("1"), Option.Some<string>("1"));
+            Assert.AreNotEqual(Option.Some<int>(1), Option.Some<int>(-1));
+            Assert.AreNotEqual(Option.Some<int?>(1), Option.Some<int?>(-1));
+            Assert.AreNotEqual(Option.Some<string>("1"), Option.Some<string>("-1"));
         }
 
         [TestMethod]
         public void Maybe_Hashing()
         {
-            // None all have identical hash codes
-            Assert.AreEqual(Option.None<int>().GetHashCode(), Option.None<int>().GetHashCode());
-            Assert.AreEqual(Option.None<int?>().GetHashCode(), Option.None<int?>().GetHashCode());
             Assert.AreEqual(Option.None<string>().GetHashCode(), Option.None<string>().GetHashCode());
+            Assert.AreEqual(Option.None<object>().GetHashCode(), Option.None<object>().GetHashCode());
 
-            Assert.AreEqual(Option.None<int>().GetHashCode(), Option.None<double>().GetHashCode());
-            Assert.AreEqual(Option.None<int?>().GetHashCode(), Option.None<double?>().GetHashCode());
-            Assert.AreEqual(Option.None<string>().GetHashCode(), Option.None<object>().GetHashCode());
-            
-            Assert.AreEqual(Option.None<int>().GetHashCode(), Option.None<string>().GetHashCode());
-            Assert.AreEqual(Option.None<int>().GetHashCode(), Option.None<int?>().GetHashCode());
-            Assert.AreEqual(Option.None<int?>().GetHashCode(), Option.None<string>().GetHashCode());
+            Assert.AreEqual(Option.Some<string>("val").GetHashCode(), Option.Some<string>("val").GetHashCode());
+            Assert.AreEqual(Option.Some<object>("val").GetHashCode(), Option.Some<object>("val").GetHashCode());
 
-            // Null values return identical hash codes
-            Assert.AreEqual(Option.Some<int?>(null).GetHashCode(), Option.Some<int?>(null).GetHashCode());
             Assert.AreEqual(Option.Some<string>(null).GetHashCode(), Option.Some<string>(null).GetHashCode());
+            Assert.AreEqual(Option.Some<object>(null).GetHashCode(), Option.Some<object>(null).GetHashCode());
 
-            Assert.AreEqual(Option.Some<int?>(null).GetHashCode(), Option.Some<double?>(null).GetHashCode());
-            Assert.AreEqual(Option.Some<string>(null).GetHashCode(), Option.Some<object>(null).GetHashCode());
-
-            Assert.AreEqual(Option.Some<int?>(null).GetHashCode(), Option.Some<string>(null).GetHashCode());
-
-            // Some values 
-            Assert.AreEqual(Option.Some(1).GetHashCode(), Option.Some(1).GetHashCode());
-            Assert.AreEqual(Option.Some<int?>(1).GetHashCode(), Option.Some<int?>(1).GetHashCode());
-            Assert.AreEqual(Option.Some("1").GetHashCode(), Option.Some("1").GetHashCode());
-
-            Assert.AreNotEqual(Option.Some(1).GetHashCode(), Option.Some(2).GetHashCode());
-            Assert.AreNotEqual(Option.Some<int?>(1).GetHashCode(), Option.Some<int?>(2).GetHashCode());
-            Assert.AreNotEqual(Option.Some("1").GetHashCode(), Option.Some("2").GetHashCode());
-
-            Assert.AreNotEqual(Option.Some(1).GetHashCode(), Option.None<int>().GetHashCode());
-            Assert.AreNotEqual(Option.Some<int?>(1).GetHashCode(), Option.None<int?>().GetHashCode());
-            Assert.AreNotEqual(Option.Some("1").GetHashCode(), Option.None<string>().GetHashCode());
-
-            // None and null are different
-            Assert.AreNotEqual(Option.None<int?>().GetHashCode(), Option.Some<int?>(null).GetHashCode());
-            Assert.AreNotEqual(Option.None<string>().GetHashCode(), Option.Some<string>(null).GetHashCode());
+            Assert.AreNotEqual(Option.Some<string>(null).GetHashCode(), Option.None<string>().GetHashCode());
+            Assert.AreNotEqual(Option.Some<object>(null).GetHashCode(), Option.None<object>().GetHashCode());
         }
 
         [TestMethod]

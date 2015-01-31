@@ -37,124 +37,62 @@ namespace Optional.Tests
         [TestMethod]
         public void Either_Equality()
         {
-            Assert.AreEqual(Option.None<int, string>("ex"), Option.None<int, string>("ex"));
-            Assert.AreEqual(Option.None<int?, string>("ex"), Option.None<int?, string>("ex"));
+            // Basic equality
             Assert.AreEqual(Option.None<string, string>("ex"), Option.None<string, string>("ex"));
-
-            Assert.AreNotEqual(Option.None<int, string>("ex"), Option.None<int, string>("ex1"));
-            Assert.AreNotEqual(Option.None<int?, string>("ex"), Option.None<int?, string>("ex1"));
+            Assert.AreEqual(Option.None<string, string>(null), Option.None<string, string>(null));
+            Assert.AreNotEqual(Option.None<string, string>("ex"), Option.None<string, string>(null));
+            Assert.AreNotEqual(Option.None<string, string>(null), Option.None<string, string>("ex"));
             Assert.AreNotEqual(Option.None<string, string>("ex"), Option.None<string, string>("ex1"));
 
-            Assert.AreNotEqual(Option.None<int, int>(1), Option.None<int, double>(1));
-            Assert.AreNotEqual(Option.None<int?, int?>(1), Option.None<int?, double?>(1));
-            Assert.AreNotEqual(Option.None<string, string>("ex"), Option.None<string, object>("ex1"));
-
-            Assert.AreNotEqual(Option.None<int, string>("ex"), Option.None<double, string>("ex"));
-            Assert.AreNotEqual(Option.None<int?, string>("ex"), Option.None<double?, string>("ex"));
-            Assert.AreNotEqual(Option.None<string, string>("ex"), Option.None<object, string>("ex"));
-
-            Assert.AreEqual(Option.Some<int, string>(1), Option.Some<int, string>(1));
-            Assert.AreEqual(Option.Some<int?, string>(1), Option.Some<int?, string>(1));
-            Assert.AreEqual(Option.Some<int?, string>(null), Option.Some<int?, string>(null));
-            Assert.AreEqual(Option.Some<string, string>("1"), Option.Some<string, string>("1"));
+            Assert.AreEqual(Option.Some<string, string>("val"), Option.Some<string, string>("val"));
             Assert.AreEqual(Option.Some<string, string>(null), Option.Some<string, string>(null));
+            Assert.AreNotEqual(Option.Some<string, string>("val"), Option.Some<string, string>(null));
+            Assert.AreNotEqual(Option.Some<string, string>(null), Option.Some<string, string>("val"));
+            Assert.AreNotEqual(Option.Some<string, string>("val"), Option.Some<string, string>("val1"));
 
-            Assert.AreNotEqual(Option.Some<int, string>(1), Option.Some<int, object>(1));
-            Assert.AreNotEqual(Option.Some<int?, int?>(1), Option.Some<int?, int>(1));
-            Assert.AreNotEqual(Option.Some<int?, int>(null), Option.Some<int?, int?>(null));
-            Assert.AreNotEqual(Option.Some<string, float>("1"), Option.Some<string, double>("1"));
-            Assert.AreNotEqual(Option.Some<string, long>(null), Option.Some<string, int>(null));
+            // Must have same types
+            Assert.AreNotEqual(Option.None<string, string>("ex"), Option.None<string, object>("ex"));
+            Assert.AreNotEqual(Option.None<string, string>("ex"), Option.None<object, string>("ex"));
+            Assert.AreNotEqual(Option.Some<string, string>("val"), Option.Some<string, object>("val"));
+            Assert.AreNotEqual(Option.Some<string, string>("val"), Option.Some<object, string>("val"));
 
-            Assert.AreNotEqual(Option.Some<int, string>(1), Option.Some<int, string>(2));
-            Assert.AreNotEqual(Option.Some<int?, string>(1), Option.Some<int?, string>(2));
-            Assert.AreNotEqual(Option.Some<int?, string>(1), Option.Some<int?, string>(null));
-            Assert.AreNotEqual(Option.Some<string, string>("1"), Option.Some<string, string>("2"));
-            Assert.AreNotEqual(Option.Some<string, string>("2"), Option.Some<string, string>(null));
+            // Some and None are different
+            Assert.AreNotEqual(Option.Some<string, string>("ex"), Option.None<string, string>("ex"));
+            Assert.AreNotEqual(Option.Some<string, string>(null), Option.None<string, string>(null));
 
-            Assert.AreNotEqual(Option.Some<int, string>(1), Option.Some<long, string>(1));
-            Assert.AreNotEqual(Option.Some<int?, string>(1), Option.Some<int, string>(1));
-            Assert.AreNotEqual(Option.Some<string, string>(null), Option.Some<int?, string>(null));
-            Assert.AreNotEqual(Option.Some<string, string>("1"), Option.Some<DateTime, string>(DateTime.Now));
-            Assert.AreNotEqual(Option.Some<string, string>(null), Option.Some<object, string>(null));
+            // Works for val. types, nullables and ref. types
+            Assert.AreEqual(Option.None<int, int>(1), Option.None<int, int>(1));
+            Assert.AreEqual(Option.None<int?, int?>(1), Option.None<int?, int?>(1));
+            Assert.AreEqual(Option.None<string, string>("1"), Option.None<string, string>("1"));
+            Assert.AreNotEqual(Option.None<int, int>(1), Option.None<int, int>(-1));
+            Assert.AreNotEqual(Option.None<int?, int?>(1), Option.None<int?, int?>(-1));
+            Assert.AreNotEqual(Option.None<string, string>("1"), Option.None<string, string>("-1"));
+
+            Assert.AreEqual(Option.Some<int, int>(1), Option.Some<int, int>(1));
+            Assert.AreEqual(Option.Some<int?, int?>(1), Option.Some<int?, int?>(1));
+            Assert.AreEqual(Option.Some<string, string>("1"), Option.Some<string, string>("1"));
+            Assert.AreNotEqual(Option.Some<int, int>(1), Option.Some<int, int>(-1));
+            Assert.AreNotEqual(Option.Some<int?, int?>(1), Option.Some<int?, int?>(-1));
+            Assert.AreNotEqual(Option.Some<string, string>("1"), Option.Some<string, string>("-1"));
         }
 
         [TestMethod]
         public void Either_Hashing()
         {
-            // None all have identical hash codes
-            Assert.AreEqual(Option.None<int, string>("ex").GetHashCode(), Option.None<int, string>("ex").GetHashCode());
-            Assert.AreEqual(Option.None<int?, string>("ex").GetHashCode(), Option.None<int?, string>("ex").GetHashCode());
             Assert.AreEqual(Option.None<string, string>("ex").GetHashCode(), Option.None<string, string>("ex").GetHashCode());
-
-            Assert.AreEqual(Option.None<int, string>("ex").GetHashCode(), Option.None<double, string>("ex").GetHashCode());
-            Assert.AreEqual(Option.None<int?, string>("ex").GetHashCode(), Option.None<double?, string>("ex").GetHashCode());
-            Assert.AreEqual(Option.None<string, string>("ex").GetHashCode(), Option.None<object, string>("ex").GetHashCode());
-
-            Assert.AreEqual(Option.None<int, string>("ex").GetHashCode(), Option.None<string, string>("ex").GetHashCode());
-            Assert.AreEqual(Option.None<int, string>("ex").GetHashCode(), Option.None<int?, string>("ex").GetHashCode());
-            Assert.AreEqual(Option.None<int?, string>("ex").GetHashCode(), Option.None<string, string>("ex").GetHashCode());
-
-            Assert.AreNotEqual(Option.None<int, string>("ex").GetHashCode(), Option.None<int, string>("ex1").GetHashCode());
-            Assert.AreNotEqual(Option.None<int?, string>("ex").GetHashCode(), Option.None<int?, string>("ex1").GetHashCode());
-            Assert.AreNotEqual(Option.None<string, string>("ex").GetHashCode(), Option.None<string, string>("ex1").GetHashCode());
-
-            Assert.AreNotEqual(Option.None<int, string>("ex").GetHashCode(), Option.None<double, string>("ex1").GetHashCode());
-            Assert.AreNotEqual(Option.None<int?, string>("ex").GetHashCode(), Option.None<double?, string>("ex1").GetHashCode());
-            Assert.AreNotEqual(Option.None<string, string>("ex").GetHashCode(), Option.None<object, string>("ex1").GetHashCode());
-
-            Assert.AreNotEqual(Option.None<int, string>("ex").GetHashCode(), Option.None<string, string>("ex1").GetHashCode());
-            Assert.AreNotEqual(Option.None<int, string>("ex").GetHashCode(), Option.None<int?, string>("ex1").GetHashCode());
-            Assert.AreNotEqual(Option.None<int?, string>("ex").GetHashCode(), Option.None<string, string>("ex1").GetHashCode());
-
-            Assert.AreEqual(Option.None<object, string>("ex").GetHashCode(), Option.None<int, string>("ex").GetHashCode());
-            Assert.AreEqual(Option.None<object, string>("ex").GetHashCode(), Option.None<int?, string>("ex").GetHashCode());
-            Assert.AreEqual(Option.None<object, string>("ex").GetHashCode(), Option.None<string, string>("ex").GetHashCode());
-
-            Assert.AreEqual(Option.None<object, string>("ex").GetHashCode(), Option.None<double, string>("ex").GetHashCode());
-            Assert.AreEqual(Option.None<object, string>("ex").GetHashCode(), Option.None<double?, string>("ex").GetHashCode());
             Assert.AreEqual(Option.None<object, string>("ex").GetHashCode(), Option.None<object, string>("ex").GetHashCode());
 
-            Assert.AreEqual(Option.None<object, string>("ex").GetHashCode(), Option.None<string, string>("ex").GetHashCode());
-            Assert.AreEqual(Option.None<object, string>("ex").GetHashCode(), Option.None<int?, string>("ex").GetHashCode());
-            Assert.AreEqual(Option.None<object, string>("ex").GetHashCode(), Option.None<string, string>("ex").GetHashCode());
+            Assert.AreEqual(Option.Some<string, string>("val").GetHashCode(), Option.Some<string, string>("val").GetHashCode());
+            Assert.AreEqual(Option.Some<object, string>("val").GetHashCode(), Option.Some<object, string>("val").GetHashCode());
 
-            // Null values return identical hash codes
-            Assert.AreEqual(Option.Some<int?, string>(null).GetHashCode(), Option.Some<int?, string>(null).GetHashCode());
+            Assert.AreEqual(Option.None<string, string>(null).GetHashCode(), Option.None<string, string>(null).GetHashCode());
+            Assert.AreEqual(Option.None<object, string>(null).GetHashCode(), Option.None<object, string>(null).GetHashCode());
+
             Assert.AreEqual(Option.Some<string, string>(null).GetHashCode(), Option.Some<string, string>(null).GetHashCode());
-            Assert.AreEqual(Option.Some<int?, string>(null).GetHashCode(), Option.Some<double?, string>(null).GetHashCode());
-            Assert.AreEqual(Option.Some<string, string>(null).GetHashCode(), Option.Some<object, string>(null).GetHashCode());
-            Assert.AreEqual(Option.Some<int?, string>(null).GetHashCode(), Option.Some<string, string>(null).GetHashCode());
+            Assert.AreEqual(Option.Some<object, string>(null).GetHashCode(), Option.Some<object, string>(null).GetHashCode());
 
-            Assert.AreEqual(Option.Some<int?, string>(null).GetHashCode(), Option.Some<int?, int>(null).GetHashCode());
-            Assert.AreEqual(Option.Some<string, string>(null).GetHashCode(), Option.Some<string, int>(null).GetHashCode());
-            Assert.AreEqual(Option.Some<int?, string>(null).GetHashCode(), Option.Some<double?, int>(null).GetHashCode());
-            Assert.AreEqual(Option.Some<string, string>(null).GetHashCode(), Option.Some<object, int>(null).GetHashCode());
-            Assert.AreEqual(Option.Some<int?, string>(null).GetHashCode(), Option.Some<string, int>(null).GetHashCode());
-
-            // Some values 
-            Assert.AreEqual(Option.Some<int, string>(1).GetHashCode(), Option.Some<int, string>(1).GetHashCode());
-            Assert.AreEqual(Option.Some<int?, string>(1).GetHashCode(), Option.Some<int?, string>(1).GetHashCode());
-            Assert.AreEqual(Option.Some<string, string>("1").GetHashCode(), Option.Some<string, string>("1").GetHashCode());
-
-            Assert.AreNotEqual(Option.Some<int, string>(1).GetHashCode(), Option.Some<int, string>(2).GetHashCode());
-            Assert.AreNotEqual(Option.Some<int?, string>(1).GetHashCode(), Option.Some<int?, string>(2).GetHashCode());
-            Assert.AreNotEqual(Option.Some<string, string>("1").GetHashCode(), Option.Some<string, string>("2").GetHashCode());
-
-            Assert.AreNotEqual(Option.Some<int, string>(1).GetHashCode(), Option.None<int, string>("ex").GetHashCode());
-            Assert.AreNotEqual(Option.Some<int?, string>(1).GetHashCode(), Option.None<int?, string>("ex").GetHashCode());
-            Assert.AreNotEqual(Option.Some<string, string>("1").GetHashCode(), Option.None<string, string>("ex").GetHashCode());
-
-            Assert.AreEqual(Option.Some<int, string>(1).GetHashCode(), Option.Some<int, object>(1).GetHashCode());
-            Assert.AreEqual(Option.Some<int?, string>(1).GetHashCode(), Option.Some<int?, object>(1).GetHashCode());
-            Assert.AreEqual(Option.Some<string, string>("1").GetHashCode(), Option.Some<string, object>("1").GetHashCode());
-
-            Assert.AreNotEqual(Option.Some<int, string>(1).GetHashCode(), Option.Some<int, object>(2).GetHashCode());
-            Assert.AreNotEqual(Option.Some<int?, string>(1).GetHashCode(), Option.Some<int?, object>(2).GetHashCode());
-            Assert.AreNotEqual(Option.Some<string, string>("1").GetHashCode(), Option.Some<string, object>("2").GetHashCode());
-
-            // None and null are different
-            Assert.AreNotEqual(Option.None<int?, string>("ex").GetHashCode(), Option.Some<int?, string>(null).GetHashCode());
-            Assert.AreNotEqual(Option.None<string, string>("ex").GetHashCode(), Option.Some<string, string>(null).GetHashCode());
+            Assert.AreNotEqual(Option.Some<string, string>(null).GetHashCode(), Option.None<string, string>(null).GetHashCode());
+            Assert.AreNotEqual(Option.Some<object, string>(null).GetHashCode(), Option.None<object, string>(null).GetHashCode());
         }
 
         [TestMethod]
