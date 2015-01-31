@@ -4,10 +4,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Optional.Tests
 {
     [TestClass]
-    public class OptionTests
+    public class MaybeTests
     {
         [TestMethod]
-        public void CreateAndCheckExistence()
+        public void Maybe_CreateAndCheckExistence()
         {
             var noneStruct = Option.None<int>();
             var noneNullable = Option.None<int?>();
@@ -31,7 +31,7 @@ namespace Optional.Tests
         }
 
         [TestMethod]
-        public void Equality()
+        public void Maybe_Equality()
         {
             Assert.AreEqual(Option.None<int>(), Option.None<int>());
             Assert.AreEqual(Option.None<int?>(), Option.None<int?>());
@@ -61,7 +61,7 @@ namespace Optional.Tests
         }
 
         [TestMethod]
-        public void Hashing()
+        public void Maybe_Hashing()
         {
             // None all have identical hash codes
             Assert.AreEqual(Option.None<int>().GetHashCode(), Option.None<int>().GetHashCode());
@@ -104,7 +104,7 @@ namespace Optional.Tests
         }
 
         [TestMethod]
-        public void StringRepresentation()
+        public void Maybe_StringRepresentation()
         {
             Assert.AreEqual(Option.None<int>().ToString(), "None");
             Assert.AreEqual(Option.None<int?>().ToString(), "None");
@@ -122,7 +122,7 @@ namespace Optional.Tests
         }
 
         [TestMethod]
-        public void GetValue()
+        public void Maybe_GetValue()
         {
             var noneStruct = Option.None<int>();
             var noneNullable = Option.None<int?>();
@@ -146,7 +146,7 @@ namespace Optional.Tests
         }
 
         [TestMethod]
-        public void AlternativeValue()
+        public void Maybe_AlternativeValue()
         {
             var noneStruct = Option.None<int>();
             var noneNullable = Option.None<int?>();
@@ -170,7 +170,7 @@ namespace Optional.Tests
         }
 
         [TestMethod]
-        public void CreateExtensions()
+        public void Maybe_CreateExtensions()
         {
             var none = 1.None();
             var some = 1.Some();
@@ -202,7 +202,7 @@ namespace Optional.Tests
         }
 
         [TestMethod]
-        public void Matching()
+        public void Maybe_Matching()
         {
             var none = 1.None();
             var some = 1.Some();
@@ -232,7 +232,7 @@ namespace Optional.Tests
         }
 
         [TestMethod]
-        public void Transformation()
+        public void Maybe_Transformation()
         {
             var none = "a".None();
             var some = "a".Some();

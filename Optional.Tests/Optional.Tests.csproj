@@ -50,11 +50,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="EitherTests.cs" />
     <Compile Include="Extensions\CollectionTests.cs" />
     <Compile Include="UnsafeTests.cs" />
     <Compile Include="LinqTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="OptionTests.cs" />
+    <Compile Include="MaybeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Optional.Extensions\Optional.Extensions.csproj">

@@ -46,7 +46,9 @@
     <Compile Include="Parse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Async\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Optional\Optional.csproj">
       <Project>{4a4c60d5-c480-4816-bb61-1e2fbc243dd4}</Project>
