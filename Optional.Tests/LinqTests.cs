@@ -8,7 +8,7 @@ namespace Optional.Tests
     public class LinqTests
     {
         [TestMethod]
-        public void LinqTransformations()
+        public void Maybe_LinqTransformations()
         {
             var none = "a".None();
             var some = "a".Some();
@@ -78,6 +78,54 @@ namespace Optional.Tests
             Assert.IsFalse(someNotA.HasValue);
             Assert.IsFalse(noneA.HasValue);
             Assert.IsTrue(someA.HasValue);
+        }
+
+        [TestMethod]
+        public void Either_LinqTransformations()
+        {
+            var none = "a".None<string, string>("ex");
+            var some = "a".Some<string, string>();
+
+            var noneNull = ((string)null).None<string, string>("ex");
+            var someNull = ((string)null).Some<string, string>();
+
+            var noneUpper =
+                from x in none
+                select x.ToUpper();
+
+            var someUpper =
+                from x in some
+                select x.ToUpper();
+
+            Assert.IsFalse(noneUpper.HasValue);
+            Assert.IsTrue(someUpper.HasValue);
+            Assert.AreEqual(noneUpper.ValueOr("b"), "b");
+            Assert.AreEqual(someUpper.ValueOr("b"), "A");
+
+            var noneNotNull =
+                from x in none
+                from y in x.SomeNotNull<string, string>("ex1")
+                select y;
+
+            var someNotNull =
+                from x in some
+                from y in x.SomeNotNull<string, string>("ex1")
+                select y;
+
+            var noneNullNotNull =
+                from x in noneNull
+                from y in x.SomeNotNull<string, string>("ex1")
+                select y;
+
+            var someNullNotNull =
+                from x in someNull
+                from y in x.SomeNotNull<string, string>("ex1")
+                select y;
+
+            Assert.IsFalse(noneNotNull.HasValue);
+            Assert.IsTrue(someNotNull.HasValue);
+            Assert.IsFalse(noneNullNotNull.HasValue);
+            Assert.IsFalse(someNullNotNull.HasValue);
         }
     }
 }

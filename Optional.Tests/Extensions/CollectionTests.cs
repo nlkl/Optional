@@ -12,7 +12,7 @@ namespace Optional.Tests.Extensions
     public class LinqTests
     {
         [TestMethod]
-        public void OptionToEnumerable()
+        public void Extensions_OptionToEnumerable()
         {
             var none = "a".None();
             var some = "a".Some();
@@ -36,7 +36,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void FirstOperatorEnumerable()
+        public void Extensions_FirstOperatorEnumerable()
         {
             var full = Enumerable.Range(0, 100);
             var empty = Enumerable.Empty<int>();
@@ -52,7 +52,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void FirstOperatorQueryable()
+        public void Extensions_FirstOperatorQueryable()
         {
             var full = Enumerable.Range(0, 100).AsQueryable();
             var empty = Enumerable.Empty<int>().AsQueryable();
@@ -62,7 +62,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void LastOperatorEnumerable()
+        public void Extensions_LastOperatorEnumerable()
         {
             var full = Enumerable.Range(0, 100);
             var empty = Enumerable.Empty<int>();
@@ -78,7 +78,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void LastOperatorQueryable()
+        public void Extensions_LastOperatorQueryable()
         {
             var full = Enumerable.Range(0, 100).AsQueryable();
             var empty = Enumerable.Empty<int>().AsQueryable();
@@ -88,7 +88,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void SingleOperatorEnumerable()
+        public void Extensions_SingleOperatorEnumerable()
         {
             var full = Enumerable.Range(0, 100);
             var empty = Enumerable.Empty<int>();
@@ -104,7 +104,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void SingleOperatorQueryable()
+        public void Extensions_SingleOperatorQueryable()
         {
             var full = Enumerable.Range(0, 100).AsQueryable();
             var empty = Enumerable.Empty<int>().AsQueryable();
@@ -114,7 +114,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void ElementAtOperatorEnumerable()
+        public void Extensions_ElementAtOperatorEnumerable()
         {
             var full = Enumerable.Range(0, 100);
             var empty = Enumerable.Empty<int>();
@@ -130,7 +130,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void ElementAtOperatorQueryable()
+        public void Extensions_ElementAtOperatorQueryable()
         {
             var full = Enumerable.Range(0, 100).AsQueryable();
             var empty = Enumerable.Empty<int>().AsQueryable();
