@@ -3,7 +3,7 @@ Optional
 
 Optional is a simple option/maybe type for C#.
 
-Version: 0.1.7.0
+Version: 0.2.0.0
 
 ## Features at a glance
 
@@ -25,22 +25,25 @@ Or visit: [https://www.nuget.org/packages/Optional/](https://www.nuget.org/packa
 
 ## Core concepts
 
-The core concept behind Optional is that of an option/maybe type (known as `Option<T>` in Optional). 
+The core concept behind Optional is derived from two common functional programming constructs, typically referred to as a maybe type and an either type (referred to as `Option<T>` and `Option<T, TException>` in Optional).
 
-Many functional programming languages disallow null values, as null-references can introduce hard-to-find bugs. An option type is a type-safe alternative to null values.
+Many functional programming languages disallow null values, as null-references can introduce hard-to-find bugs. A maybe type is a type-safe alternative to null values. 
 
 In general, an optional value can be in one of two states: Some (representing the presence of a value) and None (representing the lack of a value). Unlike null, an option type forces the user to check if a value is actually present, thereby mitigating many of the problems of null values. `Option<T>` is a struct in Optional, making it impossible to assign a null value to an option itself.
 
 Further, an option type is a lot more explicit than a null value, which can make APIs based on optional values a lot easier to understand.
 
-Finally, Optional offers several utility methods that make it easier to compose optional values, as compared to large amounts of null checks.
+An either type is conceptually similar to a maybe type. Whereas a maybe type only indicates if a value is present or not, an either type contains an auxilliary value describing how an operation failed. Apart from this *exceptional* value, an either-type behaves much like its simpler counterpart.
+
+Working with maybe and either types is very similar, and the description below will therefore focus on the maybe type, and only provide a quick summary for the either type.
+
+Finally, Optional offers several utility methods that make it easy and convenient to work with both of the above described optional values.
 
 ## Usage
 
 ### Using the library
 
 To use Optional simply import the following namespace:
-
 
 ```csharp
 using Optional;
@@ -240,3 +243,136 @@ Two optional values are equal if the following is satisfied:
 * Both are none, both contain null values, or the contained values are equal
  
 The generated hashcodes also reflect the semantics described above.
+
+### Options with exceptional values
+
+As described above, Optional support the notion of an either type, which adds and exception value, indicating how an operation went wrong.
+
+An `Option<T, TException>` can be created directly, just like the `Option<T>`. Unlike in this simple case, we need to specify potential exceptional values (and a lot of verbose type annotations - sorry guys):
+
+```csharp
+var none = Option.None<int, ErrorCode>(ErrorCode.GeneralError);
+var some = Option.Some<int, ErrorCode>(10);
+
+// These extension methods are hardly useful in this case,
+// but here for consistency
+var none = 10.None(ErrorCode.GeneralError);
+var some = 10.Some<int, ErrorCode>();
+
+string nullString = null;
+var none = nullString.SomeNotNull(ErrorCode.GeneralError); 
+
+int? nullableWithoutValue = null;
+int? nullableWithValue = 2;
+var none = nullableWithoutValue.ToOption(ErrorCode.GeneralError);
+var some = nullableWithValue.ToOption(ErrorCode.GeneralError);
+```
+
+Retrieval of values is very similar as well:
+
+```csharp
+var hasValue = option.HasValue;
+
+var value = option.ValueOr(10); 
+
+// If the value and exception is of identical type, 
+// it is possible to return the one which is present
+var value = option.ValueOrException(); 
+```
+
+The `Match` methods include the exceptional value in the none-case:
+
+```csharp
+var value = option.Match(
+  some: value => value + 1, 
+  none: exception => (int)exception
+);
+
+option.Match(
+  some: value => Console.WriteLine(value), 
+  none: exception => Console.WriteLine(exception)
+);
+```
+And again, when `Optional.Unsafe` is imported, it is possible to retrieve the value without safety:
+
+```csharp
+var value = option.ValueOrFailure();
+var anotherValue = option.ValueOrFailure("An error message"); 
+```
+
+Values can be conveniently transformed using similar operations to that of the `Option<T>`. It is however important to note, that these transformations are all **short-circuiting**! That is, if an option is already none, the current exceptional value will remain, and not be replaced by any subsequent filtering. In this respect, this exceptional value is very similar to actual exceptions (hence the name).
+
+```csharp
+var none = Option.None<int, ErrorCode>(ErrorCode.GeneralError);
+var some = none.Or(10);
+
+// Mapping
+
+var none = Option.None<int, ErrorCode>(ErrorCode.GeneralError);
+var stillNone = none.Map(x => x + 10);
+
+var some = Option.Some<int, ErrorCode>(10);
+var somePlus10 = some.Map(x => x + 10);
+
+// Flatmapping
+
+var none = Option.None<int, ErrorCode>(ErrorCode.GeneralError);
+var stillNone = none.FlatMap(x => x.Some<int, ErrorCode>());
+
+var some = Option.Some<int, ErrorCode>(10);
+var stillSome = some.FlatMap(x => x.Some<int, ErrorCode>()); 
+var nowNone = some.FlatMap(x => x.None(ErrorCode.GeneralError));
+
+// Filtering
+
+var none = Option.None<int, ErrorCode>(ErrorCode.GeneralError);
+var stillNone = none.Filter(x => x > 10, ErrorCode.ValueTooSmall); // Still "GeneralError"
+
+var some = Option.Some<int, ErrorCode>(10);
+var stillSome = some.Filter(x => x == 10, ErrorCode.ValueIsNotTen);
+var nowNone = some.Filter(x => x != 10, ErrorCode.ValueIsTen); // Now "ValueIsTen"
+```
+
+LINQ query syntax is supported, with the notable exception of the `where` operator (as it doesn't allow us to specify an exceptional value to use in case of failure):
+
+```csharp
+var optionalDocument =
+  from file in user.GetFileFromDatabase()
+  from document in FetchFromService(file.DocumentId)
+  select document;
+
+optionalDocument.Match(
+    some: document => Console.WriteLine(document.Contents), 
+    none: errorCode => Console.WriteLine(errorCode)
+);
+```
+
+### Interop between `Option<T>` and `Option<T, TException>`
+
+To make interop between `Option<T>` and `Option<T, TException>` more convenient, several utility methods are provided for this purpose.
+
+The most basic of such operations, is to simply convert between the two types:
+
+```csharp
+var some = Option.Some("This is a string");
+
+// To convert to an Option<T, TException>, we need to tell which 
+// exceptional value to use if the current option is none
+var someWithException = some.WithException(ErrorCode.GeneralError);
+
+// It is easy to simply drop the exceptional value
+var someWithoutException = someWithException.WithoutException();
+```
+
+When flatmapping, it is similarly possible to flatmap into a value of the other type:
+
+```csharp
+// The following flatmap simply ignores the new exceptional value
+var some = Option.Some("This is a string");
+var none = some.FlatMap(x => x.None(ErrorCode.GeneralError));
+
+// The following flatmap needs an explicit exceptional value 
+// as a second argument
+var some = Option.Some<string, ErrorCode>("This is a string");
+var none = some.FlatMap(x => Option.None<string>(), ErrorCode.GeneralError);
+```
