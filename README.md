@@ -186,7 +186,7 @@ var stillNone = none.FlatMap(x => x.Some()); // Returns another Option<int>
 
 var some = 10.Some();
 var stillSome = some.FlatMap(x => x.Some()); 
-var nowNone = some.FlatMap(x => x.None()); // Returns None as the resulting option is empty
+var none = some.FlatMap(x => x.None()); // Turns empty, as it maps to none
 ```
 
 `FlatMap` is useful in combination with methods that return optional values themselves:
@@ -325,7 +325,7 @@ var none = some.FlatMap(x => x.None(ErrorCode.GeneralError));
 
 // Filtering
 
-var some = Option.Some<int, ErrorCode>(10)
+var result = Option.Some<int, ErrorCode>(10)
     .Filter(x => true, ErrorCode.GeneralError) // Stil some
     .Filter(x => false, ErrorCode.GeneralError) // Now "GeneralError"
     .Filter(x => false, ErrorCode.IncorrectValue); // Still "GeneralError"
