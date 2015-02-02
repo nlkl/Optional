@@ -209,7 +209,7 @@ var stillNone = none.Filter(x => x > 10);
 
 var some = 10.Some();
 var stillSome = some.Filter(x => x == 10);
-var nowNone = some.Filter(x => x != 10);
+var none = some.Filter(x => x != 10);
 ```
 
 ### Working with LINQ query syntax
@@ -321,16 +321,14 @@ var stillNone = none.FlatMap(x => x.Some<int, ErrorCode>());
 
 var some = Option.Some<int, ErrorCode>(10);
 var stillSome = some.FlatMap(x => x.Some<int, ErrorCode>()); 
-var nowNone = some.FlatMap(x => x.None(ErrorCode.GeneralError));
+var none = some.FlatMap(x => x.None(ErrorCode.GeneralError));
 
 // Filtering
 
-var none = Option.None<int, ErrorCode>(ErrorCode.GeneralError);
-var stillNone = none.Filter(x => x > 10, ErrorCode.ValueTooSmall); // Still "GeneralError"
-
-var some = Option.Some<int, ErrorCode>(10);
-var stillSome = some.Filter(x => x == 10, ErrorCode.ValueIsNotTen);
-var nowNone = some.Filter(x => x != 10, ErrorCode.ValueIsTen); // Now "ValueIsTen"
+var some = Option.Some<int, ErrorCode>(10)
+    .Filter(x => true, ErrorCode.GeneralError) // Stil some
+    .Filter(x => false, ErrorCode.GeneralError) // Now "GeneralError"
+    .Filter(x => false, ErrorCode.IncorrectValue); // Still "GeneralError"
 ```
 
 LINQ query syntax is supported, with the notable exception of the `where` operator (as it doesn't allow us to specify an exceptional value to use in case of failure):
