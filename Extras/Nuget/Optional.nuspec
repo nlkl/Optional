@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Optional</id>
-    <version>0.1.7.0</version>
+    <version>0.2.0.0</version>
     <title>Optional</title>
     <authors>Nils Lück</authors>
     <owners>Nils Lück</owners>
@@ -11,6 +11,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A simple option type.</description>
     <copyright>Copyright 2014</copyright>
-    <tags>Maybe Option Null Monad Monadic</tags>
+    <tags>Option Maybe Either Exception Null Monad Monadic</tags>
   </metadata>
 </package>
