@@ -31,6 +31,52 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+        public void Maybe_CheckContainment()
+        {
+            var noneStruct = Option.None<int>();
+            var noneNullable = Option.None<int?>();
+            var noneClass = Option.None<string>();
+
+            Assert.IsFalse(noneStruct.Contains(0));
+            Assert.IsFalse(noneNullable.Contains(null));
+            Assert.IsFalse(noneClass.Contains(null));
+
+            Assert.IsFalse(noneStruct.Exists(val => true));
+            Assert.IsFalse(noneNullable.Exists(val => true));
+            Assert.IsFalse(noneClass.Exists(val => true));
+
+            var someStruct = Option.Some<int>(1);
+            var someNullable = Option.Some<int?>(1);
+            var someNullableEmpty = Option.Some<int?>(null);
+            var someClass = Option.Some("1");
+            var someClassNull = Option.Some<string>(null);
+
+            Assert.IsTrue(someStruct.Contains(1));
+            Assert.IsTrue(someNullable.Contains(1));
+            Assert.IsTrue(someNullableEmpty.Contains(null));
+            Assert.IsTrue(someClass.Contains("1"));
+            Assert.IsTrue(someClassNull.Contains(null));
+
+            Assert.IsTrue(someStruct.Exists(val => val == 1));
+            Assert.IsTrue(someNullable.Exists(val => val == 1));
+            Assert.IsTrue(someNullableEmpty.Exists(val => val == null));
+            Assert.IsTrue(someClass.Exists(val => val == "1"));
+            Assert.IsTrue(someClassNull.Exists(val => val == null));
+
+            Assert.IsFalse(someStruct.Contains(-1));
+            Assert.IsFalse(someNullable.Contains(-1));
+            Assert.IsFalse(someNullableEmpty.Contains(1));
+            Assert.IsFalse(someClass.Contains("-1"));
+            Assert.IsFalse(someClassNull.Contains("1"));
+
+            Assert.IsFalse(someStruct.Exists(val => val != 1));
+            Assert.IsFalse(someNullable.Exists(val => val != 1));
+            Assert.IsFalse(someNullableEmpty.Exists(val => val != null));
+            Assert.IsFalse(someClass.Exists(val => val != "1"));
+            Assert.IsFalse(someClassNull.Exists(val => val != null));
+        }
+
+        [TestMethod]
         public void Maybe_Equality()
         {
             // Basic equality

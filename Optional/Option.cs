@@ -97,13 +97,44 @@ namespace Optional
         }
 
         /// <summary>
+        /// Determines if the current optional contains a specified value.
+        /// </summary>
+        /// <param name="value">The value to locate.</param>
+        /// <returns>A boolean indicating whether or not the value was found.</returns>
+        public bool Contains(T value)
+        {
+            if (hasValue)
+            {
+                if (this.value == null)
+                {
+                    return value == null;
+                }
+
+                return this.value.Equals(value);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if the current optional contains a value 
+        /// satisfying a specified predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns>A boolean indicating whether or not the predicate was satisfied.</returns>
+        public bool Exists(Func<T, bool> predicate)
+        {
+            return hasValue && predicate(value);
+        }
+
+        /// <summary>
         /// Returns the existing value if present, and otherwise an alternative value.
         /// </summary>
         /// <param name="alternative">The alternative value.</param>
         /// <returns>The existing or alternative value.</returns>
         public T ValueOr(T alternative)
         {
-            if (HasValue)
+            if (hasValue)
             {
                 return value;
             }
@@ -118,7 +149,7 @@ namespace Optional
         /// <returns>A new optional, containing either the existing or alternative value.</returns>
         public Option<T> Or(T alternative)
         {
-            if (HasValue)
+            if (hasValue)
             {
                 return this;
             }
@@ -147,7 +178,7 @@ namespace Optional
         /// <returns>The result of the evaluated function.</returns>
         public TResult Match<TResult>(Func<T, TResult> some, Func<TResult> none)
         {
-            if (HasValue)
+            if (hasValue)
             {
                 return some(value);
             }
@@ -162,7 +193,7 @@ namespace Optional
         /// <param name="none">The action to evaluate if the value is missing.</param>
         public void Match(Action<T> some, Action none)
         {
-            if (HasValue)
+            if (hasValue)
             {
                 some(value);
             }
@@ -343,13 +374,44 @@ namespace Optional
         }
 
         /// <summary>
+        /// Determines if the current optional contains a specified value.
+        /// </summary>
+        /// <param name="value">The value to locate.</param>
+        /// <returns>A boolean indicating whether or not the value was found.</returns>
+        public bool Contains(T value)
+        {
+            if (hasValue)
+            {
+                if (this.value == null)
+                {
+                    return value == null;
+                }
+
+                return this.value.Equals(value);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if the current optional contains a value 
+        /// satisfying a specified predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns>A boolean indicating whether or not the predicate was satisfied.</returns>
+        public bool Exists(Func<T, bool> predicate)
+        {
+            return hasValue && predicate(value);
+        }
+
+        /// <summary>
         /// Returns the existing value if present, and otherwise an alternative value.
         /// </summary>
         /// <param name="alternative">The alternative value.</param>
         /// <returns>The existing or alternative value.</returns>
         public T ValueOr(T alternative)
         {
-            if (HasValue)
+            if (hasValue)
             {
                 return value;
             }
@@ -364,7 +426,7 @@ namespace Optional
         /// <returns>A new optional, containing either the existing or alternative value.</returns>
         public Option<T, TException> Or(T alternative)
         {
-            if (HasValue)
+            if (hasValue)
             {
                 return this;
             }
@@ -392,7 +454,7 @@ namespace Optional
         /// <returns>The result of the evaluated function.</returns>
         public TResult Match<TResult>(Func<T, TResult> some, Func<TException, TResult> none)
         {
-            if (HasValue)
+            if (hasValue)
             {
                 return some(value);
             }
@@ -407,7 +469,7 @@ namespace Optional
         /// <param name="none">The action to evaluate if the value is missing.</param>
         public void Match(Action<T> some, Action<TException> none)
         {
-            if (HasValue)
+            if (hasValue)
             {
                 some(value);
             }

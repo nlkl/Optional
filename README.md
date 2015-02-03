@@ -105,6 +105,13 @@ Firstly, it is possible to check if a value is actually present:
 var hasValue = option.HasValue;
 ```
 
+If you want to check if an option contains a specific value, you can use the `Contains` or `Exists` methods. The first one checks if the optional contains a specified value, the second if the contained value satisfies some predicate:
+
+```csharp
+var isThousand = option.Contains(1000);
+var isGreaterThanThousand = option.Exists(val => val > 1000);
+```
+
 The most basic way to retrieve a value from an `Option<T>` is the following:
 
 ```csharp
@@ -272,6 +279,8 @@ Retrieval of values is very similar as well:
 
 ```csharp
 var hasValue = option.HasValue;
+var isThousand = option.Contains(1000);
+var isGreaterThanThousand = option.Exists(val => val > 1000);
 
 var value = option.ValueOr(10); 
 
