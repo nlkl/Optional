@@ -193,6 +193,36 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+        public void Either_GetValueLazy()
+        {
+            var noneStruct = Option.None<int, string>("ex");
+            var noneNullable = Option.None<int?, string>("ex");
+            var noneClass = Option.None<string, string>("ex");
+
+            Assert.AreEqual(noneStruct.ValueOr(() => -1), -1);
+            Assert.AreEqual(noneNullable.ValueOr(() => -1), -1);
+            Assert.AreEqual(noneClass.ValueOr(() => "-1"), "-1");
+
+            var someStruct = Option.Some<int, string>(1);
+            var someNullable = Option.Some<int?, string>(1);
+            var someNullableEmpty = Option.Some<int?, string>(null);
+            var someClass = Option.Some<string, string>("1");
+            var someClassNull = Option.Some<string, string>(null);
+
+            Assert.AreEqual(someStruct.ValueOr(() => -1), 1);
+            Assert.AreEqual(someNullable.ValueOr(() => -1), 1);
+            Assert.AreEqual(someNullableEmpty.ValueOr(() => -1), null);
+            Assert.AreEqual(someClass.ValueOr(() => "-1"), "1");
+            Assert.AreEqual(someClassNull.ValueOr(() => "-1"), null);
+
+            Assert.AreEqual(someStruct.ValueOr(() => { Assert.Fail(); return -1; }), 1);
+            Assert.AreEqual(someNullable.ValueOr(() => { Assert.Fail(); return -1; }), 1);
+            Assert.AreEqual(someNullableEmpty.ValueOr(() => { Assert.Fail(); return -1; }), null);
+            Assert.AreEqual(someClass.ValueOr(() => { Assert.Fail(); return "-1"; }), "1");
+            Assert.AreEqual(someClassNull.ValueOr(() => { Assert.Fail(); return "-1"; }), null);
+        }
+
+        [TestMethod]
         public void Either_AlternativeValue()
         {
             var noneStruct = Option.None<int, string>("ex");
@@ -217,6 +247,34 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+        public void Either_AlternativeValueLazy()
+        {
+            var noneStruct = Option.None<int, string>("ex");
+            var noneNullable = Option.None<int?, string>("ex");
+            var noneClass = Option.None<string, string>("ex");
+
+            Assert.IsFalse(noneStruct.HasValue);
+            Assert.IsFalse(noneNullable.HasValue);
+            Assert.IsFalse(noneClass.HasValue);
+
+            var someStruct = noneStruct.Or(() => 1);
+            var someNullable = noneNullable.Or(() => 1);
+            var someClass = noneClass.Or(() => "1");
+
+            Assert.IsTrue(someStruct.HasValue);
+            Assert.IsTrue(someNullable.HasValue);
+            Assert.IsTrue(someClass.HasValue);
+
+            Assert.AreEqual(someStruct.ValueOr(() => -1), 1);
+            Assert.AreEqual(someNullable.ValueOr(() => -1), 1);
+            Assert.AreEqual(someClass.ValueOr(() => "-1"), "1");
+
+            Assert.AreEqual(someStruct.ValueOr(() => { Assert.Fail(); return -1; }), 1);
+            Assert.AreEqual(someNullable.ValueOr(() => { Assert.Fail(); return -1; }), 1);
+            Assert.AreEqual(someClass.ValueOr(() => { Assert.Fail(); return "-1"; }), "1");
+        }
+
+        [TestMethod]
         public void Either_CreateExtensions()
         {
             var none = 1.None("ex");
@@ -224,6 +282,12 @@ namespace Optional.Tests
 
             Assert.AreEqual(none.ValueOr(-1), -1);
             Assert.AreEqual(some.ValueOr(-1), 1);
+
+            var noneLargerThanTen = 1.SomeWhen<int, string>(x => x > 10, "ex");
+            var someLargerThanTen = 20.SomeWhen<int, string>(x => x > 10, "ex");
+
+            Assert.AreEqual(noneLargerThanTen.ValueOr(-1), -1);
+            Assert.AreEqual(someLargerThanTen.ValueOr(-1), 20);
 
             var noneNotNull = ((string)null).SomeNotNull<string, string>("ex");
             var someNotNull = "1".SomeNotNull<string, string>("ex");
@@ -246,6 +310,36 @@ namespace Optional.Tests
             Assert.IsInstanceOfType(someFromNullable.ValueOr(-1), typeof(int));
             Assert.AreEqual(noneFromNullable.ValueOr(-1), -1);
             Assert.AreEqual(someFromNullable.ValueOr(-1), 1);
+        }
+
+        [TestMethod]
+        public void Either_CreateExtensionsLazy()
+        {
+            var noneIsTen = "1".SomeWhen<string, string>(x => x == "10", () => "ex");
+            var someIsTen = "10".SomeWhen<string, string>(x => x == "10", () => "ex");
+
+            Assert.AreEqual(noneIsTen.ValueOrException(), "ex");
+            Assert.AreEqual(someIsTen.ValueOrException(), "10");
+
+            var noneNotNull = ((string)null).SomeNotNull<string, string>(() => "ex");
+            var someNotNull = "1".SomeNotNull<string, string>(() => "ex");
+
+            Assert.AreEqual(noneNotNull.ValueOrException(), "ex");
+            Assert.AreEqual(someNotNull.ValueOrException(), "1");
+
+            var noneFromNullable = ((int?)null).ToOption<int, int>(() => -1);
+            var someFromNullable = ((int?)1).ToOption<int, int>(() => -1);
+
+            Assert.AreEqual(noneFromNullable.ValueOrException(), -1);
+            Assert.AreEqual(someFromNullable.ValueOrException(), 1);
+
+            var some1 = "1".SomeWhen<string, string>(_ => true, () => { Assert.Fail(); return "ex"; });
+            var some2 = "1".SomeNotNull<string, string>(() => { Assert.Fail(); return "ex"; });
+            var some3 = ((int?)1).ToOption<int, int>(() => { Assert.Fail(); return -1; });
+
+            Assert.AreEqual(some1.ValueOr("-1"), "1");
+            Assert.AreEqual(some2.ValueOr("-1"), "1");
+            Assert.AreEqual(some3.ValueOr(-1), 1);
         }
 
         [TestMethod]
@@ -318,6 +412,27 @@ namespace Optional.Tests
             var someNotVal = some.Filter(x => x != "val", "ex1");
             var noneVal = none.Filter(x => x == "val", "ex1");
             var someVal = some.Filter(x => x == "val", "ex1");
+
+            Assert.IsFalse(noneNotVal.HasValue);
+            Assert.IsFalse(someNotVal.HasValue);
+            Assert.IsFalse(noneVal.HasValue);
+            Assert.IsTrue(someVal.HasValue);
+            Assert.AreEqual(noneNotVal.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(someNotVal.Match(val => val, ex => ex), "ex1");
+            Assert.AreEqual(noneVal.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(someVal.Match(val => val, ex => ex), "val");
+        }
+
+        [TestMethod]
+        public void Either_TransformationLazy()
+        {
+            var none = "val".None("ex");
+            var some = "val".Some<string, string>();
+
+            var noneNotVal = none.Filter(x => x != "val", () => "ex1");
+            var someNotVal = some.Filter(x => x != "val", () => "ex1");
+            var noneVal = none.Filter(x => x == "val", () => "ex1");
+            var someVal = some.Filter(x => x == "val", () => { Assert.Fail(); return "ex1"; });
 
             Assert.IsFalse(noneNotVal.HasValue);
             Assert.IsFalse(someNotVal.HasValue);

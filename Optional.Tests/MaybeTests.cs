@@ -168,6 +168,36 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+        public void Maybe_GetValueLazy()
+        {
+            var noneStruct = Option.None<int>();
+            var noneNullable = Option.None<int?>();
+            var noneClass = Option.None<string>();
+
+            Assert.AreEqual(noneStruct.ValueOr(() => -1), -1);
+            Assert.AreEqual(noneNullable.ValueOr(() => -1), -1);
+            Assert.AreEqual(noneClass.ValueOr(() => "-1"), "-1");
+
+            var someStruct = Option.Some<int>(1);
+            var someNullable = Option.Some<int?>(1);
+            var someNullableEmpty = Option.Some<int?>(null);
+            var someClass = Option.Some("1");
+            var someClassNull = Option.Some<string>(null);
+
+            Assert.AreEqual(someStruct.ValueOr(() => -1), 1);
+            Assert.AreEqual(someNullable.ValueOr(() => -1), 1);
+            Assert.AreEqual(someNullableEmpty.ValueOr(() => -1), null);
+            Assert.AreEqual(someClass.ValueOr(() => "-1"), "1");
+            Assert.AreEqual(someClassNull.ValueOr(() => "-1"), null);
+
+            Assert.AreEqual(someStruct.ValueOr(() => { Assert.Fail(); return -1; }), 1);
+            Assert.AreEqual(someNullable.ValueOr(() => { Assert.Fail(); return -1; }), 1);
+            Assert.AreEqual(someNullableEmpty.ValueOr(() => { Assert.Fail(); return -1; }), null);
+            Assert.AreEqual(someClass.ValueOr(() => { Assert.Fail(); return "-1"; }), "1");
+            Assert.AreEqual(someClassNull.ValueOr(() => { Assert.Fail(); return "-1"; }), null);
+        }
+
+        [TestMethod]
         public void Maybe_AlternativeValue()
         {
             var noneStruct = Option.None<int>();
@@ -192,6 +222,34 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+        public void Maybe_AlternativeValueLazy()
+        {
+            var noneStruct = Option.None<int>();
+            var noneNullable = Option.None<int?>();
+            var noneClass = Option.None<string>();
+
+            Assert.IsFalse(noneStruct.HasValue);
+            Assert.IsFalse(noneNullable.HasValue);
+            Assert.IsFalse(noneClass.HasValue);
+
+            var someStruct = noneStruct.Or(() => 1);
+            var someNullable = noneNullable.Or(() => 1);
+            var someClass = noneClass.Or(() => "1");
+
+            Assert.IsTrue(someStruct.HasValue);
+            Assert.IsTrue(someNullable.HasValue);
+            Assert.IsTrue(someClass.HasValue);
+
+            Assert.AreEqual(someStruct.ValueOr(() => -1), 1);
+            Assert.AreEqual(someNullable.ValueOr(() => -1), 1);
+            Assert.AreEqual(someClass.ValueOr(() => "-1"), "1");
+
+            Assert.AreEqual(someStruct.ValueOr(() => { Assert.Fail(); return -1; }), 1);
+            Assert.AreEqual(someNullable.ValueOr(() => { Assert.Fail(); return -1; }), 1);
+            Assert.AreEqual(someClass.ValueOr(() => { Assert.Fail(); return "-1"; }), "1");
+        }
+
+        [TestMethod]
         public void Maybe_CreateExtensions()
         {
             var none = 1.None();
@@ -199,6 +257,12 @@ namespace Optional.Tests
 
             Assert.AreEqual(none.ValueOr(-1), -1);
             Assert.AreEqual(some.ValueOr(-1), 1);
+
+            var noneLargerThanTen = 1.SomeWhen(x => x > 10);
+            var someLargerThanTen = 20.SomeWhen(x => x > 10);
+
+            Assert.AreEqual(noneLargerThanTen.ValueOr(-1), -1);
+            Assert.AreEqual(someLargerThanTen.ValueOr(-1), 20);
 
             var noneNotNull = ((string)null).SomeNotNull();
             var someNotNull = "1".SomeNotNull();

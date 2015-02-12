@@ -50,18 +50,69 @@ namespace Optional
 
         /// <summary>
         /// Creates an Option&lt;T&gt; instance from a specified value. 
+        /// If the value does not satisfy the given predicate, 
+        /// an empty optional is returned.
+        /// </summary>
+        /// <param name="value">The value to wrap.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns>An optional containing the specified value.</returns>
+        public static Option<T> SomeWhen<T>(this T value, Func<T, bool> predicate)
+        {
+            if (predicate(value))
+            {
+                return Option.Some(value);
+            }
+
+            return Option.None<T>();
+        }
+
+        /// <summary>
+        /// Creates an Option&lt;T&gt; instance from a specified value. 
+        /// If the value does not satisfy the given predicate, 
+        /// an empty optional is returned, with a specified exceptional value.
+        /// </summary>
+        /// <param name="value">The value to wrap.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="exception">The exceptional value.</param>
+        /// <returns>An optional containing the specified value.</returns>
+        public static Option<T, TException> SomeWhen<T, TException>(this T value, Func<T, bool> predicate, TException exception)
+        {
+            if (predicate(value))
+            {
+                return Option.Some<T, TException>(value);
+            }
+
+            return Option.None<T, TException>(exception);
+        }
+
+        /// <summary>
+        /// Creates an Option&lt;T&gt; instance from a specified value. 
+        /// If the value does not satisfy the given predicate, 
+        /// an empty optional is returned, with a specified exceptional value.
+        /// </summary>
+        /// <param name="value">The value to wrap.</param>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="exceptionFactory">A factory function to create an exceptional value.</param>
+        /// <returns>An optional containing the specified value.</returns>
+        public static Option<T, TException> SomeWhen<T, TException>(this T value, Func<T, bool> predicate, Func<TException> exceptionFactory)
+        {
+            if (predicate(value))
+            {
+                return Option.Some<T, TException>(value);
+            }
+
+            return Option.None<T, TException>(exceptionFactory());
+        }
+
+        /// <summary>
+        /// Creates an Option&lt;T&gt; instance from a specified value. 
         /// If the value is null, an empty optional is returned.
         /// </summary>
         /// <param name="value">The value to wrap.</param>
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T> SomeNotNull<T>(this T value)
         {
-            if (value != null)
-            {
-                return Option.Some(value);
-            }
-
-            return Option.None<T>();
+            return value.SomeWhen(val => val != null);
         }
 
         /// <summary>
@@ -74,12 +125,20 @@ namespace Optional
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> SomeNotNull<T, TException>(this T value, TException exception)
         {
-            if (value != null)
-            {
-                return Option.Some<T, TException>(value);
-            }
+            return value.SomeWhen(val => val != null, exception);
+        }
 
-            return Option.None<T, TException>(exception);
+        /// <summary>
+        /// Creates an Option&lt;T&gt; instance from a specified value. 
+        /// If the value is null, an empty optional is returned, 
+        /// with a specified exceptional value.
+        /// </summary>
+        /// <param name="value">The value to wrap.</param>
+        /// <param name="exceptionFactory">A factory function to create an exceptional value.</param>
+        /// <returns>An optional containing the specified value.</returns>
+        public static Option<T, TException> SomeNotNull<T, TException>(this T value, Func<TException> exceptionFactory)
+        {
+            return value.SomeWhen(val => val != null, exceptionFactory);
         }
 
         /// <summary>
@@ -112,6 +171,23 @@ namespace Optional
             }
 
             return Option.None<T, TException>(exception);
+        }
+
+        /// <summary>
+        /// Converts a Nullable&lt;T&gt; to an Option&lt;T, TException&gt; instance, 
+        /// with a specified exceptional value.
+        /// </summary>
+        /// <param name="value">The Nullable&lt;T&gt; instance.</param>
+        /// <param name="exceptionFactory">A factory function to create an exceptional value.</param>
+        /// <returns>The Option&lt;T, TException&gt; instance.</returns>
+        public static Option<T, TException> ToOption<T, TException>(this Nullable<T> value, Func<TException> exceptionFactory) where T : struct
+        {
+            if (value.HasValue)
+            {
+                return Option.Some<T, TException>(value.Value);
+            }
+
+            return Option.None<T, TException>(exceptionFactory());
         }
 
         /// <summary>
