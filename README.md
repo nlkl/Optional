@@ -3,7 +3,7 @@ Optional
 
 Optional is a simple option/maybe type for C#.
 
-Version: 0.2.0.0
+Version: 2.1.0
 
 ## Features at a glance
 
@@ -86,6 +86,13 @@ string nullString = null;
 var none = nullString.SomeNotNull(); // Returns None if original value is null
 ```
 
+Similarly, a more general extension method is provided, allowing a specified predicate:
+
+```csharp
+string str = "abc";
+var none = str.SomeWhen(s => s == "cba"); // Return None if predicate is violated
+```
+
 Clearly, optional values are conceptually quite similar to nullables. Hence, a method is provided to convert a nullable into an optional value:
 
 ```csharp
@@ -116,7 +123,8 @@ The most basic way to retrieve a value from an `Option<T>` is the following:
 
 ```csharp
 // Returns the value if present, or otherwise an alternative value (10)
-var value = option.ValueOr(10); 
+var value = option.ValueOr(10);
+var value = option.ValueOr(() => SlowOperation());  // Lazy variant
 ```
 
 In more elobarate scenarios, the `Match` method evaluates a specified function:
@@ -173,6 +181,7 @@ The `Or` function makes it possible to specify an alternative value. If the opti
 ```csharp
 var none = Option.None<int>();
 var some = none.Or(10); // A some instance, with value 10
+var some = none.Or(() => SlowOperation()); // Lazy variant
 ```
 
 The `Map` function transforms the inner value of an option. If no value is present none is simply propagated:
@@ -266,13 +275,19 @@ var some = Option.Some<int, ErrorCode>(10);
 var none = 10.None(ErrorCode.GeneralError);
 var some = 10.Some<int, ErrorCode>();
 
+string str = "abc";
+var none = str.SomeWhen(s => s == "cba", ErrorCode.GeneralError);
+var none = str.SomeWhen(s => s == "cba", () => SlowOperation()); // Lazy variant
+
 string nullString = null;
 var none = nullString.SomeNotNull(ErrorCode.GeneralError); 
+var none = nullString.SomeNotNull(() => SlowOperation()); // Lazy variant
 
 int? nullableWithoutValue = null;
 int? nullableWithValue = 2;
 var none = nullableWithoutValue.ToOption(ErrorCode.GeneralError);
 var some = nullableWithValue.ToOption(ErrorCode.GeneralError);
+var some = nullableWithValue.ToOption(() => SlowOperation()); // Lazy variant
 ```
 
 Retrieval of values is very similar as well:
@@ -282,7 +297,8 @@ var hasValue = option.HasValue;
 var isThousand = option.Contains(1000);
 var isGreaterThanThousand = option.Exists(val => val > 1000);
 
-var value = option.ValueOr(10); 
+var value = option.ValueOr(10);
+var value = option.ValueOr(() => SlowOperation()); // Lazy variant
 
 // If the value and exception is of identical type, 
 // it is possible to return the one which is present
@@ -314,6 +330,7 @@ Values can be conveniently transformed using similar operations to that of the `
 ```csharp
 var none = Option.None<int, ErrorCode>(ErrorCode.GeneralError);
 var some = none.Or(10);
+var some = none.Or(() => SlowOperation()); // Lazy variant
 
 // Mapping
 
@@ -337,7 +354,8 @@ var none = some.FlatMap(x => x.None(ErrorCode.GeneralError));
 var result = Option.Some<int, ErrorCode>(10)
     .Filter(x => true, ErrorCode.GeneralError) // Stil some
     .Filter(x => false, ErrorCode.GeneralError) // Now "GeneralError"
-    .Filter(x => false, ErrorCode.IncorrectValue); // Still "GeneralError"
+    .Filter(x => false, ErrorCode.IncorrectValue) // Still "GeneralError"
+    .Filter(x => false, () => SlowOperation()); // Lazy variant
 ```
 
 LINQ query syntax is supported, with the notable exception of the `where` operator (as it doesn't allow us to specify an exceptional value to use in case of failure):
@@ -366,6 +384,7 @@ var some = Option.Some("This is a string");
 // To convert to an Option<T, TException>, we need to tell which 
 // exceptional value to use if the current option is none
 var someWithException = some.WithException(ErrorCode.GeneralError);
+var someWithException = some.WithException(() => SlowOperation()); // Lazy variant
 
 // It is easy to simply drop the exceptional value
 var someWithoutException = someWithException.WithoutException();
@@ -382,4 +401,5 @@ var none = some.FlatMap(x => x.None(ErrorCode.GeneralError));
 // as a second argument
 var some = Option.Some<string, ErrorCode>("This is a string");
 var none = some.FlatMap(x => Option.None<string>(), ErrorCode.GeneralError);
+var none = some.FlatMap(x => Option.None<string>(), () => SlowOperation()); // Lazy variant
 ```
