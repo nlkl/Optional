@@ -2,6 +2,7 @@
 using Optional.Linq;
 using Optional.Extensions;
 using Optional.Extensions.Collections;
+using Optional.Extensions.Async;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -86,12 +87,25 @@ namespace Optional.Sandbox
                         none: () => Task.FromResult(Option.None<Address>())
                     ));
 
+            var optionalAddress3 = await Repository
+                .TryGetPersonAsync(1)
+                .FlatMap(optionalPerson => optionalPerson
+                    .Match(
+                        some: p => p.TryGetAddressAsync(),
+                        none: () => Task.FromResult(Option.None<Address>())
+                    ));
+
             optionalAddress.Match(
                 some: addr => Console.WriteLine(addr.Country),
                 none: () => Console.WriteLine("Not found")
             );
 
             optionalAddress2.Match(
+                some: addr => Console.WriteLine(addr.Country),
+                none: () => Console.WriteLine("Not found")
+            );
+
+            optionalAddress3.Match(
                 some: addr => Console.WriteLine(addr.Country),
                 none: () => Console.WriteLine("Not found")
             );

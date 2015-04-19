@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Async\OptionAsyncExtensions.cs" />
+    <Compile Include="Async\TaskExtensions.cs" />
     <Compile Include="Collections\OptionEnumerableExtensions.cs" />
     <Compile Include="Collections\LinqQueryableExtensions.cs" />
     <Compile Include="Collections\LinqEnumerableExtensions.cs" />
