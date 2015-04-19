@@ -8,9 +8,10 @@ namespace Optional.Extensions.Async
 {
     public static class TaskExtensions
     {
-        public static Task<TResult> Map<TResult>(this Task task, Func<TResult> mapping)
+        public static async Task<TResult> Map<TResult>(this Task task, Func<TResult> mapping)
         {
-            return Task.FromResult(mapping());
+            await task;
+            return mapping();
         }
 
         public static async Task<TResult> Map<T, TResult>(this Task<T> task, Func<T, TResult> mapping)
@@ -18,14 +19,16 @@ namespace Optional.Extensions.Async
             return mapping(await task);
         }
 
-        public static Task FlatMap(this Task task, Func<Task> mapping)
+        public static async Task FlatMap(this Task task, Func<Task> mapping)
         {
-            return mapping();
+            await task;
+            await mapping();
         }
         
-        public static Task<TResult> FlatMap<TResult>(this Task task, Func<Task<TResult>> mapping)
+        public static async Task<TResult> FlatMap<TResult>(this Task task, Func<Task<TResult>> mapping)
         {
-            return mapping();
+            await task;
+            return await mapping();
         }
 
         public static async Task FlatMap<T>(this Task<T> task, Func<T, Task> mapping)
