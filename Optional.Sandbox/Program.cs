@@ -11,52 +11,97 @@ using System.Threading.Tasks;
 
 namespace Optional.Sandbox
 {
+    public class Person
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+
+        public Option<Address> TryGetAddress()
+        {
+            return new Address
+            {
+                Id = 1,
+                StreetName = "Option Street",
+                StreetNumber = "22",
+                City = "Optionburg",
+                PostalCode = "2222",
+                Country = "Optionland"
+            }.Some();
+        }
+
+        public Task<Option<Address>> TryGetAddressAsync()
+        {
+            return Task.FromResult(TryGetAddress());
+        }
+    }
+
+    public class Address
+    {
+        public int Id { get; set; }
+        public string StreetName { get; set; }
+        public string StreetNumber { get; set; }
+        public string City { get; set; }
+        public string PostalCode { get; set; }
+        public string Country { get; set; }
+    }
+
+    public static class Repository
+    {
+        public static Option<Person> TryGetPerson(int id)
+        {
+            if (id == 1)
+            {
+                return new Person
+                {
+                    Id = 1,
+                    Name = "Jens Jensen",
+                    Age = 32
+                }.Some();
+            }
+
+            return Option.None<Person>();
+        }
+
+        public static Task<Option<Person>> TryGetPersonAsync(int id)
+        {
+            return Task.FromResult(TryGetPerson(id));
+        }
+    }
+
     class Program
     {
+        public static async Task TestAddresses()
+        {
+            var optionalAddress = Repository
+                .TryGetPerson(1)
+                .FlatMap(p => p.TryGetAddress());
+
+            var optionalAddress2 = await await Repository
+                .TryGetPersonAsync(1)
+                .ContinueWith(optionalPerson =>
+                    optionalPerson.Result
+                    .Match(
+                        some: p => p.TryGetAddressAsync(),
+                        none: () => Task.FromResult(Option.None<Address>())
+                    ));
+
+            optionalAddress.Match(
+                some: addr => Console.WriteLine(addr.Country),
+                none: () => Console.WriteLine("Not found")
+            );
+
+            optionalAddress2.Match(
+                some: addr => Console.WriteLine(addr.Country),
+                none: () => Console.WriteLine("Not found")
+            );
+        }
+
         static void Main(string[] args)
         {
-            var someResult = "Yes!".Some();
-            var noneResult = Option.None<string>();
-
-            var someWithHint = someResult.WithException("Missing!");
-            var someWithoutHint = someWithHint.WithoutException();
-
-            var noneWithHint = noneResult.WithException("Missing!");
-            var noneWithoutHint = noneWithHint.WithoutException();
-
-            var success = GetResponse(someResult);
-            var error = GetResponse(noneResult);
-
-            var x =
-                from res in someWithHint.Some<Option<string, string>, string>()
-                from y in res
-                select res.ValueOr("a") + y;
-
-            Console.WriteLine(x.ValueOr("----"));
-
-            Console.WriteLine(success);
-            Console.WriteLine(error);
+            TestAddresses().Wait();
 
             Console.Read();
-        }
-
-        private abstract class Response { }
-        private class Success : Response { public string Result { get; set; } }
-        private class Error : Response { }
-
-        private static Response GetResponse(Option<string> result)
-        {
-            return result.Match<Response>(r => GetSuccessResponse(r), () => GetErrorResponse());
-        }
-
-        private static Success GetSuccessResponse(string result)
-        {
-            return new Success() { Result = result };
-        }
-
-        private static Error GetErrorResponse()
-        {
-            return new Error();
         }
     }
 }

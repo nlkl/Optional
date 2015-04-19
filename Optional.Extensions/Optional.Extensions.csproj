@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Async\OptionAsyncExtensions.cs" />
     <Compile Include="Collections\OptionEnumerableExtensions.cs" />
     <Compile Include="Collections\LinqQueryableExtensions.cs" />
     <Compile Include="Collections\LinqEnumerableExtensions.cs" />
@@ -47,9 +48,7 @@
     <Compile Include="Parse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Async\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Optional\Optional.csproj">
       <Project>{4a4c60d5-c480-4816-bb61-1e2fbc243dd4}</Project>
