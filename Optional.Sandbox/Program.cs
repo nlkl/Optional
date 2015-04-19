@@ -95,6 +95,14 @@ namespace Optional.Sandbox
                         none: () => Task.FromResult(Option.None<Address>())
                     ));
 
+            var optionalAddress4 = await Repository
+                .TryGetPersonAsync(1)
+                .FlatMap(person => person.TryGetAddressAsync());
+
+            var optionalAddress5 = await Repository
+                .TryGetPersonAsync(1)
+                .OptionMap(person => person.TryGetAddress());
+
             optionalAddress.Match(
                 some: addr => Console.WriteLine(addr.Country),
                 none: () => Console.WriteLine("Not found")
@@ -106,6 +114,16 @@ namespace Optional.Sandbox
             );
 
             optionalAddress3.Match(
+                some: addr => Console.WriteLine(addr.Country),
+                none: () => Console.WriteLine("Not found")
+            );
+
+            optionalAddress4.Match(
+                some: addr => Console.WriteLine(addr.Country),
+                none: () => Console.WriteLine("Not found")
+            );
+
+            optionalAddress5.Match(
                 some: addr => Console.WriteLine(addr.Country),
                 none: () => Console.WriteLine("Not found")
             );
