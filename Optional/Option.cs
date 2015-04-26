@@ -9,7 +9,7 @@ namespace Optional
     /// Represents an optional value.
     /// </summary>
     /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
-    public struct Option<T>
+    public struct Option<T> : IEquatable<Option<T>>
     {
         private bool hasValue;
         private T value;
@@ -30,29 +30,32 @@ namespace Optional
         /// <summary>
         /// Determines whether two optionals are equal.
         /// </summary>
+        /// <param name="other">The optional to compare with the current one.</param>
+        /// <returns>A boolean indicating whether or not the optionals are equal</returns>
+        public bool Equals(Option<T> other)
+        {
+            if (!hasValue && !other.hasValue)
+            {
+                return true;
+            }
+            else if (hasValue && other.hasValue)
+            {
+                return EqualityComparer<T>.Default.Equals(value, other.value);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether two optionals are equal.
+        /// </summary>
         /// <param name="obj">The optional to compare with the current one.</param>
         /// <returns>A boolean indicating whether or not the optionals are equal</returns>
         public override bool Equals(object obj)
         {
             if (obj is Option<T>)
             {
-                var other = (Option<T>)obj;
-
-                if (!hasValue && !other.hasValue)
-                {
-                    return true;
-                }
-                else if (hasValue && other.hasValue)
-                {
-                    if (value == null && other.value == null)
-                    {
-                        return true;
-                    }
-                    else if (value != null && other.value != null)
-                    {
-                        return value.Equals(other.value);
-                    }
-                }
+                return Equals((Option<T>)obj);
             }
 
             return false;
@@ -309,7 +312,7 @@ namespace Optional
     /// </summary>
     /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
     /// <typeparam name="TException">A exceptional value describing the lack of an actual value.</typeparam>
-    public struct Option<T, TException>
+    public struct Option<T, TException> : IEquatable<Option<T, TException>>
     {
         private bool hasValue;
         private T value;
@@ -333,36 +336,32 @@ namespace Optional
         /// <summary>
         /// Determines whether two optionals are equal.
         /// </summary>
+        /// <param name="other">The optional to compare with the current one.</param>
+        /// <returns>A boolean indicating whether or not the optionals are equal</returns>
+        public bool Equals(Option<T, TException> other)
+        {
+            if (!hasValue && !other.hasValue)
+            {
+                return EqualityComparer<TException>.Default.Equals(exception, other.exception);
+            }
+            else if (hasValue && other.hasValue)
+            {
+                return EqualityComparer<T>.Default.Equals(value, other.value);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether two optionals are equal.
+        /// </summary>
         /// <param name="obj">The optional to compare with the current one.</param>
         /// <returns>A boolean indicating whether or not the optionals are equal</returns>
         public override bool Equals(object obj)
         {
             if (obj is Option<T, TException>)
             {
-                var other = (Option<T, TException>)obj;
-
-                if (!hasValue && !other.hasValue)
-                {
-                    if (exception == null && other.exception == null)
-                    {
-                        return true;
-                    }
-                    else if (exception != null && other.exception != null)
-                    {
-                        return exception.Equals(other.exception);
-                    }
-                }
-                else if (hasValue && other.hasValue)
-                {
-                    if (value == null && other.value == null)
-                    {
-                        return true;
-                    }
-                    else if (value != null && other.value != null)
-                    {
-                        return value.Equals(other.value);
-                    }
-                }
+                return Equals((Option<T, TException>)obj);
             }
 
             return false;
