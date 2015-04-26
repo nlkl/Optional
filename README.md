@@ -3,7 +3,7 @@ Optional
 
 Optional is a simple option/maybe type for C#.
 
-Version: 2.1.0
+Version: 2.2.0
 
 ## Features at a glance
 
@@ -257,7 +257,9 @@ Two optional values are equal if the following is satisfied:
 
 * The two options have the same type
 * Both are none, both contain null values, or the contained values are equal
- 
+
+An option both overrides `object.Equals` and implements `IEquatable<T>`, allowing efficient use in both generic and untyped scenarios. The `==` and `!=` operators are also provided for convenience. In each case, the semantics are identical.
+
 The generated hashcodes also reflect the semantics described above.
 
 ### Options with exceptional values
