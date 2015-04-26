@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace Optional.Tests
 {
@@ -107,6 +108,16 @@ namespace Optional.Tests
             Assert.AreNotEqual(Option.Some<int>(1), Option.Some<int>(-1));
             Assert.AreNotEqual(Option.Some<int?>(1), Option.Some<int?>(-1));
             Assert.AreNotEqual(Option.Some<string>("1"), Option.Some<string>("-1"));
+
+            // Works when when boxed
+            Assert.AreEqual((object)Option.None<int>(), (object)Option.None<int>());
+            Assert.AreEqual((object)Option.Some(22), (object)Option.Some(22));
+            Assert.AreNotEqual((object)Option.None<int>(), (object)Option.Some(22));
+
+            // Works with default equalitycomparer 
+            Assert.IsTrue(EqualityComparer<Option<int>>.Default.Equals(Option.None<int>(), Option.None<int>()));
+            Assert.IsTrue(EqualityComparer<Option<int>>.Default.Equals(Option.Some(22), Option.Some(22)));
+            Assert.IsFalse(EqualityComparer<Option<int>>.Default.Equals(Option.Some(22), Option.None<int>()));
         }
 
         [TestMethod]

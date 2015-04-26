@@ -120,6 +120,16 @@ namespace Optional.Tests
             Assert.AreNotEqual(Option.Some<int, int>(1), Option.Some<int, int>(-1));
             Assert.AreNotEqual(Option.Some<int?, int?>(1), Option.Some<int?, int?>(-1));
             Assert.AreNotEqual(Option.Some<string, string>("1"), Option.Some<string, string>("-1"));
+
+            // Works when when boxed
+            Assert.AreEqual((object)Option.None<int, int>(1), (object)Option.None<int, int>(1));
+            Assert.AreEqual((object)Option.Some<int, int>(22), (object)Option.Some<int, int>(22));
+            Assert.AreNotEqual((object)Option.None<int, int>(1), (object)Option.Some<int, int>(22));
+
+            // Works with default equalitycomparer 
+            Assert.IsTrue(EqualityComparer<Option<int, int>>.Default.Equals(Option.None<int, int>(1), Option.None<int, int>(1)));
+            Assert.IsTrue(EqualityComparer<Option<int, int>>.Default.Equals(Option.Some<int, int>(22), Option.Some<int, int>(22)));
+            Assert.IsFalse(EqualityComparer<Option<int, int>>.Default.Equals(Option.Some<int, int>(22), Option.None<int, int>(1)));
         }
 
         [TestMethod]
