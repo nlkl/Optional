@@ -31,7 +31,7 @@ namespace Optional
         /// Determines whether two optionals are equal.
         /// </summary>
         /// <param name="other">The optional to compare with the current one.</param>
-        /// <returns>A boolean indicating whether or not the optionals are equal</returns>
+        /// <returns>A boolean indicating whether or not the optionals are equal.</returns>
         public bool Equals(Option<T> other)
         {
             if (!hasValue && !other.hasValue)
@@ -50,7 +50,7 @@ namespace Optional
         /// Determines whether two optionals are equal.
         /// </summary>
         /// <param name="obj">The optional to compare with the current one.</param>
-        /// <returns>A boolean indicating whether or not the optionals are equal</returns>
+        /// <returns>A boolean indicating whether or not the optionals are equal.</returns>
         public override bool Equals(object obj)
         {
             if (obj is Option<T>)
@@ -59,6 +59,28 @@ namespace Optional
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Determines whether two optionals are equal.
+        /// </summary>
+        /// <param name="left">The first optional to compare.</param>
+        /// <param name="right">The second optional to compare.</param>
+        /// <returns>A boolean indicating whether or not the optionals are equal.</returns>
+        public static bool operator ==(Option<T> left, Option<T> right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Determines whether two optionals are unequal.
+        /// </summary>
+        /// <param name="left">The first optional to compare.</param>
+        /// <param name="right">The second optional to compare.</param>
+        /// <returns>A boolean indicating whether or not the optionals are unequal.</returns>
+        public static bool operator !=(Option<T> left, Option<T> right)
+        {
+            return !left.Equals(right);
         }
 
         /// <summary>
@@ -337,7 +359,7 @@ namespace Optional
         /// Determines whether two optionals are equal.
         /// </summary>
         /// <param name="other">The optional to compare with the current one.</param>
-        /// <returns>A boolean indicating whether or not the optionals are equal</returns>
+        /// <returns>A boolean indicating whether or not the optionals are equal.</returns>
         public bool Equals(Option<T, TException> other)
         {
             if (!hasValue && !other.hasValue)
@@ -356,7 +378,7 @@ namespace Optional
         /// Determines whether two optionals are equal.
         /// </summary>
         /// <param name="obj">The optional to compare with the current one.</param>
-        /// <returns>A boolean indicating whether or not the optionals are equal</returns>
+        /// <returns>A boolean indicating whether or not the optionals are equal.</returns>
         public override bool Equals(object obj)
         {
             if (obj is Option<T, TException>)
@@ -365,6 +387,28 @@ namespace Optional
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Determines whether two optionals are equal.
+        /// </summary>
+        /// <param name="left">The first optional to compare.</param>
+        /// <param name="right">The second optional to compare.</param>
+        /// <returns>A boolean indicating whether or not the optionals are equal.</returns>
+        public static bool operator ==(Option<T, TException> left, Option<T, TException> right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Determines whether two optionals are unequal.
+        /// </summary>
+        /// <param name="left">The first optional to compare.</param>
+        /// <param name="right">The second optional to compare.</param>
+        /// <returns>A boolean indicating whether or not the optionals are unequal.</returns>
+        public static bool operator !=(Option<T, TException> left, Option<T, TException> right)
+        {
+            return !left.Equals(right);
         }
 
         /// <summary>

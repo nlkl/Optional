@@ -113,11 +113,19 @@ namespace Optional.Tests
             Assert.AreEqual((object)Option.None<int>(), (object)Option.None<int>());
             Assert.AreEqual((object)Option.Some(22), (object)Option.Some(22));
             Assert.AreNotEqual((object)Option.None<int>(), (object)Option.Some(22));
+            Assert.AreNotEqual((object)Option.Some(21), (object)Option.Some(22));
 
             // Works with default equalitycomparer 
             Assert.IsTrue(EqualityComparer<Option<int>>.Default.Equals(Option.None<int>(), Option.None<int>()));
             Assert.IsTrue(EqualityComparer<Option<int>>.Default.Equals(Option.Some(22), Option.Some(22)));
             Assert.IsFalse(EqualityComparer<Option<int>>.Default.Equals(Option.Some(22), Option.None<int>()));
+            Assert.IsFalse(EqualityComparer<Option<int>>.Default.Equals(Option.Some(22), Option.Some(21)));
+
+            // Works with equality operators
+            Assert.IsTrue(Option.None<int>() == Option.None<int>());
+            Assert.IsTrue(Option.Some(22) == Option.Some(22));
+            Assert.IsTrue(Option.Some(22) != Option.None<int>());
+            Assert.IsTrue(Option.Some(22) != Option.Some(21));
         }
 
         [TestMethod]
