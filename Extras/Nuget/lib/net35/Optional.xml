@@ -10,12 +10,35 @@
             </summary>
             <typeparam name="T">The type of the value to be wrapped.</typeparam>
         </member>
+        <member name="M:Optional.Option`1.Equals(Optional.Option{`0})">
+            <summary>
+            Determines whether two optionals are equal.
+            </summary>
+            <param name="other">The optional to compare with the current one.</param>
+            <returns>A boolean indicating whether or not the optionals are equal.</returns>
+        </member>
         <member name="M:Optional.Option`1.Equals(System.Object)">
             <summary>
             Determines whether two optionals are equal.
             </summary>
             <param name="obj">The optional to compare with the current one.</param>
-            <returns>A boolean indicating whether or not the optionals are equal</returns>
+            <returns>A boolean indicating whether or not the optionals are equal.</returns>
+        </member>
+        <member name="M:Optional.Option`1.op_Equality(Optional.Option{`0},Optional.Option{`0})">
+            <summary>
+            Determines whether two optionals are equal.
+            </summary>
+            <param name="left">The first optional to compare.</param>
+            <param name="right">The second optional to compare.</param>
+            <returns>A boolean indicating whether or not the optionals are equal.</returns>
+        </member>
+        <member name="M:Optional.Option`1.op_Inequality(Optional.Option{`0},Optional.Option{`0})">
+            <summary>
+            Determines whether two optionals are unequal.
+            </summary>
+            <param name="left">The first optional to compare.</param>
+            <param name="right">The second optional to compare.</param>
+            <returns>A boolean indicating whether or not the optionals are unequal.</returns>
         </member>
         <member name="M:Optional.Option`1.GetHashCode">
             <summary>
@@ -148,12 +171,35 @@
             <typeparam name="T">The type of the value to be wrapped.</typeparam>
             <typeparam name="TException">A exceptional value describing the lack of an actual value.</typeparam>
         </member>
+        <member name="M:Optional.Option`2.Equals(Optional.Option{`0,`1})">
+            <summary>
+            Determines whether two optionals are equal.
+            </summary>
+            <param name="other">The optional to compare with the current one.</param>
+            <returns>A boolean indicating whether or not the optionals are equal.</returns>
+        </member>
         <member name="M:Optional.Option`2.Equals(System.Object)">
             <summary>
             Determines whether two optionals are equal.
             </summary>
             <param name="obj">The optional to compare with the current one.</param>
-            <returns>A boolean indicating whether or not the optionals are equal</returns>
+            <returns>A boolean indicating whether or not the optionals are equal.</returns>
+        </member>
+        <member name="M:Optional.Option`2.op_Equality(Optional.Option{`0,`1},Optional.Option{`0,`1})">
+            <summary>
+            Determines whether two optionals are equal.
+            </summary>
+            <param name="left">The first optional to compare.</param>
+            <param name="right">The second optional to compare.</param>
+            <returns>A boolean indicating whether or not the optionals are equal.</returns>
+        </member>
+        <member name="M:Optional.Option`2.op_Inequality(Optional.Option{`0,`1},Optional.Option{`0,`1})">
+            <summary>
+            Determines whether two optionals are unequal.
+            </summary>
+            <param name="left">The first optional to compare.</param>
+            <param name="right">The second optional to compare.</param>
+            <returns>A boolean indicating whether or not the optionals are unequal.</returns>
         </member>
         <member name="M:Optional.Option`2.GetHashCode">
             <summary>

@@ -2,12 +2,12 @@
 <package >
   <metadata>
     <id>Optional</id>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
     <title>Optional</title>
     <authors>Nils Lück</authors>
     <owners>Nils Lück</owners>
     <projectUrl>https://github.com/nlkl/Optional</projectUrl>
-    <iconUrl>https://dl.dropboxusercontent.com/u/4443766/optional.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/nlkl/Optional/master/Extras/Icon/Icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A simple option type.</description>
     <copyright>Copyright 2014</copyright>
