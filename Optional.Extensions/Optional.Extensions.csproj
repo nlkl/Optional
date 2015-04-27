@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Async\TaskExtensions.cs" />
+    <Compile Include="AsyncTmp\AsyncOptionExtensions.cs" />
+    <Compile Include="AsyncTmp\AsyncOption.cs" />
+    <Compile Include="Async\TaskTransformationExtensions.cs" />
     <Compile Include="Async\TaskOptionExtensions.cs" />
     <Compile Include="Collections\OptionEnumerableExtensions.cs" />
     <Compile Include="Collections\LinqQueryableExtensions.cs" />
