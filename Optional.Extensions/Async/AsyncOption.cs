@@ -4,9 +4,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Optional.Extensions.Async;
 
-namespace Optional.Extensions.AsyncTmp
+namespace Optional.Extensions.Async
 {
     public struct AsyncOption<T>
     {
@@ -49,16 +48,14 @@ namespace Optional.Extensions.AsyncTmp
             return FlatMap(value => mapping(value).InnerTask);
         }
 
-        public AsyncOption<TResult> TaskMap<TResult>(Func<T, Task<TResult>> mapping)
+        public AsyncOption<TResult> FlatMap<TResult>(Func<T, Task<TResult>> mapping)
         {
-            var newOptionTask = optionTask.FlatMap(value => mapping(value).Map(result => result.Some()));
-            return new AsyncOption<TResult>(newOptionTask);
+            return FlatMap(value => mapping(value).Map(result => result.Some()));
         }
 
-        public AsyncOption<TResult> OptionMap<TResult>(Func<T, Option<TResult>> mapping)
+        public AsyncOption<TResult> FlatMap<TResult>(Func<T, Option<TResult>> mapping)
         {
-            var newOptionTask = optionTask.FlatMap(value => Task.FromResult(mapping(value)));
-            return new AsyncOption<TResult>(newOptionTask);
+            return FlatMap(value => Task.FromResult(mapping(value)));
         }
     }
 

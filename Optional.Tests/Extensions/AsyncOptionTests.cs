@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Optional.Extensions.AsyncTmp;
+using Optional.Extensions.Async;
 
 namespace Optional.Tests.Extensions
 {
@@ -12,47 +12,69 @@ namespace Optional.Tests.Extensions
     public class AsyncOptionTests
     {
         [TestMethod]
-        public async Task Extension_Maybe_AsyncMap()
+        public async Task Extension_AsyncMaybe_Creation()
         {
-            var someOptionTask = Task.FromResult(Option.Some<string>("abc")).Collapse();
-            var noneOptionTask = Task.FromResult(Option.None<string>()).Collapse();
+            var some1 = AsyncOption.FromTask(Task.FromResult(Option.Some<string>("abc")));
+            var none1 = AsyncOption.FromTask(Task.FromResult(Option.None<string>()));
 
-            Assert.AreEqual((await someOptionTask.Map(val => val + "d")).ValueOr("0"), "abcd");
-            Assert.AreEqual((await noneOptionTask.Map(val => val + "d")).ValueOr("0"), "0");
+            var some2 = Task.FromResult(Option.Some<string>("abc")).Collapse();
+            var none2 = Task.FromResult(Option.None<string>()).Collapse();
+
+            var some3a = AsyncOption.Some("abc");
+            var some3b = AsyncOption.Some(Task.FromResult("abc"));
+            var none3 = AsyncOption.None<string>();
+
+            Assert.IsTrue((await some1).HasValue);
+            Assert.IsFalse((await none1).HasValue);
+            Assert.IsTrue((await some2).HasValue);
+            Assert.IsFalse((await none2).HasValue);
+            Assert.IsTrue((await some3a).HasValue);
+            Assert.IsTrue((await some3b).HasValue);
+            Assert.IsFalse((await none3).HasValue);
         }
 
         [TestMethod]
-        public async Task Extension_Maybe_AsyncFlatMap()
+        public async Task Extension_AsyncMaybe_Map()
         {
-            var someOptionTask = Task.FromResult(Option.Some<string>("abc")).Collapse();
-            var noneOptionTask = Task.FromResult(Option.None<string>()).Collapse();
+            var some = AsyncOption.Some("abc");
+            var none = AsyncOption.None<string>();
 
-            Assert.AreEqual((await someOptionTask.FlatMap(val => Task.FromResult(Option.Some(val + "d")))).ValueOr("0"), "abcd");
-            Assert.AreEqual((await someOptionTask.FlatMap(val => Task.FromResult(Option.None<string>()))).ValueOr("0"), "0");
-            Assert.AreEqual((await noneOptionTask.FlatMap(val => Task.FromResult(Option.Some(val + "d")))).ValueOr("0"), "0");
-            Assert.AreEqual((await noneOptionTask.FlatMap(val => Task.FromResult(Option.None<string>()))).ValueOr("0"), "0");
+            Assert.AreEqual((await some.Map(val => val + "d")).ValueOr("0"), "abcd");
+            Assert.AreEqual((await none.Map(val => val + "d")).ValueOr("0"), "0");
         }
 
         [TestMethod]
-        public async Task Extension_Maybe_AsyncOptionMap()
+        public async Task Extension_AsyncMaybe_FlatMap()
         {
-            var someOptionTask = Task.FromResult(Option.Some<string>("abc")).Collapse();
-            var noneOptionTask = Task.FromResult(Option.None<string>()).Collapse();
+            var some = AsyncOption.Some("abc");
+            var none = AsyncOption.None<string>();
 
-            Assert.AreEqual((await someOptionTask.OptionMap(val => Option.Some(val + "d"))).ValueOr("0"), "abcd");
-            Assert.AreEqual((await someOptionTask.OptionMap(val => Option.None<string>())).ValueOr("0"), "0");
-            Assert.AreEqual((await noneOptionTask.OptionMap(val => Option.Some(val + "d"))).ValueOr("0"), "0");
-            Assert.AreEqual((await noneOptionTask.OptionMap(val => Option.None<string>())).ValueOr("0"), "0");
+            Assert.AreEqual((await some.FlatMap(val => Task.FromResult(Option.Some(val + "d")))).ValueOr("0"), "abcd");
+            Assert.AreEqual((await some.FlatMap(val => Task.FromResult(Option.None<string>()))).ValueOr("0"), "0");
+            Assert.AreEqual((await none.FlatMap(val => Task.FromResult(Option.Some(val + "d")))).ValueOr("0"), "0");
+            Assert.AreEqual((await none.FlatMap(val => Task.FromResult(Option.None<string>()))).ValueOr("0"), "0");
         }
 
         [TestMethod]
-        public async Task Extension_Maybe_AsyncTaskMap()
+        public async Task Extension_AsyncMaybe_FlatMapOption()
         {
-            var someOptionTask = Task.FromResult(Option.Some<string>("abc")).Collapse();
-            var noneOptionTask = Task.FromResult(Option.None<string>()).Collapse();
+            var some = AsyncOption.Some("abc");
+            var none = AsyncOption.None<string>();
 
-            Assert.AreEqual((await someOptionTask.TaskMap(val => Task.FromResult(val + "d"))).ValueOr("0"), "abcd");
-            Assert.AreEqual((await noneOptionTask.TaskMap(val => Task.FromResult(val + "d"))).ValueOr("0"), "0");
+            Assert.AreEqual((await some.FlatMap(val => Option.Some(val + "d"))).ValueOr("0"), "abcd");
+            Assert.AreEqual((await some.FlatMap(val => Option.None<string>())).ValueOr("0"), "0");
+            Assert.AreEqual((await none.FlatMap(val => Option.Some(val + "d"))).ValueOr("0"), "0");
+            Assert.AreEqual((await none.FlatMap(val => Option.None<string>())).ValueOr("0"), "0");
+        }
+
+        [TestMethod]
+        public async Task Extension_AsyncMaybe_FlatMapTask()
+        {
+            var some = AsyncOption.Some("abc");
+            var none = AsyncOption.None<string>();
+
+            Assert.AreEqual((await some.FlatMap(val => Task.FromResult(val + "d"))).ValueOr("0"), "abcd");
+            Assert.AreEqual((await none.FlatMap(val => Task.FromResult(val + "d"))).ValueOr("0"), "0");
         }
     }
 }
