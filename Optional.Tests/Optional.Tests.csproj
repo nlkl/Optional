@@ -51,6 +51,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="EitherTests.cs" />
+    <Compile Include="Extensions\AsyncTests.cs" />
     <Compile Include="Extensions\CollectionTests.cs" />
     <Compile Include="MaybeEitherInteropTests.cs" />
     <Compile Include="UnsafeTests.cs" />
