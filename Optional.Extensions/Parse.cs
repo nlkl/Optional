@@ -6,6 +6,9 @@ using System.Text;
 
 namespace Optional.Extensions
 {
+    /// <summary>
+    /// A collection of static helper methods, for parsing strings into simple types.
+    /// </summary>
     public static class Parse
     {
         /// <summary>
