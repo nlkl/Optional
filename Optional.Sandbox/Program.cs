@@ -78,23 +78,6 @@ namespace Optional.Sandbox
                 .TryGetPerson(1)
                 .FlatMap(p => p.TryGetAddress());
 
-            var optionalAddress2 = await await Repository
-                .TryGetPersonAsync(1)
-                .ContinueWith(optionalPerson =>
-                    optionalPerson.Result
-                    .Match(
-                        some: p => p.TryGetAddressAsync(),
-                        none: () => Task.FromResult(Option.None<Address>())
-                    ));
-
-            var optionalAddress3 = await Repository
-                .TryGetPersonAsync(1)
-                .FlatMap(optionalPerson => optionalPerson
-                    .Match(
-                        some: p => p.TryGetAddressAsync(),
-                        none: () => Task.FromResult(Option.None<Address>())
-                    ));
-
             var optionalAddress4 = await Repository
                 .TryGetPersonAsync(1)
                 .FlatMap(person => person.TryGetAddressAsync());
@@ -104,16 +87,6 @@ namespace Optional.Sandbox
                 .OptionMap(person => person.TryGetAddress());
 
             optionalAddress.Match(
-                some: addr => Console.WriteLine(addr.Country),
-                none: () => Console.WriteLine("Not found")
-            );
-
-            optionalAddress2.Match(
-                some: addr => Console.WriteLine(addr.Country),
-                none: () => Console.WriteLine("Not found")
-            );
-
-            optionalAddress3.Match(
                 some: addr => Console.WriteLine(addr.Country),
                 none: () => Console.WriteLine("Not found")
             );

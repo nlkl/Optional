@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Optional.Extensions.Async
 {
-    public static class TaskExtensions
+    internal static class TaskExtensions
     {
         public static async Task<TResult> Map<TResult>(this Task task, Func<TResult> mapping)
         {
