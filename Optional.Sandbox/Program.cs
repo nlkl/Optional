@@ -74,32 +74,32 @@ namespace Optional.Sandbox
     {
         public static async Task TestAddresses()
         {
-            var optionalAddress = Repository
-                .TryGetPerson(1)
-                .FlatMap(p => p.TryGetAddress());
+            //var optionalAddress = Repository
+                //.TryGetPerson(1)
+                //.FlatMap(p => p.TryGetAddress());
 
-            var optionalAddress4 = await Repository
-                .TryGetPersonAsync(1)
-                .FlatMap(person => person.TryGetAddressAsync());
+            //var optionalAddress4 = await Repository
+                //.TryGetPersonAsync(1)
+                //.FlatMap(person => person.TryGetAddressAsync());
+            //var optionalAddress5 = await Repository
+            
+                //.TryGetPersonAsync(1)
+                //.OptionMap(person => person.TryGetAddress());
 
-            var optionalAddress5 = await Repository
-                .TryGetPersonAsync(1)
-                .OptionMap(person => person.TryGetAddress());
+            //optionalAddress.Match(
+                //some: addr => Console.WriteLine(addr.Country),
+                //none: () => Console.WriteLine("Not found")
+            //);
 
-            optionalAddress.Match(
-                some: addr => Console.WriteLine(addr.Country),
-                none: () => Console.WriteLine("Not found")
-            );
+            //optionalAddress4.Match(
+                //some: addr => Console.WriteLine(addr.Country),
+                //none: () => Console.WriteLine("Not found")
+            //);
 
-            optionalAddress4.Match(
-                some: addr => Console.WriteLine(addr.Country),
-                none: () => Console.WriteLine("Not found")
-            );
-
-            optionalAddress5.Match(
-                some: addr => Console.WriteLine(addr.Country),
-                none: () => Console.WriteLine("Not found")
-            );
+            //optionalAddress5.Match(
+                //some: addr => Console.WriteLine(addr.Country),
+                //none: () => Console.WriteLine("Not found")
+            //);
         }
 
         static void Main(string[] args)
