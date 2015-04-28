@@ -92,7 +92,7 @@ namespace Optional.Extensions.Async
 
         public AsyncOption<TResult> FlatMap<TResult>(Func<T, Option<TResult>> mapping)
         {
-            return FlatMap(value => Task.FromResult(mapping(value)));
+            return AsyncOption.FromTask(optionTask.Map(option => option.FlatMap(mapping)));
         }
     }
 
