@@ -101,6 +101,14 @@ namespace Optional.Sandbox
                 //none: () => Console.WriteLine("Not found")
             //);
         }
+        
+        public static AsyncOption<int> Something()
+        {
+            return AsyncOption.FromTask(async () =>
+            {
+                return Option.None<int>();
+            });
+        }
 
         static void Main(string[] args)
         {

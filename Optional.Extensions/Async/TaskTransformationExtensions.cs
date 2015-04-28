@@ -14,9 +14,20 @@ namespace Optional.Extensions.Async
             return mapping();
         }
 
+        public static async Task Map(this Task task, Action mapping)
+        {
+            await task;
+            mapping();
+        }
+
         public static async Task<TResult> Map<T, TResult>(this Task<T> task, Func<T, TResult> mapping)
         {
             return mapping(await task);
+        }
+
+        public static async Task Map<T>(this Task<T> task, Action<T> mapping)
+        {
+            mapping(await task);
         }
 
         public static async Task FlatMap(this Task task, Func<Task> mapping)

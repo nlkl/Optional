@@ -26,21 +26,58 @@ namespace Optional.Extensions.Async
             get { return optionTask; }
         }
 
+        public Task<bool> Contains(T value)
+        {
+            return optionTask.Map(option => option.Contains(value));
+        }
+
+        public Task<bool> Exists(Func<T, bool> predicate)
+        {
+            return optionTask.Map(option => option.Exists(predicate));
+        }
+
+        public Task<T> ValueOr(T alternative)
+        {
+            return optionTask.Map(option => option.ValueOr(alternative)); 
+        }
+
+        public Task<T> ValueOr(Func<T> alternativeFactory)
+        {
+            return optionTask.Map(option => option.ValueOr(alternativeFactory));
+        }
+
+        public AsyncOption<T> Or(T alternative)
+        {
+            return AsyncOption.FromTask(optionTask.Map(option => option.Or(alternative)));
+        }
+
+        public AsyncOption<T> Or(Func<T> alternativeFactory)
+        {
+            return AsyncOption.FromTask(optionTask.Map(option => option.Or(alternativeFactory)));
+        }
+
+        public Task<TResult> Match<TResult>(Func<T, TResult> some, Func<TResult> none)
+        {
+            return optionTask.Map(option => option.Match(some, none));
+        }
+
+        public Task Match(Action<T> some, Action none)
+        {
+            return optionTask.Map(option => option.Match(some, none));
+        }
+
         public AsyncOption<TResult> Map<TResult>(Func<T, TResult> mapping)
         {
-            var newOptionTask = optionTask.Map(option => option.Map(mapping));
-            return new AsyncOption<TResult>(newOptionTask);
+            return AsyncOption.FromTask(optionTask.Map(option => option.Map(mapping)));
         }
 
         public AsyncOption<TResult> FlatMap<TResult>(Func<T, Task<Option<TResult>>> mapping)
         {
-            var newOptionTask = optionTask.FlatMap(option => option
+            return AsyncOption.FromTask(optionTask.FlatMap(option => option
                 .Match(
                     some: value => mapping(value),
                     none: () => Task.FromResult(Option.None<TResult>())
-                ));
-
-            return new AsyncOption<TResult>(newOptionTask);
+                )));
         }
 
         public AsyncOption<TResult> FlatMap<TResult>(Func<T, AsyncOption<TResult>> mapping)
@@ -64,6 +101,11 @@ namespace Optional.Extensions.Async
         public static AsyncOption<T> FromTask<T>(Task<Option<T>> task)
         {
             return new AsyncOption<T>(task);
+        }
+
+        public static AsyncOption<T> FromTask<T>(Func<Task<Option<T>>> taskFactory)
+        {
+            return new AsyncOption<T>(taskFactory());
         }
 
         public static AsyncOption<T> Some<T>(T value)
