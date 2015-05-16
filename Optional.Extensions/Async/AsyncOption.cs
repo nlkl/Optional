@@ -390,6 +390,17 @@ namespace Optional.Extensions.Async
         }
 
         /// <summary>
+        /// Transforms the exceptional value in an optional.
+        /// If the instance is not empty, no transformation is carried out.
+        /// </summary>
+        /// <param name="mapping">The transformation function.</param>
+        /// <returns>The transformed optional.</returns>
+        public AsyncOption<T, TExceptionResult> MapException<TExceptionResult>(Func<TException, TExceptionResult> mapping)
+        {
+            return AsyncOption.FromTask(InnerTask.Map(option => option.MapException(mapping)));
+        }
+
+        /// <summary>
         /// Transforms the inner value in an async optional
         /// into another async optional. The result is flattened, 
         /// and if either is empty, an empty optional is returned.
@@ -585,9 +596,9 @@ namespace Optional.Extensions.Async
         }
 
         /// <summary>
-        /// Wraps an existing value in an async optional.
+        /// Wraps an existing async value in an async optional.
         /// </summary>
-        /// <param name="value">The value to be wrapped.</param>
+        /// <param name="task">The async value to be wrapped.</param>
         /// <returns>An async optional containing the specified value.</returns>>
         public static AsyncOption<T> Some<T>(Task<T> task)
         {
@@ -634,10 +645,10 @@ namespace Optional.Extensions.Async
         }
 
         /// <summary>
-        /// Wraps an existing value in an async optional.
+        /// Wraps an existing async value in an async optional.
         /// </summary>
-        /// <param name="value">The value to be wrapped.</param>
-        /// <returns>An async optional containing the specified value.</returns>>
+        /// <param name="task">The async value to be wrapped.</param>
+        /// <returns>An async optional containing the specified value.</returns>>>
         public static AsyncOption<T, TException> Some<T, TException>(Task<T> task)
         {
             return new AsyncOption<T, TException>(task.Map(value => Option.Some<T, TException>(value)));

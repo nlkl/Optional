@@ -23,7 +23,7 @@ namespace Optional.Extensions.Async
         /// Creates an async optional.
         /// </summary>
         /// <param name="task">The task to construct the async optional from.</param>
-        /// <returns>The async optional.</returns
+        /// <returns>The async optional.</returns>
         public static AsyncOption<T, TException> ToAsyncOption<T, TException>(this Task<Option<T, TException>> task)
         {
             return AsyncOption.FromTask(task);
