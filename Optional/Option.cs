@@ -11,8 +11,8 @@ namespace Optional
     /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
     public struct Option<T> : IEquatable<Option<T>>
     {
-        private bool hasValue;
-        private T value;
+        private readonly bool hasValue;
+        private readonly T value;
 
         /// <summary>
         /// Checks if a value is present.
@@ -336,9 +336,9 @@ namespace Optional
     /// <typeparam name="TException">A exceptional value describing the lack of an actual value.</typeparam>
     public struct Option<T, TException> : IEquatable<Option<T, TException>>
     {
-        private bool hasValue;
-        private T value;
-        private TException exception;
+        private readonly bool hasValue;
+        private readonly T value;
+        private readonly TException exception;
 
         /// <summary>
         /// Checks if a value is present.
