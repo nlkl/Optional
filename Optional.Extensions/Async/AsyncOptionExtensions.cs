@@ -9,7 +9,7 @@ namespace Optional.Extensions.Async
 {
     public static class AsyncOptionExtensions
     {
-        public static AsyncOption<T> Collapse<T>(this Task<Option<T>> task)
+        public static AsyncOption<T> ToAsyncOption<T>(this Task<Option<T>> task)
         {
             return AsyncOption.FromTask(task);
         }

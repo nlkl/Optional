@@ -17,8 +17,8 @@ namespace Optional.Tests.Extensions
             var some1 = AsyncOption.FromTask(Task.FromResult(Option.Some<string>("abc")));
             var none1 = AsyncOption.FromTask(Task.FromResult(Option.None<string>()));
 
-            var some2 = Task.FromResult(Option.Some<string>("abc")).Collapse();
-            var none2 = Task.FromResult(Option.None<string>()).Collapse();
+            var some2 = Task.FromResult(Option.Some<string>("abc")).ToAsyncOption();
+            var none2 = Task.FromResult(Option.None<string>()).ToAsyncOption();
 
             var some3a = AsyncOption.Some("abc");
             var some3b = AsyncOption.Some(Task.FromResult("abc"));
