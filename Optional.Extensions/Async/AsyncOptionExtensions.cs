@@ -13,5 +13,10 @@ namespace Optional.Extensions.Async
         {
             return AsyncOption.FromTask(task);
         }
+
+        public static AsyncOption<T, TException> ToAsyncOption<T, TException>(this Task<Option<T, TException>> task)
+        {
+            return AsyncOption.FromTask(task);
+        }
     }
 }
