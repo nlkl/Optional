@@ -24,9 +24,9 @@ namespace Optional.Extensions.Async
         /// Get an awaiter used to await the async optional.
         /// </summary>
         /// <returns>The awaiter.</returns>
-        public TaskAwaiter<Option<T>> GetAwaiter()
+        public ConfiguredTaskAwaitable<Option<T>>.ConfiguredTaskAwaiter GetAwaiter()
         {
-            return optionTask.GetAwaiter();
+            return optionTask.ConfigureAwait(false).GetAwaiter();
         }
 
         /// <summary>
@@ -272,9 +272,9 @@ namespace Optional.Extensions.Async
         /// Get an awaiter used to await the async optional.
         /// </summary>
         /// <returns>The awaiter.</returns>
-        public TaskAwaiter<Option<T, TException>> GetAwaiter()
+        public ConfiguredTaskAwaitable<Option<T, TException>>.ConfiguredTaskAwaiter GetAwaiter()
         {
-            return optionTask.GetAwaiter();
+            return optionTask.ConfigureAwait(false).GetAwaiter();
         }
 
         /// <summary>
