@@ -56,6 +56,16 @@ namespace Optional.Extensions.Async
             return AsyncOption.FromTask(optionTask.Map(option => option.Or(alternativeFactory)));
         }
 
+        public AsyncOption<T, TException> WithException<TException>(TException exception)
+        {
+            return AsyncOption.FromTask(InnerTask.Map(option => option.WithException(exception)));
+        }
+
+        public AsyncOption<T, TException> WithException<TException>(Func<TException> exceptionFactory)
+        {
+            return AsyncOption.FromTask(InnerTask.Map(option => option.WithException(exceptionFactory)));
+        }
+
         public Task<TResult> Match<TResult>(Func<T, TResult> some, Func<TResult> none)
         {
             return optionTask.Map(option => option.Match(some, none));
@@ -80,19 +90,34 @@ namespace Optional.Extensions.Async
                 )));
         }
 
+        public AsyncOption<TResult> FlatMap<TResult, TException>(Func<T, Task<Option<TResult, TException>>> mapping)
+        {
+            return FlatMap(value => mapping(value).Map(option => option.WithoutException()));
+        }
+
         public AsyncOption<TResult> FlatMap<TResult>(Func<T, AsyncOption<TResult>> mapping)
         {
             return FlatMap(value => mapping(value).InnerTask);
         }
 
-        public AsyncOption<TResult> FlatMap<TResult>(Func<T, Task<TResult>> mapping)
+        public AsyncOption<TResult> FlatMap<TResult, TException>(Func<T, AsyncOption<TResult, TException>> mapping)
         {
-            return FlatMap(value => mapping(value).Map(result => result.Some()));
+            return FlatMap(value => mapping(value).InnerTask);
         }
 
         public AsyncOption<TResult> FlatMap<TResult>(Func<T, Option<TResult>> mapping)
         {
             return AsyncOption.FromTask(optionTask.Map(option => option.FlatMap(mapping)));
+        }
+
+        public AsyncOption<TResult> FlatMap<TResult, TException>(Func<T, Option<TResult, TException>> mapping)
+        {
+            return AsyncOption.FromTask(optionTask.Map(option => option.FlatMap(mapping)));
+        }
+
+        public AsyncOption<TResult> FlatMap<TResult>(Func<T, Task<TResult>> mapping)
+        {
+            return FlatMap(value => mapping(value).Map(result => result.Some()));
         }
     }
 
@@ -145,6 +170,11 @@ namespace Optional.Extensions.Async
             return AsyncOption.FromTask(optionTask.Map(option => option.Or(alternativeFactory)));
         }
 
+        public AsyncOption<T> WithoutException()
+        {
+            return AsyncOption.FromTask(InnerTask.Map(option => option.WithoutException()));
+        }
+
         public Task<TResult> Match<TResult>(Func<T, TResult> some, Func<TException, TResult> none)
         {
             return optionTask.Map(option => option.Match(some, none));
@@ -174,6 +204,11 @@ namespace Optional.Extensions.Async
             return FlatMap(value => mapping(value).Map(option => option.WithException(exception)));
         }
 
+        public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, Task<Option<TResult>>> mapping, Func<TException> exceptionFactory)
+        {
+            return FlatMap(value => mapping(value).Map(option => option.WithException(exceptionFactory)));
+        }
+
         public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, AsyncOption<TResult, TException>> mapping)
         {
             return FlatMap(value => mapping(value).InnerTask);
@@ -181,12 +216,12 @@ namespace Optional.Extensions.Async
 
         public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, AsyncOption<TResult>> mapping, TException exception)
         {
-            return FlatMap(value => mapping(value).InnerTask.Map(option => option.WithException(exception)));
+            return FlatMap(value => mapping(value).InnerTask, exception);
         }
 
-        public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, Task<TResult>> mapping)
+        public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, AsyncOption<TResult>> mapping, Func<TException> exceptionFactory)
         {
-            return FlatMap(value => mapping(value).Map(result => Option.Some<TResult, TException>(result)));
+            return FlatMap(value => mapping(value).InnerTask, exceptionFactory);
         }
 
         public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, Option<TResult, TException>> mapping)
@@ -197,6 +232,16 @@ namespace Optional.Extensions.Async
         public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, Option<TResult>> mapping, TException exception)
         {
             return AsyncOption.FromTask(optionTask.Map(option => option.FlatMap(mapping, exception)));
+        }
+
+        public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, Option<TResult>> mapping, Func<TException> exceptionFactory)
+        {
+            return AsyncOption.FromTask(optionTask.Map(option => option.FlatMap(mapping, exceptionFactory)));
+        }
+
+        public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, Task<TResult>> mapping)
+        {
+            return FlatMap(value => mapping(value).Map(result => Option.Some<TResult, TException>(result)));
         }
     }
 
