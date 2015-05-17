@@ -374,6 +374,9 @@ namespace Optional.Tests.Extensions
 
             Assert.AreEqual(await someEither.WithoutException().ValueOr("ex2"), "abc");
             Assert.AreEqual(await noneEither.WithoutException().ValueOr("ex2"), "ex2");
+
+            Assert.AreEqual(await someEither.WithoutException().ValueOr(() => "ex2"), "abc");
+            Assert.AreEqual(await noneEither.WithoutException().ValueOr(() => "ex2"), "ex2");
         }
     }
 }
