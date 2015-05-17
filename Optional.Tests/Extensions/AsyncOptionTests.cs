@@ -12,7 +12,7 @@ namespace Optional.Tests.Extensions
     public class AsyncOptionTests
     {
         [TestMethod]
-        public async Task Extension_AsyncMaybe_Creation()
+        public async Task Extensions_AsyncMaybe_Creation()
         {
             var some1 = AsyncOption.FromTask(Task.FromResult(Option.Some<string>("abc")));
             var none1 = AsyncOption.FromTask(Task.FromResult(Option.None<string>()));
@@ -44,7 +44,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncMaybe_RetrievalAndContainment()
+        public async Task Extensions_AsyncMaybe_RetrievalAndContainment()
         {
             var some = AsyncOption.Some("abc");
             var none = AsyncOption.None<string>();
@@ -69,7 +69,37 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncMaybe_Map()
+        public async void Extensions_AsyncMaybe_Matching()
+        {
+            var some = AsyncOption.Some<string>("abc");
+            var none = AsyncOption.None<string>();
+
+            var success = await some.Match(
+                some: val => val,
+                none: () => "ex"
+            );
+
+            var failure = await none.Match(
+                some: val => val,
+                none: () => "ex"
+            );
+
+            Assert.AreEqual(success, "abc");
+            Assert.AreEqual(failure, "ex");
+
+            await none.Match(
+                some: val => Assert.Fail(),
+                none: () => { }
+            );
+
+            await some.Match(
+                some: val => Assert.AreEqual(val, "abc"),
+                none: () => Assert.Fail()
+            );
+        }
+
+        [TestMethod]
+        public async Task Extensions_AsyncMaybe_Map()
         {
             var some = AsyncOption.Some("abc");
             var none = AsyncOption.None<string>();
@@ -79,7 +109,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncMaybe_FlatMap()
+        public async Task Extensions_AsyncMaybe_FlatMap()
         {
             var some = AsyncOption.Some("abc");
             var none = AsyncOption.None<string>();
@@ -106,7 +136,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncMaybe_FlatMapOption()
+        public async Task Extensions_AsyncMaybe_FlatMapOption()
         {
             var some = AsyncOption.Some("abc");
             var none = AsyncOption.None<string>();
@@ -123,7 +153,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncMaybe_FlatMapTask()
+        public async Task Extensions_AsyncMaybe_FlatMapTask()
         {
             var some = AsyncOption.Some("abc");
             var none = AsyncOption.None<string>();
@@ -133,7 +163,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncMaybe_Filter()
+        public async Task Extensions_AsyncMaybe_Filter()
         {
             var some = AsyncOption.Some("abc");
             var none = AsyncOption.None<string>();
@@ -144,7 +174,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncEither_Creation()
+        public async Task Extensions_AsyncEither_Creation()
         {
             var some1 = AsyncOption.FromTask(Task.FromResult(Option.Some<string, string>("abc")));
             var none1 = AsyncOption.FromTask(Task.FromResult(Option.None<string, string>("ex")));
@@ -176,7 +206,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncEither_RetrievalAndContainment()
+        public async Task Extensions_AsyncEither_RetrievalAndContainment()
         {
             var some = AsyncOption.Some<string, string>("abc");
             var none = AsyncOption.None<string, string>("ex");
@@ -204,7 +234,37 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncEither_Map()
+        public async void Extensions_AsyncEither_Matching()
+        {
+            var some = AsyncOption.Some<string, string>("abc");
+            var none = AsyncOption.None<string, string>("ex");
+
+            var success = await some.Match(
+                some: val => val,
+                none: ex => ex
+            );
+
+            var failure = await none.Match(
+                some: val => val,
+                none: ex => ex
+            );
+
+            Assert.AreEqual(success, "abc");
+            Assert.AreEqual(failure, "ex");
+
+            await none.Match(
+                some: val => Assert.Fail(),
+                none: ex => Assert.AreEqual(ex, "ex")
+            );
+
+            await some.Match(
+                some: val => Assert.AreEqual(val, "abc"),
+                none: ex => Assert.Fail()
+            );
+        }
+
+        [TestMethod]
+        public async Task Extensions_AsyncEither_Map()
         {
             var some = AsyncOption.Some<string, string>("abc");
             var none = AsyncOption.None<string, string>("ex");
@@ -217,7 +277,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncEither_FlatMap()
+        public async Task Extensions_AsyncEither_FlatMap()
         {
             var some = AsyncOption.Some<string, string>("abc");
             var none = AsyncOption.None<string, string>("ex");
@@ -254,7 +314,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncEither_FlatMapOption()
+        public async Task Extensions_AsyncEither_FlatMapOption()
         {
             var some = AsyncOption.Some<string, string>("abc");
             var none = AsyncOption.None<string, string>("ex");
@@ -276,7 +336,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncEither_FlatMapTask()
+        public async Task Extensions_AsyncEither_FlatMapTask()
         {
             var some = AsyncOption.Some<string, string>("abc");
             var none = AsyncOption.None<string, string>("ex");
@@ -286,7 +346,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async Task Extension_AsyncEither_Filter()
+        public async Task Extensions_AsyncEither_Filter()
         {
             var some = AsyncOption.Some<string, string>("abc");
             var none = AsyncOption.None<string, string>("ex");
@@ -298,6 +358,22 @@ namespace Optional.Tests.Extensions
             Assert.AreEqual(await some.Filter(value => value.StartsWith("a"), () => "ex").ValueOrException(), "abc");
             Assert.AreEqual(await some.Filter(value => value.StartsWith("0"), () => "ex").ValueOrException(), "ex");
             Assert.AreEqual(await none.Filter(value => value.StartsWith("a"), () => "ex2").ValueOrException(), "ex");
+        }
+
+        [TestMethod]
+        public async Task Extensions_AsyncMaybeEither_Conversions()
+        {
+            var someMaybe = AsyncOption.Some<string>("abc");
+            var noneMaybe = AsyncOption.None<string>();
+            
+            var someEither = AsyncOption.Some<string, string>("abc");
+            var noneEither = AsyncOption.None<string, string>("ex");
+
+            Assert.AreEqual(await someMaybe.WithException("ex").ValueOrException(), "abc");
+            Assert.AreEqual(await noneMaybe.WithException("ex").ValueOrException(), "ex");
+
+            Assert.AreEqual(await someEither.WithoutException().ValueOr("ex2"), "abc");
+            Assert.AreEqual(await noneEither.WithoutException().ValueOr("ex2"), "ex2");
         }
     }
 }
