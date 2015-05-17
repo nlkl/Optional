@@ -28,5 +28,16 @@ namespace Optional.Extensions.Async
         {
             return AsyncOption.FromTask(task);
         }
+
+        /// <summary>
+        /// Returns the existing value if present, or the attached 
+        /// exceptional value.
+        /// </summary>
+        /// <param name="option">The specified async optional.</param>
+        /// <returns>The existing or exceptional value.</returns>
+        public static Task<T> ValueOrException<T>(this AsyncOption<T, T> option)
+        {
+            return option.Match(value => value, exception => exception);
+        }
     }
 }
