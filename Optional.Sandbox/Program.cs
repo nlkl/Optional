@@ -102,13 +102,13 @@ namespace Optional.Sandbox
             //);
         }
         
-        public static AsyncOption<int> Something()
-        {
-            return AsyncOption.FromTask(async () =>
-            {
-                return Option.None<int>();
-            });
-        }
+        //public static AsyncOption<int> Something()
+        //{
+        //    return AsyncOption.FromTask(async () =>
+        //    {
+        //        return Option.None<int>();
+        //    });
+        //}
 
         static void Main(string[] args)
         {

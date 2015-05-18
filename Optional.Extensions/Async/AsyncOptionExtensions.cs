@@ -12,21 +12,41 @@ namespace Optional.Extensions.Async
         /// <summary>
         /// Creates an async optional.
         /// </summary>
-        /// <param name="task">The task to construct the async optional from.</param>
+        /// <param name="option">The source to construct the async optional from.</param>
         /// <returns>The async optional.</returns>
-        public static AsyncOption<T> ToAsyncOption<T>(this Task<Option<T>> task)
+        public static AsyncOption<T> ToAsyncOption<T>(this Option<T> option)
         {
-            return AsyncOption.FromTask(task);
+            return new AsyncOption<T>(Task.FromResult(option));
         }
 
         /// <summary>
         /// Creates an async optional.
         /// </summary>
-        /// <param name="task">The task to construct the async optional from.</param>
+        /// <param name="optionTask">The source to construct the async optional from.</param>
         /// <returns>The async optional.</returns>
-        public static AsyncOption<T, TException> ToAsyncOption<T, TException>(this Task<Option<T, TException>> task)
+        public static AsyncOption<T> ToAsyncOption<T>(this Task<Option<T>> optionTask)
         {
-            return AsyncOption.FromTask(task);
+            return new AsyncOption<T>(optionTask);
+        }
+
+        /// <summary>
+        /// Creates an async optional.
+        /// </summary>
+        /// <param name="option">The source to construct the async optional from.</param>
+        /// <returns>The async optional.</returns>
+        public static AsyncOption<T, TException> ToAsyncOption<T, TException>(this Option<T, TException> option)
+        {
+            return new AsyncOption<T, TException>(Task.FromResult(option));
+        }
+
+        /// <summary>
+        /// Creates an async optional.
+        /// </summary>
+        /// <param name="optionTask">The source to construct the async optional from.</param>
+        /// <returns>The async optional.</returns>
+        public static AsyncOption<T, TException> ToAsyncOption<T, TException>(this Task<Option<T, TException>> optionTask)
+        {
+            return new AsyncOption<T, TException>(optionTask);
         }
 
         /// <summary>

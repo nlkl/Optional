@@ -14,11 +14,14 @@ namespace Optional.Tests.Extensions
         [TestMethod]
         public async Task Extensions_AsyncMaybe_Creation()
         {
-            var some1 = AsyncOption.FromTask(Task.FromResult(Option.Some<string>("abc")));
-            var none1 = AsyncOption.FromTask(Task.FromResult(Option.None<string>()));
+            var some1 = new AsyncOption<string>(Task.FromResult(Option.Some<string>("abc")));
+            var none1 = new AsyncOption<string>(Task.FromResult(Option.None<string>()));
 
-            var some2 = Task.FromResult(Option.Some<string>("abc")).ToAsyncOption();
-            var none2 = Task.FromResult(Option.None<string>()).ToAsyncOption();
+
+            var some2a = Option.Some<string>("abc").ToAsyncOption();
+            var none2a = Option.None<string>().ToAsyncOption();
+            var some2b = Task.FromResult(Option.Some<string>("abc")).ToAsyncOption();
+            var none2b = Task.FromResult(Option.None<string>()).ToAsyncOption();
 
             var some3a = AsyncOption.Some("abc");
             var some3b = AsyncOption.Some(Task.FromResult("abc"));
@@ -27,8 +30,10 @@ namespace Optional.Tests.Extensions
             // Awaiting the whole option
             Assert.IsTrue((await some1).HasValue);
             Assert.IsFalse((await none1).HasValue);
-            Assert.IsTrue((await some2).HasValue);
-            Assert.IsFalse((await none2).HasValue);
+            Assert.IsTrue((await some2a).HasValue);
+            Assert.IsFalse((await none2a).HasValue);
+            Assert.IsTrue((await some2b).HasValue);
+            Assert.IsFalse((await none2b).HasValue);
             Assert.IsTrue((await some3a).HasValue);
             Assert.IsTrue((await some3b).HasValue);
             Assert.IsFalse((await none3).HasValue);
@@ -36,8 +41,10 @@ namespace Optional.Tests.Extensions
             // awaiting only HasValue
             Assert.IsTrue(await some1.HasValue);
             Assert.IsFalse(await none1.HasValue);
-            Assert.IsTrue(await some2.HasValue);
-            Assert.IsFalse(await none2.HasValue);
+            Assert.IsTrue(await some2a.HasValue);
+            Assert.IsFalse(await none2a.HasValue);
+            Assert.IsTrue(await some2b.HasValue);
+            Assert.IsFalse(await none2b.HasValue);
             Assert.IsTrue(await some3a.HasValue);
             Assert.IsTrue(await some3b.HasValue);
             Assert.IsFalse(await none3.HasValue);
@@ -169,11 +176,13 @@ namespace Optional.Tests.Extensions
         [TestMethod]
         public async Task Extensions_AsyncEither_Creation()
         {
-            var some1 = AsyncOption.FromTask(Task.FromResult(Option.Some<string, string>("abc")));
-            var none1 = AsyncOption.FromTask(Task.FromResult(Option.None<string, string>("ex")));
+            var some1 = new AsyncOption<string, string>(Task.FromResult(Option.Some<string, string>("abc")));
+            var none1 = new AsyncOption<string, string>(Task.FromResult(Option.None<string, string>("ex")));
 
-            var some2 = Task.FromResult(Option.Some<string, string>("abc")).ToAsyncOption();
-            var none2 = Task.FromResult(Option.None<string, string>("ex")).ToAsyncOption();
+            var some2a = Option.Some<string, string>("abc").ToAsyncOption();
+            var none2a = Option.None<string, string>("ex").ToAsyncOption();
+            var some2b = Task.FromResult(Option.Some<string, string>("abc")).ToAsyncOption();
+            var none2b = Task.FromResult(Option.None<string, string>("ex")).ToAsyncOption();
 
             var some3a = AsyncOption.Some<string, string>("abc");
             var some3b = AsyncOption.Some<string, string>(Task.FromResult("abc"));
@@ -182,8 +191,10 @@ namespace Optional.Tests.Extensions
             // Awaiting the whole option
             Assert.IsTrue((await some1).HasValue);
             Assert.IsFalse((await none1).HasValue);
-            Assert.IsTrue((await some2).HasValue);
-            Assert.IsFalse((await none2).HasValue);
+            Assert.IsTrue((await some2a).HasValue);
+            Assert.IsFalse((await none2a).HasValue);
+            Assert.IsTrue((await some2b).HasValue);
+            Assert.IsFalse((await none2b).HasValue);
             Assert.IsTrue((await some3a).HasValue);
             Assert.IsTrue((await some3b).HasValue);
             Assert.IsFalse((await none3).HasValue);
@@ -191,8 +202,10 @@ namespace Optional.Tests.Extensions
             // awaiting only HasValue
             Assert.IsTrue(await some1.HasValue);
             Assert.IsFalse(await none1.HasValue);
-            Assert.IsTrue(await some2.HasValue);
-            Assert.IsFalse(await none2.HasValue);
+            Assert.IsTrue(await some2a.HasValue);
+            Assert.IsFalse(await none2a.HasValue);
+            Assert.IsTrue(await some2b.HasValue);
+            Assert.IsFalse(await none2b.HasValue);
             Assert.IsTrue(await some3a.HasValue);
             Assert.IsTrue(await some3b.HasValue);
             Assert.IsFalse(await none3.HasValue);

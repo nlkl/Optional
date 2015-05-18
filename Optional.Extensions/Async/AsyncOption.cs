@@ -15,7 +15,11 @@ namespace Optional.Extensions.Async
     {
         private readonly Task<Option<T>> optionTask;
 
-        internal AsyncOption(Task<Option<T>> optionTask)
+        /// <summary>
+        /// Initializes an async optional from an task-wrapped optional.
+        /// </summary>
+        /// <param name="optionTask">The task-wrapped optional.</param>
+        public AsyncOption(Task<Option<T>> optionTask)
         {
             this.optionTask = optionTask;
         }
@@ -87,7 +91,7 @@ namespace Optional.Extensions.Async
         /// <returns>A new optional, containing either the existing or alternative value.</returns>
         public AsyncOption<T> Or(T alternative)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.Or(alternative)));
+            return InnerTask.Map(option => option.Or(alternative)).ToAsyncOption();
         }
 
         /// <summary>
@@ -97,7 +101,7 @@ namespace Optional.Extensions.Async
         /// <returns>A new optional, containing either the existing or alternative value.</returns>
         public AsyncOption<T> Or(Func<T> alternativeFactory)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.Or(alternativeFactory)));
+            return InnerTask.Map(option => option.Or(alternativeFactory)).ToAsyncOption();
         }
 
         /// <summary>
@@ -107,7 +111,7 @@ namespace Optional.Extensions.Async
         /// <returns>An optional with an exceptional value.</returns>
         public AsyncOption<T, TException> WithException<TException>(TException exception)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.WithException(exception)));
+            return InnerTask.Map(option => option.WithException(exception)).ToAsyncOption();
         }
 
         /// <summary>
@@ -117,7 +121,7 @@ namespace Optional.Extensions.Async
         /// <returns>An optional with an exceptional value.</returns>
         public AsyncOption<T, TException> WithException<TException>(Func<TException> exceptionFactory)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.WithException(exceptionFactory)));
+            return InnerTask.Map(option => option.WithException(exceptionFactory)).ToAsyncOption();
         }
 
         /// <summary>
@@ -149,7 +153,7 @@ namespace Optional.Extensions.Async
         /// <returns>The transformed optional.</returns>
         public AsyncOption<TResult> Map<TResult>(Func<T, TResult> mapping)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.Map(mapping)));
+            return InnerTask.Map(option => option.Map(mapping)).ToAsyncOption();
         }
 
         /// <summary>
@@ -172,11 +176,11 @@ namespace Optional.Extensions.Async
         /// <returns>The transformed optional.</returns>
         public AsyncOption<TResult> FlatMap<TResult>(Func<T, Task<Option<TResult>>> mapping)
         {
-            return AsyncOption.FromTask(InnerTask.FlatMap(option => option
+            return InnerTask.FlatMap(option => option
                 .Match(
                     some: value => mapping(value),
                     none: () => Task.FromResult(Option.None<TResult>())
-                )));
+                )).ToAsyncOption();
         }
 
         /// <summary>
@@ -226,7 +230,7 @@ namespace Optional.Extensions.Async
         /// <returns>The transformed optional.</returns>
         public AsyncOption<TResult> FlatMap<TResult>(Func<T, Option<TResult>> mapping)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.FlatMap(mapping)));
+            return InnerTask.Map(option => option.FlatMap(mapping)).ToAsyncOption();
         }
 
         /// <summary>
@@ -239,7 +243,7 @@ namespace Optional.Extensions.Async
         /// <returns>The transformed optional.</returns>
         public AsyncOption<TResult> FlatMap<TResult, TException>(Func<T, Option<TResult, TException>> mapping)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.FlatMap(mapping)));
+            return InnerTask.Map(option => option.FlatMap(mapping)).ToAsyncOption();
         }
 
         /// <summary>
@@ -250,7 +254,7 @@ namespace Optional.Extensions.Async
         /// <returns>The filtered optional.</returns>
         public AsyncOption<T> Filter(Func<T, bool> predicate)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.Filter(predicate)));
+            return InnerTask.Map(option => option.Filter(predicate)).ToAsyncOption();
         }
     }
 
@@ -263,7 +267,11 @@ namespace Optional.Extensions.Async
     {
         private readonly Task<Option<T, TException>> optionTask;
 
-        internal AsyncOption(Task<Option<T, TException>> optionTask)
+        /// <summary>
+        /// Initializes an async optional from an task-wrapped optional.
+        /// </summary>
+        /// <param name="optionTask">The task-wrapped optional.</param>
+        public AsyncOption(Task<Option<T, TException>> optionTask)
         {
             this.optionTask = optionTask;
         }
@@ -335,7 +343,7 @@ namespace Optional.Extensions.Async
         /// <returns>A new optional, containing either the existing or alternative value.</returns>
         public AsyncOption<T, TException> Or(T alternative)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.Or(alternative)));
+            return InnerTask.Map(option => option.Or(alternative)).ToAsyncOption();
         }
 
         /// <summary>
@@ -345,7 +353,7 @@ namespace Optional.Extensions.Async
         /// <returns>A new optional, containing either the existing or alternative value.</returns>
         public AsyncOption<T, TException> Or(Func<T> alternativeFactory)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.Or(alternativeFactory)));
+            return InnerTask.Map(option => option.Or(alternativeFactory)).ToAsyncOption();
         }
 
         /// <summary>
@@ -354,7 +362,7 @@ namespace Optional.Extensions.Async
         /// <returns>An optional without an exceptional value.</returns>
         public AsyncOption<T> WithoutException()
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.WithoutException()));
+            return InnerTask.Map(option => option.WithoutException()).ToAsyncOption();
         }
 
         /// <summary>
@@ -386,7 +394,7 @@ namespace Optional.Extensions.Async
         /// <returns>The transformed optional.</returns>
         public AsyncOption<TResult, TException> Map<TResult>(Func<T, TResult> mapping)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.Map(mapping)));
+            return InnerTask.Map(option => option.Map(mapping)).ToAsyncOption();
         }
 
         /// <summary>
@@ -408,7 +416,7 @@ namespace Optional.Extensions.Async
         /// <returns>The transformed optional.</returns>
         public AsyncOption<T, TExceptionResult> MapException<TExceptionResult>(Func<TException, TExceptionResult> mapping)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.MapException(mapping)));
+            return InnerTask.Map(option => option.MapException(mapping)).ToAsyncOption();
         }
 
         /// <summary>
@@ -420,11 +428,11 @@ namespace Optional.Extensions.Async
         /// <returns>The transformed optional.</returns>
         public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, Task<Option<TResult, TException>>> mapping)
         {
-            return AsyncOption.FromTask(InnerTask.FlatMap(option => option
+            return InnerTask.FlatMap(option => option
                 .Match(
                     some: value => mapping(value),
                     none: exception => Task.FromResult(Option.None<TResult, TException>(exception))
-                )));
+                )).ToAsyncOption();
         }
 
         /// <summary>
@@ -504,7 +512,7 @@ namespace Optional.Extensions.Async
         /// <returns>The transformed optional.</returns>
         public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, Option<TResult, TException>> mapping)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.FlatMap(mapping)));
+            return InnerTask.Map(option => option.FlatMap(mapping)).ToAsyncOption();
         }
 
         /// <summary>
@@ -518,7 +526,7 @@ namespace Optional.Extensions.Async
         /// <returns>The transformed optional.</returns>
         public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, Option<TResult>> mapping, TException exception)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.FlatMap(mapping, exception)));
+            return InnerTask.Map(option => option.FlatMap(mapping, exception)).ToAsyncOption();
         }
 
         /// <summary>
@@ -532,7 +540,7 @@ namespace Optional.Extensions.Async
         /// <returns>The transformed optional.</returns>
         public AsyncOption<TResult, TException> FlatMap<TResult>(Func<T, Option<TResult>> mapping, Func<TException> exceptionFactory)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.FlatMap(mapping, exceptionFactory)));
+            return InnerTask.Map(option => option.FlatMap(mapping, exceptionFactory)).ToAsyncOption();
         }
 
         /// <summary>
@@ -544,7 +552,7 @@ namespace Optional.Extensions.Async
         /// <returns>The filtered optional.</returns>
         public AsyncOption<T, TException> Filter(Func<T, bool> predicate, TException exception)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.Filter(predicate, exception)));
+            return InnerTask.Map(option => option.Filter(predicate, exception)).ToAsyncOption();
         }
 
         /// <summary>
@@ -556,7 +564,7 @@ namespace Optional.Extensions.Async
         /// <returns>The filtered optional.</returns>
         public AsyncOption<T, TException> Filter(Func<T, bool> predicate, Func<TException> exceptionFactory)
         {
-            return AsyncOption.FromTask(InnerTask.Map(option => option.Filter(predicate, exceptionFactory)));
+            return InnerTask.Map(option => option.Filter(predicate, exceptionFactory)).ToAsyncOption();
         }
     }
 
@@ -565,26 +573,6 @@ namespace Optional.Extensions.Async
     /// </summary>
     public static class AsyncOption
     {
-        /// <summary>
-        /// Creates an async optional.
-        /// </summary>
-        /// <param name="task">The task to construct the async optional from.</param>
-        /// <returns>The async optional.</returns>
-        public static AsyncOption<T> FromTask<T>(Task<Option<T>> task)
-        {
-            return new AsyncOption<T>(task);
-        }
-
-        /// <summary>
-        /// Creates an async optional.
-        /// </summary>
-        /// <param name="taskFactory">The factory function to construct the async optional from.</param>
-        /// <returns>The async optional.</returns>
-        public static AsyncOption<T> FromTask<T>(Func<Task<Option<T>>> taskFactory)
-        {
-            return new AsyncOption<T>(taskFactory());
-        }
-
         /// <summary>
         /// Wraps an existing value in an async optional.
         /// </summary>
@@ -598,11 +586,11 @@ namespace Optional.Extensions.Async
         /// <summary>
         /// Wraps an existing async value in an async optional.
         /// </summary>
-        /// <param name="task">The async value to be wrapped.</param>
+        /// <param name="valueTask">The async value to be wrapped.</param>
         /// <returns>An async optional containing the specified value.</returns>>
-        public static AsyncOption<T> Some<T>(Task<T> task)
+        public static AsyncOption<T> Some<T>(Task<T> valueTask)
         {
-            return new AsyncOption<T>(task.Map(value => Option.Some(value)));
+            return new AsyncOption<T>(valueTask.Map(value => Option.Some(value)));
         }
 
         /// <summary>
@@ -612,26 +600,6 @@ namespace Optional.Extensions.Async
         public static AsyncOption<T> None<T>()
         {
             return new AsyncOption<T>(Task.FromResult(Option.None<T>())); ;
-        }
-
-        /// <summary>
-        /// Creates an async optional.
-        /// </summary>
-        /// <param name="task">The task to construct the async optional from.</param>
-        /// <returns>The async optional.</returns>
-        public static AsyncOption<T, TException> FromTask<T, TException>(Task<Option<T, TException>> task)
-        {
-            return new AsyncOption<T, TException>(task);
-        }
-
-        /// <summary>
-        /// Creates an async optional.
-        /// </summary>
-        /// <param name="taskFactory">The factory function to construct the async optional from.</param>
-        /// <returns>The async optional.</returns>
-        public static AsyncOption<T, TException> FromTask<T, TException>(Func<Task<Option<T, TException>>> taskFactory)
-        {
-            return new AsyncOption<T, TException>(taskFactory());
         }
 
         /// <summary>
@@ -647,11 +615,11 @@ namespace Optional.Extensions.Async
         /// <summary>
         /// Wraps an existing async value in an async optional.
         /// </summary>
-        /// <param name="task">The async value to be wrapped.</param>
+        /// <param name="valueTask">The async value to be wrapped.</param>
         /// <returns>An async optional containing the specified value.</returns>>>
-        public static AsyncOption<T, TException> Some<T, TException>(Task<T> task)
+        public static AsyncOption<T, TException> Some<T, TException>(Task<T> valueTask)
         {
-            return new AsyncOption<T, TException>(task.Map(value => Option.Some<T, TException>(value)));
+            return new AsyncOption<T, TException>(valueTask.Map(value => Option.Some<T, TException>(value)));
         }
 
         /// <summary>
