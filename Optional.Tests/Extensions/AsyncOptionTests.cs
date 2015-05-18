@@ -69,7 +69,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async void Extensions_AsyncMaybe_Matching()
+        public async Task Extensions_AsyncMaybe_Matching()
         {
             var some = AsyncOption.Some<string>("abc");
             var none = AsyncOption.None<string>();
@@ -106,6 +106,9 @@ namespace Optional.Tests.Extensions
 
             Assert.AreEqual(await some.Map(val => val + "d").ValueOr("0"), "abcd");
             Assert.AreEqual(await none.Map(val => val + "d").ValueOr("0"), "0");
+
+            Assert.AreEqual(await some.Map(val => Task.FromResult(val + "d")).ValueOr("0"), "abcd");
+            Assert.AreEqual(await none.Map(val => Task.FromResult(val + "d")).ValueOr("0"), "0");
         }
 
         [TestMethod]
@@ -150,16 +153,6 @@ namespace Optional.Tests.Extensions
             Assert.AreEqual(await some.FlatMap(val => Option.None<string, string>("ex")).ValueOr("0"), "0");
             Assert.AreEqual(await none.FlatMap(val => Option.Some<string, string>(val + "d")).ValueOr("0"), "0");
             Assert.AreEqual(await none.FlatMap(val => Option.None<string, string>("ex")).ValueOr("0"), "0");
-        }
-
-        [TestMethod]
-        public async Task Extensions_AsyncMaybe_FlatMapTask()
-        {
-            var some = AsyncOption.Some("abc");
-            var none = AsyncOption.None<string>();
-
-            Assert.AreEqual(await some.FlatMap(val => Task.FromResult(val + "d")).ValueOr("0"), "abcd");
-            Assert.AreEqual(await none.FlatMap(val => Task.FromResult(val + "d")).ValueOr("0"), "0");
         }
 
         [TestMethod]
@@ -234,7 +227,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public async void Extensions_AsyncEither_Matching()
+        public async Task Extensions_AsyncEither_Matching()
         {
             var some = AsyncOption.Some<string, string>("abc");
             var none = AsyncOption.None<string, string>("ex");
@@ -274,6 +267,9 @@ namespace Optional.Tests.Extensions
 
             Assert.AreEqual(await some.MapException(ex => ex + "d").ValueOrException(), "abc");
             Assert.AreEqual(await none.MapException(ex => ex + "d").ValueOrException(), "exd");
+
+            Assert.AreEqual(await some.Map(val => Task.FromResult(val + "d")).ValueOrException(), "abcd");
+            Assert.AreEqual(await none.Map(val => Task.FromResult(val + "d")).ValueOrException(), "ex");
         }
 
         [TestMethod]
@@ -333,16 +329,6 @@ namespace Optional.Tests.Extensions
             Assert.AreEqual(await some.FlatMap(val => Option.None<string>(), () => "ex").ValueOrException(), "ex");
             Assert.AreEqual(await none.FlatMap(val => Option.Some<string>(val + "d"), () => "ex").ValueOrException(), "ex");
             Assert.AreEqual(await none.FlatMap(val => Option.None<string>(), () => "ex").ValueOrException(), "ex");
-        }
-
-        [TestMethod]
-        public async Task Extensions_AsyncEither_FlatMapTask()
-        {
-            var some = AsyncOption.Some<string, string>("abc");
-            var none = AsyncOption.None<string, string>("ex");
-
-            Assert.AreEqual(await some.FlatMap(val => Task.FromResult(val + "d")).ValueOrException(), "abcd");
-            Assert.AreEqual(await none.FlatMap(val => Task.FromResult(val + "d")).ValueOrException(), "ex");
         }
 
         [TestMethod]
