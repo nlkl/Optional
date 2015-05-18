@@ -59,5 +59,83 @@ namespace Optional.Extensions.Async
         {
             return option.Match(value => value, exception => exception);
         }
+
+        // TODO: Document and test
+        public static AsyncOption<TResult> Map<T, TResult>(this Option<T> option, Func<T, Task<TResult>> mapping)
+        {
+            return option.ToAsyncOption().Map(mapping);
+        }
+
+        // TODO: Document and test
+        public static AsyncOption<TResult> FlatMap<T, TResult>(this Option<T> option, Func<T, Task<Option<TResult>>> mapping)
+        {
+            return option.ToAsyncOption().FlatMap(mapping);
+        }
+
+        // TODO: Document and test
+        public static AsyncOption<TResult> FlatMap<T, TResult>(this Option<T> option, Func<T, AsyncOption<TResult>> mapping)
+        {
+            return option.ToAsyncOption().FlatMap(mapping);
+        }
+
+        // TODO: Document and test
+        public static AsyncOption<TResult> FlatMap<T, TResult, TException>(this Option<T> option, Func<T, Task<Option<TResult, TException>>> mapping)
+        {
+            return option.ToAsyncOption().FlatMap(mapping);
+        }
+
+        // TODO: Document and test
+        public static AsyncOption<TResult> FlatMap<T, TResult, TException>(this Option<T> option, Func<T, AsyncOption<TResult, TException>> mapping)
+        {
+            return option.ToAsyncOption().FlatMap(mapping);
+        }
+
+        // TODO: Document and test
+        public static AsyncOption<TResult, TException> Map<T, TException, TResult>(this Option<T, TException> option, Func<T, Task<TResult>> mapping)
+        {
+            return option.ToAsyncOption().Map(mapping);
+        }
+
+        // TODO: Document and test
+        public static AsyncOption<T, TExceptionResult> MapException<T, TException, TExceptionResult>(this Option<T, TException> option, Func<TException, Task<TExceptionResult>> mapping)
+        {
+            return option.ToAsyncOption().MapException(mapping);
+        }
+
+        // TODO: Document and test
+        public static AsyncOption<TResult, TException> FlatMap<T, TException, TResult>(this Option<T, TException> option, Func<T, Task<Option<TResult, TException>>> mapping)
+        {
+            return option.ToAsyncOption().FlatMap(mapping);
+        }
+
+        // TODO: Document and test
+        public static AsyncOption<TResult, TException> FlatMap<T, TException, TResult>(this Option<T, TException> option, Func<T, Task<Option<TResult>>> mapping, TException exception)
+        {
+            return option.ToAsyncOption().FlatMap(mapping, exception);
+        }
+
+        // TODO: Document and test
+        public static AsyncOption<TResult, TException> FlatMap<T, TException, TResult>(this Option<T, TException> option, Func<T, Task<Option<TResult>>> mapping, Func<TException> exceptionFactory)
+        {
+            return option.ToAsyncOption().FlatMap(mapping, exceptionFactory);
+        }
+
+        // TODO: Document and test
+        public static AsyncOption<TResult, TException> FlatMap<T, TException, TResult>(this Option<T, TException> option, Func<T, AsyncOption<TResult, TException>> mapping)
+        {
+            return option.ToAsyncOption().FlatMap(mapping);
+        }
+
+        // TODO: Document and test
+        public static AsyncOption<TResult, TException> FlatMap<T, TException, TResult>(this Option<T, TException> option, Func<T, AsyncOption<TResult>> mapping, TException exception)
+        {
+            return option.ToAsyncOption().FlatMap(mapping, exception);
+        }
+
+        // TODO: Document and test
+        public static AsyncOption<TResult, TException> FlatMap<T, TException, TResult>(this Option<T, TException> option, Func<T, AsyncOption<TResult>> mapping, Func<TException> exceptionFactory)
+        {
+            return option.ToAsyncOption().FlatMap(mapping, exceptionFactory);
+        }
     }
 }
