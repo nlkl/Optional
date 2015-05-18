@@ -420,6 +420,21 @@ namespace Optional.Extensions.Async
         }
 
         /// <summary>
+        /// Transforms the exceptional value in an optional.
+        /// If the instance is not empty, no transformation is carried out.
+        /// </summary>
+        /// <param name="mapping">The transformation function.</param>
+        /// <returns>The transformed optional.</returns>
+        public AsyncOption<T, TExceptionResult> MapException<TExceptionResult>(Func<TException, Task<TExceptionResult>> mapping)
+        {
+            return InnerTask.FlatMap(option => option
+                .Match(
+                    some: value => Task.FromResult(Option.Some<T, TExceptionResult>(value)),
+                    none: exception => mapping(exception).Map(ex => Option.None<T, TExceptionResult>(ex))
+                )).ToAsyncOption();
+        }
+
+        /// <summary>
         /// Transforms the inner value in an async optional
         /// into another async optional. The result is flattened, 
         /// and if either is empty, an empty optional is returned.

@@ -283,6 +283,9 @@ namespace Optional.Tests.Extensions
 
             Assert.AreEqual(await some.Map(val => Task.FromResult(val + "d")).ValueOrException(), "abcd");
             Assert.AreEqual(await none.Map(val => Task.FromResult(val + "d")).ValueOrException(), "ex");
+
+            Assert.AreEqual(await some.MapException(ex => Task.FromResult(ex + "d")).ValueOrException(), "abc");
+            Assert.AreEqual(await none.MapException(ex => Task.FromResult(ex + "d")).ValueOrException(), "exd");
         }
 
         [TestMethod]
