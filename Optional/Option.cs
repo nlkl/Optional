@@ -321,11 +321,12 @@ namespace Optional
         /// <returns>The filtered optional.</returns>
         public Option<T> Filter(bool condition)
         {
-            var original = this;
-            return Match(
-                some: _ => condition ? original : Option.None<T>(),
-                none: () => original
-            );
+            if (HasValue && !condition)
+            {
+                return Option.None<T>();
+            }
+
+            return this;
         }
 
         /// <summary>
@@ -690,11 +691,12 @@ namespace Optional
         /// <returns>The filtered optional.</returns>
         public Option<T, TException> Filter(bool condition, TException exception)
         {
-            var original = this;
-            return Match(
-                some: _ => condition ? original : Option.None<T, TException>(exception),
-                none: _ => original
-            );
+            if (HasValue && !condition)
+            {
+                return Option.None<T, TException>(exception);
+            }
+
+            return this;
         }
 
         /// <summary>
@@ -706,11 +708,12 @@ namespace Optional
         /// <returns>The filtered optional.</returns>
         public Option<T, TException> Filter(bool condition, Func<TException> exceptionFactory)
         {
-            var original = this;
-            return Match(
-                some: _ => condition ? original : Option.None<T, TException>(exceptionFactory()),
-                none: _ => original
-            );
+            if (HasValue && !condition)
+            {
+                return Option.None<T, TException>(exceptionFactory());
+            }
+
+            return this;
         }
 
         /// <summary>
