@@ -323,7 +323,7 @@ namespace Optional
         {
             var original = this;
             return Match(
-                some: value => condition ? original : Option.None<T>(),
+                some: _ => condition ? original : Option.None<T>(),
                 none: () => original
             );
         }
@@ -692,7 +692,7 @@ namespace Optional
         {
             var original = this;
             return Match(
-                some: value => condition ? original : Option.None<T, TException>(exception),
+                some: _ => condition ? original : Option.None<T, TException>(exception),
                 none: _ => original
             );
         }
@@ -708,7 +708,7 @@ namespace Optional
         {
             var original = this;
             return Match(
-                some: value => condition ? original : Option.None<T, TException>(exceptionFactory()),
+                some: _ => condition ? original : Option.None<T, TException>(exceptionFactory()),
                 none: _ => original
             );
         }
