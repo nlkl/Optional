@@ -53,6 +53,17 @@ namespace Optional.Extensions.Async
             return InnerTask.Map(option => option.Contains(value));
         }
 
+        // TODO: TEST
+        /// <summary>
+        /// Determines if the current optional contains a specified value.
+        /// </summary>
+        /// <param name="value">The value to locate.</param>
+        /// <returns>A boolean indicating whether or not the value was found.</returns>
+        public Task<bool> Contains(Task<T> value)
+        {
+            return InnerTask.FlatMap(option => value.Map(option.Contains));
+        }
+
         /// <summary>
         /// Determines if the current optional contains a value 
         /// satisfying a specified predicate.
@@ -61,7 +72,19 @@ namespace Optional.Extensions.Async
         /// <returns>A boolean indicating whether or not the predicate was satisfied.</returns>
         public Task<bool> Exists(Func<T, bool> predicate)
         {
-            return InnerTask.Map(option => option.Exists(predicate));
+            return Match(predicate, () => false);
+        }
+
+        // TODO: TEST
+        /// <summary>
+        /// Determines if the current optional contains a value 
+        /// satisfying a specified predicate.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns>A boolean indicating whether or not the predicate was satisfied.</returns>
+        public Task<bool> Exists(Func<T, Task<bool>> predicate)
+        {
+            return Match(predicate, () => Task.FromResult(false));
         }
 
         /// <summary>
@@ -71,7 +94,18 @@ namespace Optional.Extensions.Async
         /// <returns>The existing or alternative value.</returns>
         public Task<T> ValueOr(T alternative)
         {
-            return InnerTask.Map(option => option.ValueOr(alternative));
+            return Match(value => value, () => alternative);
+        }
+
+        // TODO: TEST
+        /// <summary>
+        /// Returns the existing value if present, and otherwise an alternative value.
+        /// </summary>
+        /// <param name="alternative">The alternative value.</param>
+        /// <returns>The existing or alternative value.</returns>
+        public Task<T> ValueOr(Task<T> alternative)
+        {
+            return Match(value => Task.FromResult(value), () => alternative);
         }
 
         /// <summary>
@@ -81,7 +115,18 @@ namespace Optional.Extensions.Async
         /// <returns>The existing or alternative value.</returns>
         public Task<T> ValueOr(Func<T> alternativeFactory)
         {
-            return InnerTask.Map(option => option.ValueOr(alternativeFactory));
+            return Match(value => value, () => alternativeFactory());
+        }
+
+        // TODO: TEST
+        /// <summary>
+        /// Returns the existing value if present, and otherwise an alternative value.
+        /// </summary>
+        /// <param name="alternativeFactory">A factory function to create an alternative value.</param>
+        /// <returns>The existing or alternative value.</returns>
+        public Task<T> ValueOr(Func<Task<T>> alternativeFactory)
+        {
+            return Match(value => Task.FromResult(value), () => alternativeFactory());
         }
 
         /// <summary>
@@ -135,6 +180,18 @@ namespace Optional.Extensions.Async
             return InnerTask.Map(option => option.Match(some, none));
         }
 
+        // TODO: TEST
+        /// <summary>
+        /// Evaluates a specified function, based on whether a value is present or not.
+        /// </summary>
+        /// <param name="some">The function to evaluate if the value is present.</param>
+        /// <param name="none">The function to evaluate if the value is missing.</param>
+        /// <returns>The result of the evaluated function.</returns>
+        public Task<TResult> Match<TResult>(Func<T, Task<TResult>> some, Func<Task<TResult>> none)
+        {
+            return InnerTask.FlatMap(option => option.Match(some, none));
+        }
+
         /// <summary>
         /// Evaluates a specified action, based on whether a value is present or not.
         /// </summary>
@@ -145,6 +202,17 @@ namespace Optional.Extensions.Async
             return InnerTask.Map(option => option.Match(some, none));
         }
 
+        // TODO: TEST
+        /// <summary>
+        /// Evaluates a specified action, based on whether a value is present or not.
+        /// </summary>
+        /// <param name="some">The action to evaluate if the value is present.</param>
+        /// <param name="none">The action to evaluate if the value is missing.</param>
+        public Task Match(Func<T, Task> some, Func<Task> none)
+        {
+            return InnerTask.FlatMap(option => option.Match(some, none));
+        }
+
         /// <summary>
         /// Transforms the inner value in an async optional.
         /// If the instance is empty, an empty optional is returned.
@@ -153,7 +221,7 @@ namespace Optional.Extensions.Async
         /// <returns>The transformed optional.</returns>
         public AsyncOption<TResult> Map<TResult>(Func<T, TResult> mapping)
         {
-            return InnerTask.Map(option => option.Map(mapping)).ToAsyncOption();
+            return FlatMap(value => mapping(value).Some());
         }
 
         /// <summary>
@@ -255,6 +323,24 @@ namespace Optional.Extensions.Async
         public AsyncOption<T> Filter(Func<T, bool> predicate)
         {
             return InnerTask.Map(option => option.Filter(predicate)).ToAsyncOption();
+        }
+
+        // TODO: TEST
+        /// <summary>
+        /// Empties an optional, if a specified predicate
+        /// is not satisfied.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <returns>The filtered optional.</returns>
+        public AsyncOption<T> Filter(Func<T, Task<bool>> predicate)
+        {
+            //return Match(predicate, () => Task.FromResult(false));
+            //return Exists(predicate).Map(exists => exists ? )
+            //return Map(value => predicate(value).Map(exists => exists ? value : ))
+            //return InnerTask.Map(option => option.Map(value => predicate(value).Map()))
+            //return Map(predicate).Map(exists => InnerTask.Map(option => option.Filter())
+            //return Exists(predicate).FlatMap(exists => exists ? original.In : AsyncOption.None<T>());
+            throw new NotImplementedException();
         }
     }
 
