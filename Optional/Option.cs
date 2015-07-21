@@ -314,6 +314,21 @@ namespace Optional
         }
 
         /// <summary>
+        /// Empties an optional, if a specified condition
+        /// is not satisfied.
+        /// </summary>
+        /// <param name="condition">The condition.</param>
+        /// <returns>The filtered optional.</returns>
+        public Option<T> Filter(bool condition)
+        {
+            var original = this;
+            return Match(
+                some: value => condition ? original : Option.None<T>(),
+                none: () => original
+            );
+        }
+
+        /// <summary>
         /// Empties an optional, if a specified predicate
         /// is not satisfied.
         /// </summary>
@@ -664,6 +679,38 @@ namespace Optional
         public Option<TResult, TException> FlatMap<TResult>(Func<T, Option<TResult>> mapping, Func<TException> exceptionFactory)
         {
             return FlatMap(value => mapping(value).WithException(exceptionFactory));
+        }
+
+        /// <summary>
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if a specified condition is not satisfied.
+        /// </summary>
+        /// <param name="condition">The condition.</param>
+        /// <param name="exception">The exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public Option<T, TException> Filter(bool condition, TException exception)
+        {
+            var original = this;
+            return Match(
+                some: value => condition ? original : Option.None<T, TException>(exception),
+                none: _ => original
+            );
+        }
+
+        /// <summary>
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if a specified condition is not satisfied.
+        /// </summary>
+        /// <param name="condition">The condition.</param>
+        /// <param name="exceptionFactory">A factory function to create an exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public Option<T, TException> Filter(bool condition, Func<TException> exceptionFactory)
+        {
+            var original = this;
+            return Match(
+                some: value => condition ? original : Option.None<T, TException>(exceptionFactory()),
+                none: _ => original
+            );
         }
 
         /// <summary>

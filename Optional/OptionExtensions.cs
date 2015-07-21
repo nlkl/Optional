@@ -41,6 +41,7 @@ namespace Optional
         /// Creates an empty Option&lt;T, TException&gt; instance, 
         /// with a specified exceptional value.
         /// </summary>
+        /// <param name="value">The value to wrap.</param>
         /// <param name="exception">The exceptional value.</param>
         /// <returns>An empty optional.</returns>
         public static Option<T, TException> None<T, TException>(this T value, TException exception)

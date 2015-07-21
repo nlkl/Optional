@@ -428,6 +428,13 @@ namespace Optional.Tests
             Assert.AreEqual(someNotNull.Match(val => val, ex => ex), "val");
             Assert.AreEqual(noneNullNotNull.Match(val => val, ex => ex), "ex");
             Assert.AreEqual(someNullNotNull.Match(val => val, ex => ex), "ex1");
+        }
+
+        [TestMethod]
+        public void Either_Filtering()
+        { 
+            var none = "val".None("ex");
+            var some = "val".Some<string, string>();
 
             var noneNotVal = none.Filter(x => x != "val", "ex1");
             var someNotVal = some.Filter(x => x != "val", "ex1");
@@ -442,10 +449,24 @@ namespace Optional.Tests
             Assert.AreEqual(someNotVal.Match(val => val, ex => ex), "ex1");
             Assert.AreEqual(noneVal.Match(val => val, ex => ex), "ex");
             Assert.AreEqual(someVal.Match(val => val, ex => ex), "val");
+
+            var noneFalse = none.Filter(false, "ex1");
+            var someFalse = some.Filter(false, "ex1");
+            var noneTrue = none.Filter(true, "ex1");
+            var someTrue = some.Filter(true, "ex1");
+
+            Assert.IsFalse(noneFalse.HasValue);
+            Assert.IsFalse(someFalse.HasValue);
+            Assert.IsFalse(noneTrue.HasValue);
+            Assert.IsTrue(someTrue.HasValue);
+            Assert.AreEqual(noneFalse.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(someFalse.Match(val => val, ex => ex), "ex1");
+            Assert.AreEqual(noneTrue.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(someTrue.Match(val => val, ex => ex), "val");
         }
 
         [TestMethod]
-        public void Either_TransformationLazy()
+        public void Either_Filtering_Lazy()
         {
             var none = "val".None("ex");
             var some = "val".Some<string, string>();
@@ -463,10 +484,24 @@ namespace Optional.Tests
             Assert.AreEqual(someNotVal.Match(val => val, ex => ex), "ex1");
             Assert.AreEqual(noneVal.Match(val => val, ex => ex), "ex");
             Assert.AreEqual(someVal.Match(val => val, ex => ex), "val");
+
+            var noneFalse = none.Filter(false, () => "ex1");
+            var someFalse = some.Filter(false, () => "ex1");
+            var noneTrue = none.Filter(true, () => "ex1");
+            var someTrue = some.Filter(true, () => { Assert.Fail(); return "ex1"; });
+
+            Assert.IsFalse(noneFalse.HasValue);
+            Assert.IsFalse(someFalse.HasValue);
+            Assert.IsFalse(noneTrue.HasValue);
+            Assert.IsTrue(someTrue.HasValue);
+            Assert.AreEqual(noneFalse.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(someFalse.Match(val => val, ex => ex), "ex1");
+            Assert.AreEqual(noneTrue.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(someTrue.Match(val => val, ex => ex), "val");
         }
 
         [TestMethod]
-        public void Either_ExceptionPropagation()
+        public void Either_Filtering_ExceptionPropagation()
         {
             var none = "val".None("ex");
             var some = "val".Some<string, string>();
@@ -474,17 +509,25 @@ namespace Optional.Tests
             Assert.AreEqual(none.Match(val => val, ex => ex), "ex");
             Assert.AreEqual(some.Match(val => val, ex => ex), "val");
 
-            var none1 = none.Filter(val => false, "ex1");
-            var some1 = some.Filter(val => false, "ex1");
+            var none1a = none.Filter(val => false, "ex1");
+            var some1a = some.Filter(val => false, "ex1");
+            var none1b = none.Filter(false, "ex1");
+            var some1b = some.Filter(false, "ex1");
 
-            Assert.AreEqual(none1.Match(val => val, ex => ex), "ex");
-            Assert.AreEqual(some1.Match(val => val, ex => ex), "ex1");
+            Assert.AreEqual(none1a.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(some1a.Match(val => val, ex => ex), "ex1");
+            Assert.AreEqual(none1b.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(some1b.Match(val => val, ex => ex), "ex1");
 
-            var none2 = none1.Filter(val => false, "ex2");
-            var some2 = some1.Filter(val => false, "ex2");
+            var none2a = none1a.Filter(val => false, "ex2");
+            var some2a = some1a.Filter(val => false, "ex2");
+            var none2b = none1b.Filter(false, "ex2");
+            var some2b = some1b.Filter(false, "ex2");
 
-            Assert.AreEqual(none2.Match(val => val, ex => ex), "ex");
-            Assert.AreEqual(some2.Match(val => val, ex => ex), "ex1");
+            Assert.AreEqual(none2a.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(some2a.Match(val => val, ex => ex), "ex1");
+            Assert.AreEqual(none2b.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(some2b.Match(val => val, ex => ex), "ex1");
         }
     }
 }

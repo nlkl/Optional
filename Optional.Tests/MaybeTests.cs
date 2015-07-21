@@ -362,6 +362,13 @@ namespace Optional.Tests
             Assert.IsTrue(someNotNull.HasValue);
             Assert.IsFalse(noneNullNotNull.HasValue);
             Assert.IsFalse(someNullNotNull.HasValue);
+        }
+
+        [TestMethod]
+        public void Maybe_Filtering()
+        {
+            var none = "a".None();
+            var some = "a".Some();
 
             var noneNotA = none.Filter(x => x != "a");
             var someNotA = some.Filter(x => x != "a");
@@ -372,6 +379,16 @@ namespace Optional.Tests
             Assert.IsFalse(someNotA.HasValue);
             Assert.IsFalse(noneA.HasValue);
             Assert.IsTrue(someA.HasValue);
+
+            var noneFalse = none.Filter(false);
+            var someFalse = some.Filter(false);
+            var noneTrue = none.Filter(true);
+            var someTrue = some.Filter(true);
+
+            Assert.IsFalse(noneFalse.HasValue);
+            Assert.IsFalse(someFalse.HasValue);
+            Assert.IsFalse(noneTrue.HasValue);
+            Assert.IsTrue(someTrue.HasValue);
         }
     }
 }
