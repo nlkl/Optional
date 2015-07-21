@@ -314,6 +314,30 @@ namespace Optional.Extensions.Async
             return InnerTask.Map(option => option.FlatMap(mapping)).ToAsyncOption();
         }
 
+        // TODO: TEST
+        /// <summary>
+        /// Empties an optional, if a specified condition
+        /// is not satisfied.
+        /// </summary>
+        /// <param name="condition">The condition.</param>
+        /// <returns>The filtered optional.</returns>
+        public AsyncOption<T> Filter(bool condition)
+        {
+            return InnerTask.Map(option => option.Filter(condition)).ToAsyncOption();
+        }
+
+        // TODO: TEST
+        /// <summary>
+        /// Empties an optional, if a specified condition
+        /// is not satisfied.
+        /// </summary>
+        /// <param name="condition">The condition.</param>
+        /// <returns>The filtered optional.</returns>
+        public AsyncOption<T> Filter(Task<bool> condition)
+        {
+            return InnerTask.FlatMap(option => condition.Map(option.Filter)).ToAsyncOption();
+        }
+
         /// <summary>
         /// Empties an optional, if a specified predicate
         /// is not satisfied.
@@ -334,13 +358,11 @@ namespace Optional.Extensions.Async
         /// <returns>The filtered optional.</returns>
         public AsyncOption<T> Filter(Func<T, Task<bool>> predicate)
         {
-            //return Match(predicate, () => Task.FromResult(false));
-            //return Exists(predicate).Map(exists => exists ? )
-            //return Map(value => predicate(value).Map(exists => exists ? value : ))
-            //return InnerTask.Map(option => option.Map(value => predicate(value).Map()))
-            //return Map(predicate).Map(exists => InnerTask.Map(option => option.Filter())
-            //return Exists(predicate).FlatMap(exists => exists ? original.In : AsyncOption.None<T>());
-            throw new NotImplementedException();
+            return InnerTask.FlatMap(option => option
+                .Match(
+                    some: value => predicate(value).Map(option.Filter),
+                    none: () => Task.FromResult(option)
+                )).ToAsyncOption();
         }
     }
 
