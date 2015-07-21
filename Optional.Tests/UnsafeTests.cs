@@ -34,6 +34,16 @@ namespace Optional.Tests
             {
                 Assert.AreEqual(ex.Message, "Error message");
             }
+
+            try
+            {
+                var result = none.ValueOrFailure(() => "Error message");
+                Assert.Fail();
+            }
+            catch (OptionValueMissingException ex)
+            {
+                Assert.AreEqual(ex.Message, "Error message");
+            }
         }
 
         [TestMethod]
@@ -62,6 +72,16 @@ namespace Optional.Tests
             catch (OptionValueMissingException ex)
             {
                 Assert.AreEqual(ex.Message, "Error message");
+            }
+
+            try
+            {
+                var result = none.ValueOrFailure(ex => "Error message" + ex);
+                Assert.Fail();
+            }
+            catch (OptionValueMissingException ex)
+            {
+                Assert.AreEqual(ex.Message, "Error messageex");
             }
         }
     }
