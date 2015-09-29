@@ -33,7 +33,7 @@ In general, an optional value can be in one of two states: Some (representing th
 
 Further, an option type is a lot more explicit than a null value, which can make APIs based on optional values a lot easier to understand.
 
-An either type is conceptually similar to a maybe type. Whereas a maybe type only indicates if a value is present or not, an either type contains an auxilliary value describing how an operation failed. Apart from this *exceptional* value, an either-type behaves much like its simpler counterpart.
+An either type is conceptually similar to a maybe type. Whereas a maybe type only indicates if a value is present or not, an either type contains an auxiliary value describing how an operation failed. Apart from this *exceptional* value, an either-type behaves much like its simpler counterpart.
 
 Working with maybe and either types is very similar, and the description below will therefore focus on the maybe type, and only provide a quick summary for the either type.
 
