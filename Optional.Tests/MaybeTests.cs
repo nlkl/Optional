@@ -283,6 +283,12 @@ namespace Optional.Tests
             Assert.AreEqual(noneLargerThanTen.ValueOr(-1), -1);
             Assert.AreEqual(someLargerThanTen.ValueOr(-1), 20);
 
+            someLargerThanTen = 1.NoneWhen(x => x > 10);
+            noneLargerThanTen = 20.NoneWhen(x => x > 10);
+
+            Assert.AreEqual(someLargerThanTen.ValueOr(-1), 1);
+            Assert.AreEqual(noneLargerThanTen.ValueOr(-1), -1);
+
             var noneNotNull = ((string)null).SomeNotNull();
             var someNotNull = "1".SomeNotNull();
 
