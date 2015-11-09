@@ -106,41 +106,44 @@ namespace Optional
         }
 
         /// <summary>
-        /// Opposite of <see cref="SomeWhen{T}"/>
+        /// Creates an Option&lt;T&gt; instance from a specified value. 
+        /// If the value satisfies the given predicate, 
+        /// an empty optional is returned.
         /// </summary>
-        /// <seealso cref="SomeWhen{T}"/>
         /// <param name="value">The value to wrap.</param>
         /// <param name="predicate">The predicate.</param>
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T> NoneWhen<T>(this T value, Predicate<T> predicate)
         {
-            return value.SomeWhen(x => !predicate(x));
+            return value.SomeWhen(val => !predicate(val));
         }
 
         /// <summary>
-        /// Opposite of <see cref="SomeWhen{T,TException}(T,System.Func{T,bool},TException)"/>
+        /// Creates an Option&lt;T&gt; instance from a specified value. 
+        /// If the value satisfies the given predicate, 
+        /// an empty optional is returned, with a specified exceptional value.
         /// </summary>
-        /// <seealso cref="SomeWhen{T,TException}(T,System.Func{T,bool},TException)"/>
         /// <param name="value">The value to wrap.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="exception">The exceptional value.</param>
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> NoneWhen<T, TException>(this T value, Predicate<T> predicate, TException exception)
         {
-            return value.SomeWhen(x => !predicate(x), exception);
+            return value.SomeWhen(val => !predicate(val), exception);
         }
 
         /// <summary>
-        /// Opposite of <see cref="SomeWhen{T,TException}(T,System.Func{T,bool},System.Func{TException})"/>
+        /// Creates an Option&lt;T&gt; instance from a specified value. 
+        /// If the value does satisfy the given predicate, 
+        /// an empty optional is returned, with a specified exceptional value.
         /// </summary>
-        /// <seealso cref="SomeWhen{T,TException}(T,System.Func{T,bool},System.Func{TException})"/>
         /// <param name="value">The value to wrap.</param>
         /// <param name="predicate">The predicate.</param>
         /// <param name="exceptionFactory">A factory function to create an exceptional value.</param>
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> NoneWhen<T, TException>(this T value, Predicate<T> predicate, Func<TException> exceptionFactory)
         {
-            return value.SomeWhen(x => !predicate(x), exceptionFactory);
+            return value.SomeWhen(val => !predicate(val), exceptionFactory);
         }
 
         /// <summary>
