@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Optional.Tests
 {
@@ -395,6 +396,33 @@ namespace Optional.Tests
             Assert.IsFalse(someFalse.HasValue);
             Assert.IsFalse(noneTrue.HasValue);
             Assert.IsTrue(someTrue.HasValue);
+        }
+
+        [TestMethod]
+        public void Maybe_ToEnumerable()
+        {
+            var none = "a".None();
+            var some = "a".Some();
+
+            var noneAsEnumerable = none.ToEnumerable();
+            var someAsEnumerable = some.ToEnumerable();
+
+            foreach (var value in noneAsEnumerable)
+            {
+                Assert.Fail();
+            }
+
+            int count = 0;
+            foreach (var value in someAsEnumerable)
+            {
+                Assert.AreEqual(value, "a");
+                count += 1;
+            }
+
+            Assert.AreEqual(count, 1);
+
+            Assert.AreEqual(noneAsEnumerable.Count(), 0);
+            Assert.AreEqual(someAsEnumerable.Count(), 1);
         }
     }
 }

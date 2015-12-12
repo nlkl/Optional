@@ -561,5 +561,32 @@ namespace Optional.Tests
             Assert.AreEqual(none2b.Match(val => val, ex => ex), "ex");
             Assert.AreEqual(some2b.Match(val => val, ex => ex), "ex1");
         }
+
+        [TestMethod]
+        public void Either_ToEnumerable()
+        {
+            var none = "a".None("ex");
+            var some = "a".Some<string, string>();
+
+            var noneAsEnumerable = none.ToEnumerable();
+            var someAsEnumerable = some.ToEnumerable();
+
+            foreach (var value in noneAsEnumerable)
+            {
+                Assert.Fail();
+            }
+
+            int count = 0;
+            foreach (var value in someAsEnumerable)
+            {
+                Assert.AreEqual(value, "a");
+                count += 1;
+            }
+
+            Assert.AreEqual(count, 1);
+
+            Assert.AreEqual(noneAsEnumerable.Count(), 0);
+            Assert.AreEqual(someAsEnumerable.Count(), 1);
+        }
     }
 }

@@ -45,7 +45,6 @@
     <Compile Include="Async\AsyncOptionExtensions.cs" />
     <Compile Include="Async\AsyncOption.cs" />
     <Compile Include="Async\TaskTransformationExtensions.cs" />
-    <Compile Include="Collections\OptionEnumerableExtensions.cs" />
     <Compile Include="Collections\LinqQueryableExtensions.cs" />
     <Compile Include="Collections\LinqEnumerableExtensions.cs" />
     <Compile Include="Internal\Guard.cs" />

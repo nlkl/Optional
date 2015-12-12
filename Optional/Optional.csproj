@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Linq\OptionLinqExtensions.cs" />
+    <Compile Include="Option_Either.cs" />
     <Compile Include="Option.cs" />
+    <Compile Include="Option_Maybe.cs" />
     <Compile Include="OptionExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unsafe\OptionUnsafeExtensions.cs" />
