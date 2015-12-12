@@ -65,10 +65,12 @@ namespace Optional.Unsafe
         /// <exception cref="Optional.Unsafe.OptionValueMissingException">Thrown when a value is not present.</exception>
         public static T ValueOrFailure<T>(this Option<T> option, Func<string> errorMessageFactory)
         {
-            return option.Match(
-                some: value => value, 
-                none: () => { throw new OptionValueMissingException(errorMessageFactory()); }
-            );
+            if (option.HasValue)
+            {
+                return option.Value;
+            }
+
+            throw new OptionValueMissingException(errorMessageFactory());
         }
 
         /// <summary>
@@ -97,10 +99,12 @@ namespace Optional.Unsafe
         /// <exception cref="Optional.Unsafe.OptionValueMissingException">Thrown when a value is not present.</exception>
         public static T ValueOrFailure<T, TException>(this Option<T, TException> option, Func<TException, string> errorMessageFactory)
         {
-            return option.Match(
-                some: value => value, 
-                none: exception => { throw new OptionValueMissingException(errorMessageFactory(exception)); }
-            );
+            if (option.HasValue)
+            {
+                return option.Value;
+            }
+
+            throw new OptionValueMissingException(errorMessageFactory(option.Exception));
         }
     }
 }
