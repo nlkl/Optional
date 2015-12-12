@@ -582,11 +582,44 @@ namespace Optional.Tests
                 Assert.AreEqual(value, "a");
                 count += 1;
             }
-
             Assert.AreEqual(count, 1);
+
+            foreach (var value in someAsEnumerable)
+            {
+                Assert.AreEqual(value, "a");
+                count += 1;
+            }
+            Assert.AreEqual(count, 2);
 
             Assert.AreEqual(noneAsEnumerable.Count(), 0);
             Assert.AreEqual(someAsEnumerable.Count(), 1);
+        }
+
+        [TestMethod]
+        public void Either_Enumerate()
+        {
+            var none = "a".None("ex");
+            var some = "a".Some<string, string>();
+
+            foreach (var value in none)
+            {
+                Assert.Fail();
+            }
+
+            int count = 0;
+            foreach (var value in some)
+            {
+                Assert.AreEqual(value, "a");
+                count += 1;
+            }
+            Assert.AreEqual(count, 1);
+
+            foreach (var value in some)
+            {
+                Assert.AreEqual(value, "a");
+                count += 1;
+            }
+            Assert.AreEqual(count, 2);
         }
     }
 }

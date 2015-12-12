@@ -125,7 +125,25 @@ namespace Optional
         /// Converts the current optional into an enumerable with one or zero elements.
         /// </summary>
         /// <returns>A corresponding enumerable.</returns>
-        public IEnumerable<T> ToEnumerable() => hasValue ? Enumerable.Repeat(value, 1) : Enumerable.Empty<T>();
+        public IEnumerable<T> ToEnumerable()
+        {
+            if (hasValue)
+            {
+                yield return value;
+            }
+        }
+
+        /// <summary>
+        /// Returns an enumerator for the optional.
+        /// </summary>
+        /// <returns>The enumerator.</returns>
+        public IEnumerator<T> GetEnumerator()
+        {
+            if (hasValue)
+            {
+                yield return value;
+            }
+        }
 
         /// <summary>
         /// Determines if the current optional contains a specified value.
