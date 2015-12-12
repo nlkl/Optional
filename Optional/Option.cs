@@ -437,6 +437,13 @@ namespace Optional
         public T ValueOr(Func<T> alternativeFactory) => hasValue ? value : alternativeFactory();
 
         /// <summary>
+        /// Returns the existing value if present, and otherwise an alternative value.
+        /// </summary>
+        /// <param name="alternativeFactory">A factory function to map the exceptional value to an alternative value.</param>
+        /// <returns>The existing or alternative value.</returns>
+        public T ValueOr(Func<TException, T> alternativeFactory) => hasValue ? value : alternativeFactory(exception);
+
+        /// <summary>
         /// Uses an alternative value, if no existing value is present.
         /// </summary>
         /// <param name="alternative">The alternative value.</param>
@@ -451,6 +458,14 @@ namespace Optional
         /// <returns>A new optional, containing either the existing or alternative value.</returns>
         public Option<T, TException> Or(Func<T> alternativeFactory) =>
             hasValue ? this : Option.Some<T, TException>(alternativeFactory());
+
+        /// <summary>
+        /// Uses an alternative value, if no existing value is present.
+        /// </summary>
+        /// <param name="alternativeFactory">A factory function to map the exceptional value to an alternative value.</param>
+        /// <returns>A new optional, containing either the existing or alternative value.</returns>
+        public Option<T, TException> Or(Func<TException, T> alternativeFactory) =>
+            hasValue ? this : Option.Some<T, TException>(alternativeFactory(exception));
 
         /// <summary>
         /// Forgets any attached exceptional value.

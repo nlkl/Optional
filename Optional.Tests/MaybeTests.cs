@@ -263,9 +263,9 @@ namespace Optional.Tests
             Assert.AreEqual(someNullable.ValueOr(() => -1), 1);
             Assert.AreEqual(someClass.ValueOr(() => "-1"), "1");
 
-            Assert.AreEqual(someStruct.ValueOr(() => { Assert.Fail(); return -1; }), 1);
-            Assert.AreEqual(someNullable.ValueOr(() => { Assert.Fail(); return -1; }), 1);
-            Assert.AreEqual(someClass.ValueOr(() => { Assert.Fail(); return "-1"; }), "1");
+            someStruct.Or(() => { Assert.Fail(); return -1; });
+            someNullable.Or(() => { Assert.Fail(); return -1; });
+            someClass.Or(() => { Assert.Fail(); return "-1"; });
         }
 
         [TestMethod]

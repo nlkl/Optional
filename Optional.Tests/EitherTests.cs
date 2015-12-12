@@ -224,6 +224,10 @@ namespace Optional.Tests
             Assert.AreEqual(noneNullable.ValueOr(() => -1), -1);
             Assert.AreEqual(noneClass.ValueOr(() => "-1"), "-1");
 
+            Assert.AreEqual(noneStruct.ValueOr(ex => ex.GetHashCode()), "ex".GetHashCode());
+            Assert.AreEqual(noneNullable.ValueOr(ex => ex.GetHashCode()), "ex".GetHashCode());
+            Assert.AreEqual(noneClass.ValueOr(ex => ex), "ex");
+
             var someStruct = Option.Some<int, string>(1);
             var someNullable = Option.Some<int?, string>(1);
             var someNullableEmpty = Option.Some<int?, string>(null);
@@ -236,11 +240,23 @@ namespace Optional.Tests
             Assert.AreEqual(someClass.ValueOr(() => "-1"), "1");
             Assert.AreEqual(someClassNull.ValueOr(() => "-1"), null);
 
+            Assert.AreEqual(someStruct.ValueOr(ex => ex.GetHashCode()), 1);
+            Assert.AreEqual(someNullable.ValueOr(ex => ex.GetHashCode()), 1);
+            Assert.AreEqual(someNullableEmpty.ValueOr(ex => ex.GetHashCode()), null);
+            Assert.AreEqual(someClass.ValueOr(ex => ex), "1");
+            Assert.AreEqual(someClassNull.ValueOr(ex => ex), null);
+
             Assert.AreEqual(someStruct.ValueOr(() => { Assert.Fail(); return -1; }), 1);
             Assert.AreEqual(someNullable.ValueOr(() => { Assert.Fail(); return -1; }), 1);
             Assert.AreEqual(someNullableEmpty.ValueOr(() => { Assert.Fail(); return -1; }), null);
             Assert.AreEqual(someClass.ValueOr(() => { Assert.Fail(); return "-1"; }), "1");
             Assert.AreEqual(someClassNull.ValueOr(() => { Assert.Fail(); return "-1"; }), null);
+
+            Assert.AreEqual(someStruct.ValueOr(ex => { Assert.Fail(); return -1; }), 1);
+            Assert.AreEqual(someNullable.ValueOr(ex => { Assert.Fail(); return -1; }), 1);
+            Assert.AreEqual(someNullableEmpty.ValueOr(ex => { Assert.Fail(); return -1; }), null);
+            Assert.AreEqual(someClass.ValueOr(ex => { Assert.Fail(); return "-1"; }), "1");
+            Assert.AreEqual(someClassNull.ValueOr(ex => { Assert.Fail(); return "-1"; }), null);
         }
 
         [TestMethod]
@@ -290,9 +306,25 @@ namespace Optional.Tests
             Assert.AreEqual(someNullable.ValueOr(() => -1), 1);
             Assert.AreEqual(someClass.ValueOr(() => "-1"), "1");
 
-            Assert.AreEqual(someStruct.ValueOr(() => { Assert.Fail(); return -1; }), 1);
-            Assert.AreEqual(someNullable.ValueOr(() => { Assert.Fail(); return -1; }), 1);
-            Assert.AreEqual(someClass.ValueOr(() => { Assert.Fail(); return "-1"; }), "1");
+            someStruct.Or(() => { Assert.Fail(); return -1; });
+            someNullable.Or(() => { Assert.Fail(); return -1; });
+            someClass.Or(() => { Assert.Fail(); return "-1"; });
+
+            var someStructEx = noneStruct.Or(ex => ex.GetHashCode());
+            var someNullableEx = noneNullable.Or(ex => ex.GetHashCode());
+            var someClassEx = noneClass.Or(ex => ex);
+
+            Assert.IsTrue(someStructEx.HasValue);
+            Assert.IsTrue(someNullableEx.HasValue);
+            Assert.IsTrue(someClassEx.HasValue);
+
+            Assert.AreEqual(someStructEx.ValueOr(() => -1), "ex".GetHashCode());
+            Assert.AreEqual(someNullableEx.ValueOr(() => -1), "ex".GetHashCode());
+            Assert.AreEqual(someClassEx.ValueOr(() => "-1"), "ex");
+
+            someStructEx.Or(() => { Assert.Fail(); return -1; });
+            someNullableEx.Or(() => { Assert.Fail(); return -1; });
+            someClassEx.Or(() => { Assert.Fail(); return "-1"; });
         }
 
         [TestMethod]
@@ -432,7 +464,7 @@ namespace Optional.Tests
 
         [TestMethod]
         public void Either_Filtering()
-        { 
+        {
             var none = "val".None("ex");
             var some = "val".Some<string, string>();
 
