@@ -3,7 +3,7 @@ Optional
 
 Optional is a simple option/maybe type for C#.
 
-Version: 2.2.0
+Version: 3.0.0
 
 ## Features at a glance
 
@@ -91,6 +91,7 @@ Similarly, a more general extension method is provided, allowing a specified pre
 ```csharp
 string str = "abc";
 var none = str.SomeWhen(s => s == "cba"); // Return None if predicate is violated
+var none = str.NoneWhen(s => s == "abc"); // Return None if predicate is satisfied
 ```
 
 Clearly, optional values are conceptually quite similar to nullables. Hence, a method is provided to convert a nullable into an optional value:
@@ -228,6 +229,27 @@ var stillSome = some.Filter(x => x == 10);
 var none = some.Filter(x => x != 10);
 ```
 
+### Enumerating options
+
+An option implements `GetEnumerator`, allowing you to loop over the value, as if it was a collection with either a single or no elements.
+
+```csharp
+foreach (var value in option)
+{
+	Console.WriteLine(value);
+}
+```
+
+As you might have noticed, this is a nice and lightweight alternative to `Match` in cases where you only want to do something if the value is present. Also, you should use this instead of the more verbose and unsafe combination of `option.HasValue` and `option.ValueOrFailure()`, which you might otherwise be tempted to try.
+
+Notice, however, that options don't actually implement `IEnumerable<T>`, in order to not pollute the options with LINQ extension methods and the like. Although many LINQ methods share functionality similar to those offered by an option, they offer a more collection-oriented interface, and includes several unsafe functions (such as `First`, `Single`, etc).
+
+Although options deliberately don't act as enumerables, you can easily convert an option to an enumerable by calling the `ToEnumerable()` method:
+
+```csharp
+var enumerable = option.ToEnumerable();
+```
+
 ### Working with LINQ query syntax
 
 Optional supports LINQ query syntax, to make the above transformations somewhat cleaner.
@@ -301,6 +323,7 @@ var isGreaterThanThousand = option.Exists(val => val > 1000);
 
 var value = option.ValueOr(10);
 var value = option.ValueOr(() => SlowOperation()); // Lazy variant
+var value = option.ValueOr(exception => (int)exception); // Mapped from exceptional value
 
 // If the value and exception is of identical type, 
 // it is possible to return the one which is present
@@ -320,6 +343,7 @@ option.Match(
   none: exception => Console.WriteLine(exception)
 );
 ```
+
 And again, when `Optional.Unsafe` is imported, it is possible to retrieve the value without safety:
 
 ```csharp
@@ -333,6 +357,7 @@ Values can be conveniently transformed using similar operations to that of the `
 var none = Option.None<int, ErrorCode>(ErrorCode.GeneralError);
 var some = none.Or(10);
 var some = none.Or(() => SlowOperation()); // Lazy variant
+var some = none.Or(exception = (int)exception); // Mapped from exceptional value
 
 // Mapping
 
@@ -358,6 +383,17 @@ var result = Option.Some<int, ErrorCode>(10)
     .Filter(x => false, ErrorCode.GeneralError) // Now "GeneralError"
     .Filter(x => false, ErrorCode.IncorrectValue) // Still "GeneralError"
     .Filter(x => false, () => SlowOperation()); // Lazy variant
+```
+
+Enumeration works identically to that of `Option<T>`:
+
+```csharp
+foreach (var value in option)
+{
+	// Do something
+}
+
+var enumerable = option.ToEnumerable();
 ```
 
 LINQ query syntax is supported, with the notable exception of the `where` operator (as it doesn't allow us to specify an exceptional value to use in case of failure):
