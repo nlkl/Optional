@@ -185,6 +185,15 @@ var some = none.Or(10); // A some instance, with value 10
 var some = none.Or(() => SlowOperation()); // Lazy variant
 ```
 
+Similarly, the `Else` function enables you to specify an alternative option, which will replace the current one, in case no value is present. Notice, that both options might be none, in which case a none-option will be returned:
+
+```csharp
+var none = Option.None<int>();
+var some = none.Else(10.Some()); // A some instance, with value 10
+var some = none.Else(Option.None<int>()); // A none instance
+var some = none.Else(() => Option.Some<int>()); // Lazy variant
+```
+
 The `Map` function transforms the inner value of an option. If no value is present none is simply propagated:
 
 ```csharp
@@ -358,6 +367,10 @@ var none = Option.None<int, ErrorCode>(ErrorCode.GeneralError);
 var some = none.Or(10);
 var some = none.Or(() => SlowOperation()); // Lazy variant
 var some = none.Or(exception = (int)exception); // Mapped from exceptional value
+var some = none.Else(10.Some<int, ErrorCode>()); // A some instance with value 10
+var some = none.Else(Option.None<int, ErrorCode>(ErrorCode.FatalError)); // A none instance carrying a ErrorCode.FatalError
+var some = none.Else(() => 10.Some<int, ErrorCode>()); // Lazy variant
+var some = none.Else(exception = Option.None<int, ErrorCode>(exception)); // Mapped from exceptional value
 
 // Mapping
 
