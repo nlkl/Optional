@@ -188,6 +188,20 @@ namespace Optional
         public Option<T> Or(Func<T> alternativeFactory) => hasValue ? this : Option.Some(alternativeFactory());
 
         /// <summary>
+        /// Uses an alternative optional, if no existing value is present.
+        /// </summary>
+        /// <param name="alternativeOption">The alternative optional.</param>
+        /// <returns>The alternative optional, if no value is present, otherwise itself.</returns>
+        public Option<T> Else(Option<T> alternativeOption) => hasValue ? this : alternativeOption;
+
+        /// <summary>
+        /// Uses an alternative optional, if no existing value is present.
+        /// </summary>
+        /// <param name="alternativeOptionFactory">A factory function to create an alternative optional.</param>
+        /// <returns>The alternative optional, if no value is present, otherwise itself.</returns>
+        public Option<T> Else(Func<Option<T>> alternativeOptionFactory) => hasValue ? this : alternativeOptionFactory();
+
+        /// <summary>
         /// Attaches an exceptional value to an empty optional.
         /// </summary>
         /// <param name="exception">The exceptional value to attach.</param>

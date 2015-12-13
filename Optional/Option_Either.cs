@@ -219,6 +219,30 @@ namespace Optional
             hasValue ? this : Option.Some<T, TException>(alternativeFactory(exception));
 
         /// <summary>
+        /// Uses an alternative optional, if no existing value is present.
+        /// </summary>
+        /// <param name="alternativeOption">The alternative optional.</param>
+        /// <returns>The alternative optional, if no value is present, otherwise itself.</returns>
+        public Option<T, TException> Else(Option<T, TException> alternativeOption) =>
+            hasValue ? this : alternativeOption;
+
+        /// <summary>
+        /// Uses an alternative optional, if no existing value is present.
+        /// </summary>
+        /// <param name="alternativeOptionFactory">A factory function to create an alternative optional.</param>
+        /// <returns>The alternative optional, if no value is present, otherwise itself.</returns>
+        public Option<T, TException> Else(Func<Option<T, TException>> alternativeOptionFactory) =>
+            hasValue ? this : alternativeOptionFactory();
+
+        /// <summary>
+        /// Uses an alternative optional, if no existing value is present.
+        /// </summary>
+        /// <param name="alternativeOptionFactory">A factory function to map the exceptional value to an alternative optional.</param>
+        /// <returns>The alternative optional, if no value is present, otherwise itself.</returns>
+        public Option<T, TException> Else(Func<TException, Option<T, TException>> alternativeOptionFactory) =>
+            hasValue ? this : alternativeOptionFactory(exception);
+
+        /// <summary>
         /// Forgets any attached exceptional value.
         /// </summary>
         /// <returns>An optional without an exceptional value.</returns>

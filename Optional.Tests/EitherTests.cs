@@ -284,6 +284,40 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+        public void Either_AlternativeOption()
+        {
+            var noneStruct = Option.None<int, string>("ex");
+            var noneNullable = Option.None<int?, string>("ex");
+            var noneClass = Option.None<string, string>("ex");
+
+            Assert.IsFalse(noneStruct.HasValue);
+            Assert.IsFalse(noneNullable.HasValue);
+            Assert.IsFalse(noneClass.HasValue);
+            Assert.AreEqual(noneClass.ValueOrException(), "ex");
+
+            var noneStruct2 = noneStruct.Else(Option.None<int, string>("ex2"));
+            var noneNullable2 = noneNullable.Else(Option.None<int?, string>("ex2"));
+            var noneClass2 = noneClass.Else(Option.None<string, string>("ex2"));
+
+            Assert.IsFalse(noneStruct2.HasValue);
+            Assert.IsFalse(noneNullable2.HasValue);
+            Assert.IsFalse(noneClass2.HasValue);
+            Assert.AreEqual(noneClass2.ValueOrException(), "ex2");
+
+            var someStruct = noneStruct.Else(1.Some<int, string>());
+            var someNullable = noneNullable.Else(Option.Some<int?, string>(1));
+            var someClass = noneClass.Else("1".Some<string, string>());
+
+            Assert.IsTrue(someStruct.HasValue);
+            Assert.IsTrue(someNullable.HasValue);
+            Assert.IsTrue(someClass.HasValue);
+
+            Assert.AreEqual(someStruct.ValueOr(-1), 1);
+            Assert.AreEqual(someNullable.ValueOr(-1), 1);
+            Assert.AreEqual(someClass.ValueOr("-1"), "1");
+        }
+
+        [TestMethod]
         public void Either_AlternativeValueLazy()
         {
             var noneStruct = Option.None<int, string>("ex");
@@ -325,6 +359,71 @@ namespace Optional.Tests
             someStructEx.Or(() => { Assert.Fail(); return -1; });
             someNullableEx.Or(() => { Assert.Fail(); return -1; });
             someClassEx.Or(() => { Assert.Fail(); return "-1"; });
+        }
+
+        [TestMethod]
+        public void Either_AlternativeOptionLazy()
+        {
+            var noneStruct = Option.None<int, string>("ex");
+            var noneNullable = Option.None<int?, string>("ex");
+            var noneClass = Option.None<string, string>("ex");
+
+            Assert.IsFalse(noneStruct.HasValue);
+            Assert.IsFalse(noneNullable.HasValue);
+            Assert.IsFalse(noneClass.HasValue);
+            Assert.AreEqual(noneClass.ValueOrException(), "ex");
+
+            var noneStruct2 = noneStruct.Else(() => Option.None<int, string>("ex2"));
+            var noneNullable2 = noneNullable.Else(() => Option.None<int?, string>("ex2"));
+            var noneClass2 = noneClass.Else(() => Option.None<string, string>("ex2"));
+
+            Assert.IsFalse(noneStruct2.HasValue);
+            Assert.IsFalse(noneNullable2.HasValue);
+            Assert.IsFalse(noneClass2.HasValue);
+            Assert.AreEqual(noneClass2.ValueOrException(), "ex2");
+
+            var noneStruct3 = noneStruct.Else(ex => Option.None<int, string>(ex + "3"));
+            var noneNullable3 = noneNullable.Else(ex => Option.None<int?, string>(ex + "3"));
+            var noneClass3 = noneClass.Else(ex => Option.None<string, string>(ex + "3"));
+
+            Assert.IsFalse(noneStruct3.HasValue);
+            Assert.IsFalse(noneNullable3.HasValue);
+            Assert.IsFalse(noneClass3.HasValue);
+            Assert.AreEqual(noneClass3.Map(val => val.ToString()).ValueOrException(), "ex3");
+            Assert.AreEqual(noneClass3.Map(val => val.ToString()).ValueOrException(), "ex3");
+            Assert.AreEqual(noneClass3.ValueOrException(), "ex3");
+
+            var someStruct = noneStruct.Else(() => 1.Some<int, string>());
+            var someNullable = noneNullable.Else(() => Option.Some<int?, string>(1));
+            var someClass = noneClass.Else(() => "1".Some<string, string>());
+
+            Assert.IsTrue(someStruct.HasValue);
+            Assert.IsTrue(someNullable.HasValue);
+            Assert.IsTrue(someClass.HasValue);
+
+            Assert.AreEqual(someStruct.ValueOr(() => -1), 1);
+            Assert.AreEqual(someNullable.ValueOr(() => -1), 1);
+            Assert.AreEqual(someClass.ValueOr(() => "-1"), "1");
+
+            someStruct.Else(() => { Assert.Fail(); return (-1).Some<int, string>(); });
+            someNullable.Else(() => { Assert.Fail(); return Option.Some<int?, string>(-1); });
+            someClass.Else(() => { Assert.Fail(); return "-1".Some<string, string>(); });
+
+            var someStructEx = noneStruct.Else(ex => ex.GetHashCode().Some<int, string>());
+            var someNullableEx = noneNullable.Else(ex => Option.Some<int?, string>(ex.GetHashCode()));
+            var someClassEx = noneClass.Else(ex => ex.Some<string, string>());
+
+            Assert.IsTrue(someStructEx.HasValue);
+            Assert.IsTrue(someNullableEx.HasValue);
+            Assert.IsTrue(someClassEx.HasValue);
+
+            Assert.AreEqual(someStructEx.ValueOr(() => -1), "ex".GetHashCode());
+            Assert.AreEqual(someNullableEx.ValueOr(() => -1), "ex".GetHashCode());
+            Assert.AreEqual(someClassEx.ValueOr(() => "-1"), "ex");
+
+            someStructEx.Else(() => { Assert.Fail(); return (-1).Some<int, string>(); });
+            someNullableEx.Else(() => { Assert.Fail(); return Option.Some<int?, string>(-1); });
+            someClassEx.Else(() => { Assert.Fail(); return "-1".Some<string, string>(); });
         }
 
         [TestMethod]
