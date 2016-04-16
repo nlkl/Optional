@@ -61,9 +61,17 @@
     <Compile Include="MaybeTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Optional.Extensions\Optional.Extensions.csproj">
-      <Project>{83aa6caf-64aa-4e29-b0c0-74e50480c571}</Project>
-      <Name>Optional.Extensions</Name>
+    <ProjectReference Include="..\Optional.Async\Optional.Async.csproj">
+      <Project>{73183408-b4b2-41dd-84d5-f4ec972d7048}</Project>
+      <Name>Optional.Async</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Optional.Collections\Optional.Collections.csproj">
+      <Project>{c2e9000d-8175-4d37-ae43-26284e678feb}</Project>
+      <Name>Optional.Collections</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Optional.Utilities\Optional.Utilities.csproj">
+      <Project>{444c5c12-c1a2-485c-bd10-a11b78e5dac9}</Project>
+      <Name>Optional.Utilities</Name>
     </ProjectReference>
     <ProjectReference Include="..\Optional\Optional.csproj">
       <Project>{4a4c60d5-c480-4816-bb61-1e2fbc243dd4}</Project>

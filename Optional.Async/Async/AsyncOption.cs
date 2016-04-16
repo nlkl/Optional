@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Optional.Extensions.Async
+namespace Optional.Async
 {
     /// <summary>
     /// Represents an asynchronously evaluated optional value.

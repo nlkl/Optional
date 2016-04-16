@@ -2,13 +2,12 @@
 // Implementation closely inspired by the official source code for FirstOrDefault, etc.
 // Refer to reference source for original source code: referencesource.microsoft.com
 
-using Optional.Extensions.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Optional.Extensions.Collections
+namespace Optional.Collections
 {
     public static class LinqEnumerableExtensions
     {
@@ -19,7 +18,7 @@ namespace Optional.Extensions.Collections
         /// <returns>An Option&lt;T&gt; instance containing the first element if present.</returns>
         public static Option<TSource> FirstOrNone<TSource>(this IEnumerable<TSource> source)
         {
-            Guard.NotNull(source, "source");
+            if (source == null) throw new ArgumentNullException(nameof(source));
 
             IList<TSource> list = source as IList<TSource>;
             if (list != null)
@@ -52,8 +51,8 @@ namespace Optional.Extensions.Collections
         /// <returns>An Option&lt;T&gt; instance containing the first element if present.</returns>
         public static Option<TSource> FirstOrNone<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            Guard.NotNull(source, "source");
-            Guard.NotNull(predicate, "predicate");
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
             foreach (var element in source)
             {
@@ -73,7 +72,7 @@ namespace Optional.Extensions.Collections
         /// <returns>An Option&lt;T&gt; instance containing the last element if present.</returns>
         public static Option<TSource> LastOrNone<TSource>(this IEnumerable<TSource> source)
         {
-            Guard.NotNull(source, "source");
+            if (source == null) throw new ArgumentNullException(nameof(source));
 
             IList<TSource> list = source as IList<TSource>;
             if (list != null)
@@ -113,8 +112,8 @@ namespace Optional.Extensions.Collections
         /// <returns>An Option&lt;T&gt; instance containing the last element if present.</returns>
         public static Option<TSource> LastOrNone<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            Guard.NotNull(source, "source");
-            Guard.NotNull(predicate, "predicate");
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
             TSource result = default(TSource);
             bool exists = false;
@@ -138,7 +137,7 @@ namespace Optional.Extensions.Collections
         /// <returns>An Option&lt;T&gt; instance containing the element if present.</returns>
         public static Option<TSource> SingleOrNone<TSource>(this IEnumerable<TSource> source)
         {
-            Guard.NotNull(source, "source");
+            if (source == null) throw new ArgumentNullException(nameof(source));
 
             IList<TSource> list = source as IList<TSource>;
             if (list != null)
@@ -178,8 +177,8 @@ namespace Optional.Extensions.Collections
         /// <returns>An Option&lt;T&gt; instance containing the element if present.</returns>
         public static Option<TSource> SingleOrNone<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
         {
-            Guard.NotNull(source, "source");
-            Guard.NotNull(predicate, "predicate");
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
             TSource result = default(TSource);
             long count = 0;
@@ -208,7 +207,7 @@ namespace Optional.Extensions.Collections
         /// <returns>An Option&lt;T&gt; instance containing the element if found.</returns>
         public static Option<TSource> ElementAtOrNone<TSource>(this IEnumerable<TSource> source, int index)
         {
-            Guard.NotNull(source, "source");
+            if (source == null) throw new ArgumentNullException(nameof(source));
 
             if (index >= 0)
             {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Optional.Extensions.Async;
+using Optional.Async;
 
 namespace Optional.Tests.Extensions
 {

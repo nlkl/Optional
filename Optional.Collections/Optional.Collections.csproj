@@ -1,20 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{65A088A5-A36E-4C9C-968D-485D6D647002}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{C2E9000D-8175-4D37-AE43-26284E678FEB}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Optional.Sandbox</RootNamespace>
-    <AssemblyName>Optional.Sandbox</AssemblyName>
+    <RootNamespace>Optional.Collections</RootNamespace>
+    <AssemblyName>Optional.Collections</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -39,29 +36,15 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Collections\LinqEnumerableExtensions.cs" />
+    <Compile Include="Collections\LinqQueryableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Timing.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Optional.Async\Optional.Async.csproj">
-      <Project>{73183408-b4b2-41dd-84d5-f4ec972d7048}</Project>
-      <Name>Optional.Async</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Optional.Collections\Optional.Collections.csproj">
-      <Project>{c2e9000d-8175-4d37-ae43-26284e678feb}</Project>
-      <Name>Optional.Collections</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Optional.Utilities\Optional.Utilities.csproj">
-      <Project>{444c5c12-c1a2-485c-bd10-a11b78e5dac9}</Project>
-      <Name>Optional.Utilities</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Optional\Optional.csproj">
       <Project>{4a4c60d5-c480-4816-bb61-1e2fbc243dd4}</Project>
       <Name>Optional</Name>

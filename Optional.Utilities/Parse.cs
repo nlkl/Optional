@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace Optional.Extensions
+namespace Optional.Utilities
 {
     /// <summary>
     /// A collection of static helper methods, for parsing strings into simple types.

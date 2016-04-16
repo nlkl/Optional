@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Optional.Extensions
+namespace Optional.Utilities
 {
     public static class Try
     {

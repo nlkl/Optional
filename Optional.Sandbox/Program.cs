@@ -1,8 +1,8 @@
 ﻿using Optional;
 using Optional.Linq;
-using Optional.Extensions;
-using Optional.Extensions.Collections;
-using Optional.Extensions.Async;
+using Optional.Async;
+using Optional.Collections;
+using Optional.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
