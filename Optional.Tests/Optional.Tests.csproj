@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="EitherTests.cs" />
     <Compile Include="Extensions\AsyncOptionTests.cs" />
+    <Compile Include="Extensions\TryTests.cs" />
     <Compile Include="Extensions\CollectionTests.cs" />
     <Compile Include="MaybeEitherInteropTests.cs" />
     <Compile Include="UnsafeTests.cs" />
