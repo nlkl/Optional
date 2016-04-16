@@ -42,8 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\LinqEnumerableExtensions.cs" />
-    <Compile Include="Collections\LinqQueryableExtensions.cs" />
+    <Compile Include="LinqEnumerableExtensions.cs" />
+    <Compile Include="LinqQueryableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

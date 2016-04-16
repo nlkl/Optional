@@ -42,9 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Async\AsyncOption.cs" />
-    <Compile Include="Async\AsyncOptionExtensions.cs" />
-    <Compile Include="Async\TaskTransformationExtensions.cs" />
+    <Compile Include="AsyncOption.cs" />
+    <Compile Include="AsyncOptionExtensions.cs" />
+    <Compile Include="TaskTransformationExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
