@@ -1,6 +1,3 @@
-Optional
-=====
-
 ![Optional](https://raw.githubusercontent.com/nlkl/Optional/master/Extras/Icon/Logo.png)
 
 Optional is a simple option/maybe type for C#.
