@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿#if !NOASYNC
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -367,7 +369,7 @@ namespace Optional.Tests.Extensions
         {
             var someMaybe = AsyncOption.Some<string>("abc");
             var noneMaybe = AsyncOption.None<string>();
-            
+
             var someEither = AsyncOption.Some<string, string>("abc");
             var noneEither = AsyncOption.None<string, string>("ex");
 
@@ -385,3 +387,5 @@ namespace Optional.Tests.Extensions
         }
     }
 }
+
+#endif

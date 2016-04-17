@@ -251,6 +251,7 @@ namespace Optional.Utilities
             return char.TryParse(s, out result) ? result.Some() : result.None();
         }
 
+#if !NET35
         /// <summary>
         /// Tries to parse a string into a guid.
         /// </summary>
@@ -280,6 +281,7 @@ namespace Optional.Utilities
             TEnum result;
             return Enum.TryParse<TEnum>(s, ignoreCase, out result) ? result.Some() : result.None();
         }
+#endif
 
         /// <summary>
         /// Tries to parse a string into a datetime.
@@ -331,6 +333,7 @@ namespace Optional.Utilities
             return TimeSpan.TryParse(s, out result) ? result.Some() : result.None();
         }
 
+#if !NET35
         /// <summary>
         /// Tries to parse a string into a timespan.
         /// </summary>
@@ -380,6 +383,7 @@ namespace Optional.Utilities
             TimeSpan result;
             return TimeSpan.TryParseExact(s, formats, provider, styles, out result) ? result.Some() : result.None();
         }
+#endif
 
         /// <summary>
         /// Tries to parse a string into a datetime offset.
