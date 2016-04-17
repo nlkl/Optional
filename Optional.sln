@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optional.Async", "Optional.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optional.Utilities", "Optional.Utilities\Optional.Utilities.csproj", "{444C5C12-C1A2-485C-BD10-A11B78E5DAC9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{8C7EBAD1-F847-4368-98AC-2ECBCD6033DD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8C7EBAD1-F847-4368-98AC-2ECBCD6033DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

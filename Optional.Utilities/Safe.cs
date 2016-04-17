@@ -14,7 +14,7 @@ namespace Optional.Utilities
         /// </summary>
         /// <param name="operation">The operation to perform.</param>
         /// <returns>An Option&lt;T&gt; instance containing the result or a caught exception.</returns>
-        public static Option<T, Exception> Catch<T>(Func<T> operation)
+        public static Option<T, Exception> Try<T>(Func<T> operation)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace Optional.Utilities
         /// </summary>
         /// <param name="operation">The operation to perform.</param>
         /// <returns>An Option&lt;T&gt; instance containing the result or a caught exception.</returns>
-        public static Option<T, Exception> Catch<T, TException>(Func<T> operation)
+        public static Option<T, Exception> Try<T, TException>(Func<T> operation)
             where TException : Exception
         {
             try
@@ -53,7 +53,7 @@ namespace Optional.Utilities
         /// </summary>
         /// <param name="operation">The operation to perform.</param>
         /// <returns>An Option&lt;T&gt; instance containing the result or a caught exception.</returns>
-        public static Option<T, Exception> Catch<T, TException1, TException2>(Func<T> operation)
+        public static Option<T, Exception> Try<T, TException1, TException2>(Func<T> operation)
             where TException1 : Exception
             where TException2 : Exception
         {
@@ -78,7 +78,7 @@ namespace Optional.Utilities
         /// </summary>
         /// <param name="operation">The operation to perform.</param>
         /// <returns>An Option&lt;T&gt; instance containing the result or a caught exception.</returns>
-        public static Option<T, Exception> Catch<T, TException1, TException2, TException3>(Func<T> operation)
+        public static Option<T, Exception> Try<T, TException1, TException2, TException3>(Func<T> operation)
             where TException1 : Exception
             where TException2 : Exception
             where TException3 : Exception
@@ -108,7 +108,7 @@ namespace Optional.Utilities
         /// </summary>
         /// <param name="operation">The operation to perform.</param>
         /// <returns>An Option&lt;T&gt; instance containing the result or a caught exception.</returns>
-        public static Option<T, Exception> Catch<T, TException1, TException2, TException3, TException4>(Func<T> operation)
+        public static Option<T, Exception> Try<T, TException1, TException2, TException3, TException4>(Func<T> operation)
             where TException1 : Exception
             where TException2 : Exception
             where TException3 : Exception
@@ -143,7 +143,7 @@ namespace Optional.Utilities
         /// </summary>
         /// <param name="operation">The operation to perform.</param>
         /// <returns>An Option&lt;T&gt; instance containing the result or a caught exception.</returns>
-        public static Option<T, Exception> Catch<T, TException1, TException2, TException3, TException4, TException5>(Func<T> operation)
+        public static Option<T, Exception> Try<T, TException1, TException2, TException3, TException4, TException5>(Func<T> operation)
             where TException1 : Exception
             where TException2 : Exception
             where TException3 : Exception
