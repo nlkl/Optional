@@ -1,9 +1,11 @@
 Optional
 =====
 
+![Optional](https://raw.githubusercontent.com/nlkl/Optional/master/Extras/Icon/Logo.png)
+
 Optional is a simple option/maybe type for C#.
 
-Version: 3.0.0
+Version: 3.1.0
 
 ## Features at a glance
 
