@@ -525,5 +525,25 @@ namespace Optional.Tests
             }
             Assert.AreEqual(count, 2);
         }
+
+        [TestMethod]
+        public void Maybe_Default()
+        {
+            var none1 = default(Option<int>);
+            var none2 = default(Option<int?>);
+            var none3 = default(Option<string>);
+
+            Assert.IsFalse(none1.HasValue);
+            Assert.IsFalse(none2.HasValue);
+            Assert.IsFalse(none3.HasValue);
+
+            var some1 = none1.Or(1);
+            var some2 = none2.Or(1);
+            var some3 = none3.Or("1");
+
+            Assert.AreEqual(some1.ValueOr(-1), 1);
+            Assert.AreEqual(some2.ValueOr(-1), 1);
+            Assert.AreEqual(some3.ValueOr("-1"), "1");
+        }
     }
 }

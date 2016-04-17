@@ -720,5 +720,37 @@ namespace Optional.Tests
             }
             Assert.AreEqual(count, 2);
         }
+
+        [TestMethod]
+        public void Maybe_Default()
+        {
+            var none1 = default(Option<int, int>);
+            var none2 = default(Option<int?, int?>);
+            var none3 = default(Option<string, string>);
+
+            Assert.IsFalse(none1.HasValue);
+            Assert.IsFalse(none2.HasValue);
+            Assert.IsFalse(none3.HasValue);
+
+            Assert.AreEqual(none1.ValueOrException(), default(int));
+            Assert.AreEqual(none2.ValueOrException(), default(int?));
+            Assert.AreEqual(none3.ValueOrException(), default(string));
+
+            var noneWithEx1 = none1.MapException(x => -1);
+            var noneWithEx2 = none2.MapException(x => (int?)-1);
+            var noneWithEx3 = none3.MapException(x => "-1");
+
+            Assert.AreEqual(noneWithEx1.ValueOrException(), -1);
+            Assert.AreEqual(noneWithEx2.ValueOrException(), -1);
+            Assert.AreEqual(noneWithEx3.ValueOrException(), "-1");
+
+            var some1 = none1.Or(1);
+            var some2 = none2.Or(1);
+            var some3 = none3.Or("1");
+
+            Assert.AreEqual(some1.ValueOr(-1), 1);
+            Assert.AreEqual(some2.ValueOr(-1), 1);
+            Assert.AreEqual(some3.ValueOr("-1"), "1");
+        }
     }
 }
