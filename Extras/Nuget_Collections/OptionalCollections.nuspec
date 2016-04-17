@@ -13,7 +13,7 @@
     <copyright>Copyright 2016</copyright>
     <tags>Option Some None Maybe Either Exception Null Monad Monadic Functional</tags>
     <dependencies>
-      <dependency id="Optional" version="3.0.0" />
+      <dependency id="Optional" version="3.1.0" />
     </dependencies>
   </metadata>
 </package>
