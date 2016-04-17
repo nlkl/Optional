@@ -16,6 +16,7 @@ using Ex5 = System.NotImplementedException;
 using Ex6 = System.RankException;
 using BaseEx = System.MemberAccessException;
 using SubEx = System.MethodAccessException;
+using Optional.Tests.Utilities;
 
 namespace Optional.Tests.Extensions
 {
@@ -59,19 +60,8 @@ namespace Optional.Tests.Extensions
             Assert.IsInstanceOfType(err1.Match(x => null, ex => ex), typeof(Ex1));
             Assert.AreEqual(err1.Match(x => null, ex => ex), ex1);
 
-            try
-            {
-                Try.Run<bool, Ex1>(() => { throw ex0; });
-                Assert.Fail();
-            }
-            catch { }
-
-            try
-            {
-                Try.Run<bool, Ex1>(() => { throw ex2; });
-                Assert.Fail();
-            }
-            catch { }
+            CustomAssert.Throws<Ex>(() => Try.Run<bool, Ex2>(() => { throw ex0; }));
+            CustomAssert.Throws<Ex1>(() => Try.Run<bool, Ex2>(() => { throw ex1; }));
 
             Try.Run<bool, BaseEx>(() => { throw subEx; });
             Try.Run<bool, Ex>(() => { throw ex0; });
@@ -103,19 +93,8 @@ namespace Optional.Tests.Extensions
             Assert.AreEqual(err1.Match(x => null, ex => ex), ex1);
             Assert.AreEqual(err2.Match(x => null, ex => ex), ex2);
 
-            try
-            {
-                Try.Run<bool, Ex1, Ex2>(() => { throw ex0; });
-                Assert.Fail();
-            }
-            catch { }
-
-            try
-            {
-                Try.Run<bool, Ex1, Ex2>(() => { throw ex3; });
-                Assert.Fail();
-            }
-            catch { }
+            CustomAssert.Throws<Ex>(() => Try.Run<bool, Ex2, Ex3>(() => { throw ex0; }));
+            CustomAssert.Throws<Ex1>(() => Try.Run<bool, Ex2, Ex3>(() => { throw ex1; }));
 
             Try.Run<bool, BaseEx, Ex2>(() => { throw subEx; });
             Try.Run<bool, Ex, Ex2>(() => { throw ex0; });
@@ -152,19 +131,8 @@ namespace Optional.Tests.Extensions
             Assert.AreEqual(err2.Match(x => null, ex => ex), ex2);
             Assert.AreEqual(err3.Match(x => null, ex => ex), ex3);
 
-            try
-            {
-                Try.Run<bool, Ex1, Ex2, Ex3>(() => { throw ex0; });
-                Assert.Fail();
-            }
-            catch { }
-
-            try
-            {
-                Try.Run<bool, Ex1, Ex2, Ex3>(() => { throw ex4; });
-                Assert.Fail();
-            }
-            catch { }
+            CustomAssert.Throws<Ex>(() => Try.Run<bool, Ex2, Ex3, Ex4>(() => { throw ex0; }));
+            CustomAssert.Throws<Ex1>(() => Try.Run<bool, Ex2, Ex3, Ex4>(() => { throw ex1; }));
 
             Try.Run<bool, BaseEx, Ex2, Ex3>(() => { throw subEx; });
             Try.Run<bool, Ex, Ex2, Ex3>(() => { throw ex0; });
@@ -206,19 +174,8 @@ namespace Optional.Tests.Extensions
             Assert.AreEqual(err3.Match(x => null, ex => ex), ex3);
             Assert.AreEqual(err4.Match(x => null, ex => ex), ex4);
 
-            try
-            {
-                Try.Run<bool, Ex1, Ex2, Ex3, Ex4>(() => { throw ex0; });
-                Assert.Fail();
-            }
-            catch { }
-
-            try
-            {
-                Try.Run<bool, Ex1, Ex2, Ex3, Ex4>(() => { throw ex5; });
-                Assert.Fail();
-            }
-            catch { }
+            CustomAssert.Throws<Ex>(() => Try.Run<bool, Ex2, Ex3, Ex4, Ex5>(() => { throw ex0; }));
+            CustomAssert.Throws<Ex1>(() => Try.Run<bool, Ex2, Ex3, Ex4, Ex5>(() => { throw ex1; }));
 
             Try.Run<bool, BaseEx, Ex2, Ex3, Ex4>(() => { throw subEx; });
             Try.Run<bool, Ex, Ex2, Ex3, Ex4>(() => { throw ex0; });
@@ -265,19 +222,8 @@ namespace Optional.Tests.Extensions
             Assert.AreEqual(err4.Match(x => null, ex => ex), ex4);
             Assert.AreEqual(err5.Match(x => null, ex => ex), ex5);
 
-            try
-            {
-                Try.Run<bool, Ex1, Ex2, Ex3, Ex4, Ex5>(() => { throw ex0; });
-                Assert.Fail();
-            }
-            catch { }
-
-            try
-            {
-                Try.Run<bool, Ex1, Ex2, Ex3, Ex4, Ex5>(() => { throw ex6; });
-                Assert.Fail();
-            }
-            catch { }
+            CustomAssert.Throws<Ex>(() => Try.Run<bool, Ex2, Ex3, Ex4, Ex5, Ex6>(() => { throw ex0; }));
+            CustomAssert.Throws<Ex1>(() => Try.Run<bool, Ex2, Ex3, Ex4, Ex5, Ex6>(() => { throw ex1; }));
 
             Try.Run<bool, BaseEx, Ex2, Ex3, Ex4, Ex5>(() => { throw subEx; });
             Try.Run<bool, Ex, Ex2, Ex3, Ex4, Ex5>(() => { throw ex0; });
