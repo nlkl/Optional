@@ -128,7 +128,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ReadOnlyDictionaryExtensions.cs" />
+    <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="LinqEnumerableExtensions.cs" />
     <Compile Include="LinqQueryableExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

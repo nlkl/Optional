@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Optional.Collections;
+using System.Collections;
 
 namespace Optional.Tests.Extensions
 {
@@ -115,13 +116,26 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void Extensions_GetOperatorReadOnlyDictionary()
+        public void Extensions_GetValueOperatorDictionary()
         {
-            var full = Enumerable.Range(0, 100).ToDictionary(i => i, i => i.ToString());
-            var single = Enumerable.Repeat(0, 1).ToDictionary(i => i, i => i.ToString());
-            var empty = Enumerable.Empty<int>().ToDictionary(i => i, i => i.ToString());
+            var dictionaryA = Enumerable.Range(50, 50).ToDictionary(i => i, i => i.ToString());
+            var excludedKeysA = Enumerable.Range(-50, 50);
+            GetValueOperator(new TestReadOnlyDictionary<int, string>(dictionaryA), excludedKeysA);
+            GetValueOperator(new TestDictionary<int, string>(dictionaryA), excludedKeysA);
+            GetValueOperator(dictionaryA.ToList(), excludedKeysA);
 
-            DictionaryGetOperator(full, single, empty);
+            var dictionaryB = new Dictionary<string, Guid>
+            {
+                { "a", Guid.NewGuid() },
+                { "b", Guid.NewGuid() },
+                { "c", Guid.NewGuid() },
+                { "d", Guid.NewGuid() },
+                { "e", Guid.NewGuid() },
+            };
+            var excludedKeysB = new List<string> { "h", "i", "j", "k" };
+            GetValueOperator(new TestReadOnlyDictionary<string, Guid>(dictionaryB), excludedKeysB);
+            GetValueOperator(new TestDictionary<string, Guid>(dictionaryB), excludedKeysB);
+            GetValueOperator(dictionaryB.ToList(), excludedKeysB);
         }
 
         private void FirstOperator(IEnumerable<int> full, IEnumerable<int> single, IEnumerable<int> empty)
@@ -278,21 +292,71 @@ namespace Optional.Tests.Extensions
             Assert.IsFalse(empty.ElementAtOrNone(0).HasValue);
         }
 
-        private void DictionaryGetOperator(IReadOnlyDictionary<int, string> full, IReadOnlyDictionary<int, string> single, IReadOnlyDictionary<int, string> empty)
+        private void GetValueOperator<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> dictionary, IEnumerable<TKey> excludedKeys)
         {
-            Assert.IsFalse(full.GetOrNone(-1).HasValue);
-            Assert.IsFalse(full.GetOrNone(full.Count).HasValue);
-
-            foreach (var i in Enumerable.Range(0, full.Count))
+            foreach (var pair in dictionary)
             {
-                Assert.AreEqual(Option.Some(i.ToString()), full.GetOrNone(i));
+                Assert.IsTrue(dictionary.GetValueOrNone(pair.Key).HasValue);
+                Assert.AreEqual(dictionary.GetValueOrNone(pair.Key).ValueOr(default(TValue)), pair.Value);
             }
 
-            Assert.IsFalse(single.GetOrNone(-1).HasValue);
-            Assert.IsFalse(single.GetOrNone(1).HasValue);
-            Assert.AreEqual(Option.Some("0"), single.GetOrNone(0));
+            foreach (var key in excludedKeys)
+            {
+                Assert.IsFalse(dictionary.GetValueOrNone(key).HasValue);
+            }
+        }
 
-            Assert.IsFalse(empty.GetOrNone(0).HasValue);
+        private class TestReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+        {
+            private readonly Dictionary<TKey, TValue> dictionary;
+
+            public TestReadOnlyDictionary(Dictionary<TKey, TValue> dictionary)
+            {
+                this.dictionary = dictionary;
+            }
+
+            public TValue this[TKey key] => dictionary[key];
+            public int Count => dictionary.Count;
+            public IEnumerable<TKey> Keys => dictionary.Keys;
+            public IEnumerable<TValue> Values => dictionary.Values;
+            public bool ContainsKey(TKey key) => dictionary.ContainsKey(key);
+            public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => dictionary.GetEnumerator();
+            public bool TryGetValue(TKey key, out TValue value) => dictionary.TryGetValue(key, out value);
+            IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)dictionary).GetEnumerator();
+        }
+
+        private class TestDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+        {
+            private readonly Dictionary<TKey, TValue> dictionary;
+
+            public TestDictionary(Dictionary<TKey, TValue> dictionary)
+            {
+                this.dictionary = dictionary;
+            }
+
+            private ICollection<KeyValuePair<TKey, TValue>> Collection => dictionary;
+
+            public TValue this[TKey key]
+            {
+                get { return dictionary[key]; }
+                set { dictionary[key] = value; }
+            }
+
+            public int Count => dictionary.Count;
+            public bool IsReadOnly => Collection.IsReadOnly;
+            public ICollection<TKey> Keys => dictionary.Keys;
+            public ICollection<TValue> Values => dictionary.Values;
+            public void Add(KeyValuePair<TKey, TValue> item) => Collection.Add(item);
+            public void Add(TKey key, TValue value) => dictionary.Add(key, value);
+            public void Clear() => Collection.Clear();
+            public bool Contains(KeyValuePair<TKey, TValue> item) => dictionary.Contains(item);
+            public bool ContainsKey(TKey key) => dictionary.ContainsKey(key);
+            public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => Collection.CopyTo(array, arrayIndex);
+            public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => dictionary.GetEnumerator();
+            public bool Remove(KeyValuePair<TKey, TValue> item) => Collection.Remove(item);
+            public bool Remove(TKey key) => dictionary.Remove(key);
+            public bool TryGetValue(TKey key, out TValue value) => dictionary.TryGetValue(key, out value);
+            IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)dictionary).GetEnumerator();
         }
     }
 }
