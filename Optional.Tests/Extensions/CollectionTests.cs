@@ -114,6 +114,16 @@ namespace Optional.Tests.Extensions
             ElementAtOperator(full, single, empty);
         }
 
+        [TestMethod]
+        public void Extensions_GetOperatorReadOnlyDictionary()
+        {
+            var full = Enumerable.Range(0, 100).ToDictionary(i => i, i => i.ToString());
+            var single = Enumerable.Repeat(0, 1).ToDictionary(i => i, i => i.ToString());
+            var empty = Enumerable.Empty<int>().ToDictionary(i => i, i => i.ToString());
+
+            DictionaryGetOperator(full, single, empty);
+        }
+
         private void FirstOperator(IEnumerable<int> full, IEnumerable<int> single, IEnumerable<int> empty)
         {
             Assert.IsTrue(full.FirstOrNone().HasValue);
@@ -266,6 +276,23 @@ namespace Optional.Tests.Extensions
             Assert.AreEqual(single.ElementAtOrNone(0).ValueOr(-1), single.Single());
 
             Assert.IsFalse(empty.ElementAtOrNone(0).HasValue);
+        }
+
+        private void DictionaryGetOperator(IReadOnlyDictionary<int, string> full, IReadOnlyDictionary<int, string> single, IReadOnlyDictionary<int, string> empty)
+        {
+            Assert.IsFalse(full.GetOrNone(-1).HasValue);
+            Assert.IsFalse(full.GetOrNone(full.Count).HasValue);
+
+            foreach (var i in Enumerable.Range(0, full.Count))
+            {
+                Assert.AreEqual(Option.Some(i.ToString()), full.GetOrNone(i));
+            }
+
+            Assert.IsFalse(single.GetOrNone(-1).HasValue);
+            Assert.IsFalse(single.GetOrNone(1).HasValue);
+            Assert.AreEqual(Option.Some("0"), single.GetOrNone(0));
+
+            Assert.IsFalse(empty.GetOrNone(0).HasValue);
         }
     }
 }
