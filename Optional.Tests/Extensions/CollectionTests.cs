@@ -120,7 +120,9 @@ namespace Optional.Tests.Extensions
         {
             var dictionaryA = Enumerable.Range(50, 50).ToDictionary(i => i, i => i.ToString());
             var excludedKeysA = Enumerable.Range(-50, 50);
+#if !NET35 && !NET40
             GetValueOperator(new TestReadOnlyDictionary<int, string>(dictionaryA), excludedKeysA);
+#endif
             GetValueOperator(new TestDictionary<int, string>(dictionaryA), excludedKeysA);
             GetValueOperator(dictionaryA.ToList(), excludedKeysA);
 
@@ -133,7 +135,9 @@ namespace Optional.Tests.Extensions
                 { "e", Guid.NewGuid() },
             };
             var excludedKeysB = new List<string> { "h", "i", "j", "k" };
+#if !NET35 && !NET40
             GetValueOperator(new TestReadOnlyDictionary<string, Guid>(dictionaryB), excludedKeysB);
+#endif
             GetValueOperator(new TestDictionary<string, Guid>(dictionaryB), excludedKeysB);
             GetValueOperator(dictionaryB.ToList(), excludedKeysB);
         }
@@ -306,6 +310,7 @@ namespace Optional.Tests.Extensions
             }
         }
 
+#if !NET35 && !NET40
         private class TestReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
         {
             private readonly Dictionary<TKey, TValue> dictionary;
@@ -324,6 +329,7 @@ namespace Optional.Tests.Extensions
             public bool TryGetValue(TKey key, out TValue value) => dictionary.TryGetValue(key, out value);
             IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)dictionary).GetEnumerator();
         }
+#endif
 
         private class TestDictionary<TKey, TValue> : IDictionary<TKey, TValue>
         {

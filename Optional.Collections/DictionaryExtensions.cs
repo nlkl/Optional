@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Optional.Collections
 {
@@ -26,12 +25,14 @@ namespace Optional.Collections
                 TValue value;
                 return dictionary.TryGetValue(key, out value) ? value.Some() : value.None();
             }
+#if !NET35 && !NET40
             else if (source is IReadOnlyDictionary<TKey, TValue>)
             {
                 var dictionary = (IReadOnlyDictionary<TKey, TValue>)source;
                 TValue value;
                 return dictionary.TryGetValue(key, out value) ? value.Some() : value.None();
             }
+#endif
 
             return source
                 .FirstOrNone(pair => EqualityComparer<TKey>.Default.Equals(pair.Key, key))
