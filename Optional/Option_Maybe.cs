@@ -256,6 +256,30 @@ namespace Optional
         }
 
         /// <summary>
+        /// Evaluates a specified action if a value is present.
+        /// </summary>
+        /// <param name="some">The action to evaluate if the value is present.</param>
+        public void MatchSome(Action<T> some)
+        {
+            if (hasValue)
+            {
+                some(value);
+            }
+        }
+
+        /// <summary>
+        /// Evaluates a specified action if no value is present.
+        /// </summary>
+        /// <param name="none">The action to evaluate if the value is missing.</param>
+        public void MatchNone(Action none)
+        {
+            if (!hasValue)
+            {
+                none();
+            }
+        }
+
+        /// <summary>
         /// Transforms the inner value in an optional.
         /// If the instance is empty, an empty optional is returned.
         /// </summary>

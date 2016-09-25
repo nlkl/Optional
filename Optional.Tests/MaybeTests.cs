@@ -402,15 +402,29 @@ namespace Optional.Tests
             Assert.AreEqual(failure, -2);
             Assert.AreEqual(success, 2);
 
+            var hasMatched = false;
             none.Match(
                 some: x => Assert.Fail(),
-                none: () => { }
+                none: () => hasMatched = true
             );
+            Assert.IsTrue(hasMatched);
 
+            hasMatched = false;
             some.Match(
-                some: x => { },
+                some: x => hasMatched = x == 1,
                 none: () => Assert.Fail()
             );
+            Assert.IsTrue(hasMatched);
+
+            none.MatchSome(x => Assert.Fail());
+            hasMatched = false;
+            some.MatchSome(x => hasMatched = x == 1);
+            Assert.IsTrue(hasMatched);
+
+            some.MatchNone(() => Assert.Fail());
+            hasMatched = false;
+            none.MatchNone(() => hasMatched = true);
+            Assert.IsTrue(hasMatched);
         }
 
         [TestMethod]
