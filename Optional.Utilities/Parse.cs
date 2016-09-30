@@ -35,6 +35,7 @@ namespace Optional.Utilities
         /// Tries to parse a string into a signed byte.
         /// </summary>
         /// <returns>An optional value containing the result if any.</returns>
+        [CLSCompliant(false)]
         public static Option<sbyte> ToSByte(string s)
         {
             sbyte result;
@@ -45,6 +46,7 @@ namespace Optional.Utilities
         /// Tries to parse a string into a signed byte.
         /// </summary>
         /// <returns>An optional value containing the result if any.</returns>
+        [CLSCompliant(false)]
         public static Option<sbyte> ToSByte(string s, IFormatProvider provider, NumberStyles styles)
         {
             sbyte result;
@@ -75,6 +77,7 @@ namespace Optional.Utilities
         /// Tries to parse a string into an unsigned short.
         /// </summary>
         /// <returns>An optional value containing the result if any.</returns>
+        [CLSCompliant(false)]
         public static Option<ushort> ToUShort(string s)
         {
             ushort result;
@@ -85,6 +88,7 @@ namespace Optional.Utilities
         /// Tries to parse a string into an unsigned short.
         /// </summary>
         /// <returns>An optional value containing the result if any.</returns>
+        [CLSCompliant(false)]
         public static Option<ushort> ToUShort(string s, IFormatProvider provider, NumberStyles styles)
         {
             ushort result;
@@ -115,6 +119,7 @@ namespace Optional.Utilities
         /// Tries to parse a string into an unsigned int.
         /// </summary>
         /// <returns>An optional value containing the result if any.</returns>
+        [CLSCompliant(false)]
         public static Option<uint> ToUInt(string s)
         {
             uint result;
@@ -125,6 +130,7 @@ namespace Optional.Utilities
         /// Tries to parse a string into an unsigned int.
         /// </summary>
         /// <returns>An optional value containing the result if any.</returns>
+        [CLSCompliant(false)]
         public static Option<uint> ToUInt(string s, IFormatProvider provider, NumberStyles styles)
         {
             uint result;
@@ -155,6 +161,7 @@ namespace Optional.Utilities
         /// Tries to parse a string into an unsigned long.
         /// </summary>
         /// <returns>An optional value containing the result if any.</returns>
+        [CLSCompliant(false)]
         public static Option<ulong> ToULong(string s)
         {
             ulong result;
@@ -165,6 +172,7 @@ namespace Optional.Utilities
         /// Tries to parse a string into an unsigned long.
         /// </summary>
         /// <returns>An optional value containing the result if any.</returns>
+        [CLSCompliant(false)]
         public static Option<ulong> ToULong(string s, IFormatProvider provider, NumberStyles styles)
         {
             ulong result;
