@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Optional.Collections</id>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <title>Optional.Collections</title>
     <authors>Nils Lück</authors>
     <owners>Nils Lück</owners>
@@ -12,8 +12,13 @@
     <description>Useful Optional extensions for working with collections.</description>
     <copyright>Copyright 2016</copyright>
     <tags>Option Some None Maybe Either Exception Null Monad Monadic Functional</tags>
-    <dependencies>
-      <dependency id="Optional" version="3.1.0" />
+    <dependencies> 
+      <group>
+        <dependency id="Optional" version="3.2.0" />
+      </group>
+      <group targetFramework=".NETStandard1.0">
+        <dependency id="System.Linq.Queryable" version="4.0.1" />
+      </group>
     </dependencies>
   </metadata>
 </package>
