@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Optional.Utilities
 {
+    /// <summary>
+    /// Utility functionality for catching and wrapping exceptions in an optional.
+    /// </summary>
     public static class Safe
     {
         /// <summary>
