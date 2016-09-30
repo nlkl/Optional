@@ -200,5 +200,24 @@ namespace Optional
         /// <param name="option">The specified optional.</param>
         /// <returns>The existing or exceptional value.</returns>
         public static T ValueOrException<T>(this Option<T, T> option) => option.HasValue ? option.Value : option.Exception;
+
+
+        /// <summary>
+        /// Flattens two nested optionals into one. The resulting optional
+        /// will be empty if either the inner or outer optional is empty.
+        /// </summary>
+        /// <param name="option">The nested optional.</param>
+        /// <returns>A flattened optional.</returns>
+        public static Option<T> Flatten<T>(this Option<Option<T>> option) =>
+            option.FlatMap(innerOption => innerOption);
+
+        /// <summary>
+        /// Flattens two nested optionals into one. The resulting optional
+        /// will be empty if either the inner or outer optional is empty.
+        /// </summary>
+        /// <param name="option">The nested optional.</param>
+        /// <returns>A flattened optional.</returns>
+        public static Option<T, TException> Flatten<T, TException>(this Option<Option<T, TException>, TException> option) =>
+            option.FlatMap(innerOption => innerOption);
     }
 }

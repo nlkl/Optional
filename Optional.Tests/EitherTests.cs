@@ -577,6 +577,26 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+        public void Either_Flatten()
+        {
+            var noneNone = Option.None<Option<string, int>, int>(1);
+            var someNone = Option.Some<Option<string, int>, int>(Option.None<string, int>(2));
+            var someSome = Option.Some<Option<string, int>, int>(Option.Some<string, int>("a"));
+
+            Assert.IsFalse(noneNone.HasValue);
+            Assert.IsFalse(noneNone.Flatten().HasValue);
+            Assert.AreEqual(noneNone.Flatten().ValueOr(i => i.ToString()), "1");
+
+            Assert.IsTrue(someNone.HasValue);
+            Assert.IsFalse(someNone.Flatten().HasValue);
+            Assert.AreEqual(someNone.Flatten().ValueOr(i => i.ToString()), "2");
+
+            Assert.IsTrue(someSome.HasValue);
+            Assert.IsTrue(someSome.Flatten().HasValue);
+            Assert.AreEqual(someSome.Flatten().ValueOr("b"), "a");
+        }
+
+        [TestMethod]
         public void Either_Filtering()
         {
             var none = "val".None("ex");

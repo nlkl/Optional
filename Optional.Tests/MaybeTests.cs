@@ -456,6 +456,24 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+        public void Maybe_Flatten()
+        {
+            var noneNone = Option.None<Option<string>>();
+            var someNone = Option.Some(Option.None<string>());
+            var someSome = Option.Some(Option.Some("a"));
+
+            Assert.IsFalse(noneNone.HasValue);
+            Assert.IsFalse(noneNone.Flatten().HasValue);
+
+            Assert.IsTrue(someNone.HasValue);
+            Assert.IsFalse(someNone.Flatten().HasValue);
+
+            Assert.IsTrue(someSome.HasValue);
+            Assert.IsTrue(someSome.Flatten().HasValue);
+            Assert.AreEqual(someSome.Flatten().ValueOr("b"), "a");
+        }
+
+        [TestMethod]
         public void Maybe_Filtering()
         {
             var none = "a".None();
