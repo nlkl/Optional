@@ -373,12 +373,7 @@ namespace Optional
         public Option<T> Filter(Func<T, bool> predicate)
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-
-            var original = this;
-            return Match(
-                some: value => predicate(value) ? original : Option.None<T>(),
-                none: () => original
-            );
+            return hasValue && !predicate(value) ? Option.None<T>() : this;
         }
     }
 }

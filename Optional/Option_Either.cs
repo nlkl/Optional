@@ -453,12 +453,7 @@ namespace Optional
         public Option<T, TException> Filter(Func<T, bool> predicate, TException exception)
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-
-            var original = this;
-            return Match(
-                some: value => predicate(value) ? original : Option.None<T, TException>(exception),
-                none: _ => original
-            );
+            return hasValue && !predicate(value) ? Option.None<T, TException>(exception) : this;
         }
 
         /// <summary>
@@ -472,12 +467,7 @@ namespace Optional
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
-
-            var original = this;
-            return Match(
-                some: value => predicate(value) ? original : Option.None<T, TException>(exceptionFactory()),
-                none: _ => original
-            );
+            return hasValue && !predicate(value) ? Option.None<T, TException>(exceptionFactory()) : this;
         }
     }
 }
