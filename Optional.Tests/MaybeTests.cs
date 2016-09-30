@@ -498,6 +498,24 @@ namespace Optional.Tests
             Assert.IsFalse(someFalse.HasValue);
             Assert.IsFalse(noneTrue.HasValue);
             Assert.IsTrue(someTrue.HasValue);
+
+            var someNull = Option.Some<string>(null);
+            Assert.IsTrue(someNull.HasValue);
+            Assert.IsFalse(someNull.NotNull().HasValue);
+
+            var someNullableNull = Option.Some<int?>(null);
+            Assert.IsTrue(someNullableNull.HasValue);
+            Assert.IsFalse(someNullableNull.NotNull().HasValue);
+
+            var someStructNull = Option.Some(default(int));
+            Assert.IsTrue(someStructNull.HasValue);
+            Assert.IsTrue(someStructNull.NotNull().HasValue);
+
+            Assert.IsTrue(some.HasValue);
+            Assert.IsTrue(some.NotNull().HasValue);
+
+            Assert.IsFalse(none.HasValue);
+            Assert.IsFalse(none.NotNull().HasValue);
         }
 
         [TestMethod]

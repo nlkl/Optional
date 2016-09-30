@@ -469,5 +469,26 @@ namespace Optional
             if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
             return hasValue && !predicate(value) ? Option.None<T, TException>(exceptionFactory()) : this;
         }
+
+        /// <summary>
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if the value is null.
+        /// </summary>
+        /// <param name="exception">The exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public Option<T, TException> NotNull(TException exception) =>
+            hasValue && value == null ? Option.None<T, TException>(exception) : this;
+
+        /// <summary>
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if the value is null.
+        /// </summary>
+        /// <param name="exceptionFactory">A factory function to create an exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public Option<T, TException> NotNull(Func<TException> exceptionFactory)
+        {
+            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            return hasValue && value == null ? Option.None<T, TException>(exceptionFactory()) : this;
+        }
     }
 }

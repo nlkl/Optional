@@ -629,6 +629,29 @@ namespace Optional.Tests
             Assert.AreEqual(someFalse.Match(val => val, ex => ex), "ex1");
             Assert.AreEqual(noneTrue.Match(val => val, ex => ex), "ex");
             Assert.AreEqual(someTrue.Match(val => val, ex => ex), "val");
+
+            var someNull = Option.Some<string, string>(null);
+            Assert.IsTrue(someNull.HasValue);
+            Assert.IsFalse(someNull.NotNull("ex").HasValue);
+            Assert.AreEqual(someNull.NotNull("ex").ValueOrException(), "ex");
+
+            var someNullableNull = Option.Some<int?, int?>(null);
+            Assert.IsTrue(someNullableNull.HasValue);
+            Assert.IsFalse(someNullableNull.NotNull(-1).HasValue);
+            Assert.AreEqual(someNullableNull.NotNull(-1).ValueOrException(), -1);
+
+            var someStructNull = Option.Some<int, int>(default(int));
+            Assert.IsTrue(someStructNull.HasValue);
+            Assert.IsTrue(someStructNull.NotNull(-1).HasValue);
+            Assert.AreEqual(someStructNull.NotNull(-1).ValueOrException(), default(int));
+
+            Assert.IsTrue(some.HasValue);
+            Assert.IsTrue(some.NotNull("ex").HasValue);
+            Assert.AreEqual(some.NotNull("ex").ValueOrException(), "val");
+
+            Assert.IsFalse(none.HasValue);
+            Assert.IsFalse(none.NotNull("ex1").HasValue);
+            Assert.AreEqual(none.NotNull("ex1").ValueOrException(), "ex");
         }
 
         [TestMethod]
@@ -664,6 +687,35 @@ namespace Optional.Tests
             Assert.AreEqual(someFalse.Match(val => val, ex => ex), "ex1");
             Assert.AreEqual(noneTrue.Match(val => val, ex => ex), "ex");
             Assert.AreEqual(someTrue.Match(val => val, ex => ex), "val");
+
+            var someNull = Option.Some<string, string>(null);
+            Assert.IsTrue(someNull.HasValue);
+            Assert.IsFalse(someNull.NotNull(() => "ex").HasValue);
+            Assert.AreEqual(someNull.NotNull(() => "ex").ValueOrException(), "ex");
+
+            var someNullableNull = Option.Some<int?, int?>(null);
+            Assert.IsTrue(someNullableNull.HasValue);
+            Assert.IsFalse(someNullableNull.NotNull(() => -1).HasValue);
+            Assert.AreEqual(someNullableNull.NotNull(() => -1).ValueOrException(), -1);
+
+            var someStructNull = Option.Some<int, int>(default(int));
+            Assert.IsTrue(someStructNull.HasValue);
+            Assert.IsTrue(someStructNull.NotNull(() => -1).HasValue);
+            Assert.AreEqual(someStructNull.NotNull(() => -1).ValueOrException(), default(int));
+
+            Assert.IsTrue(some.HasValue);
+            Assert.IsTrue(some.NotNull(() => "ex").HasValue);
+            Assert.AreEqual(some.NotNull(() => "ex").ValueOrException(), "val");
+
+            Assert.IsFalse(none.HasValue);
+            Assert.IsFalse(none.NotNull(() => "ex1").HasValue);
+            Assert.AreEqual(none.NotNull(() => "ex1").ValueOrException(), "ex");
+
+            var someNotNull = some.NotNull(() => { Assert.Fail(); return "ex1"; });
+            Assert.IsTrue(someNotNull.HasValue);
+
+            var noneNotNull = none.NotNull(() => { Assert.Fail(); return "ex1"; });
+            Assert.IsFalse(noneNotNull.HasValue);
         }
 
         [TestMethod]

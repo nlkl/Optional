@@ -357,7 +357,7 @@ namespace Optional
         }
 
         /// <summary>
-        /// Empties an optional, if a specified condition
+        /// Empties an optional if a specified condition
         /// is not satisfied.
         /// </summary>
         /// <param name="condition">The condition.</param>
@@ -365,7 +365,7 @@ namespace Optional
         public Option<T> Filter(bool condition) => hasValue && !condition ? Option.None<T>() : this;
 
         /// <summary>
-        /// Empties an optional, if a specified predicate
+        /// Empties an optional if a specified predicate
         /// is not satisfied.
         /// </summary>
         /// <param name="predicate">The predicate.</param>
@@ -375,5 +375,11 @@ namespace Optional
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             return hasValue && !predicate(value) ? Option.None<T>() : this;
         }
+
+        /// <summary>
+        /// Empties an optional if the value is null.
+        /// </summary>
+        /// <returns>The filtered optional.</returns>
+        public Option<T> NotNull() => hasValue && value == null ? Option.None<T>() : this;
     }
 }
