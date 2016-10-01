@@ -2,13 +2,20 @@
 
 Optional is a simple option/maybe type for C#.
 
-Version: 3.1.0
+Version: 3.2.0
 
 ## Features at a glance
 
-* Avoid null-reference exceptions, by using a type-safe alternative to null values.
-* Transform optional values safely, without the manual null-checks.
-* Easily chain and combine null values using LINQ query syntax.
+* Avoid null-reference exceptions by using a type-safe alternative to null values.
+* Transform optional values safely without the hassle manual null-checks.
+* Easily chain and combine optional values using LINQ query syntax.
+
+## Features
+
+* **Well tested** and **battle-proven**
+* **Easily installed** through NuGet with **no dependencies**
+* Supports **.NET 3.5+** and **.NET Core** (.NET Standard 1.0+)
+* **Batteries included** 
 
 ## Installation
 
@@ -30,7 +37,7 @@ Many functional programming languages disallow null values, as null-references c
 
 In general, an optional value can be in one of two states: Some (representing the presence of a value) and None (representing the lack of a value). Unlike null, an option type forces the user to check if a value is actually present, thereby mitigating many of the problems of null values. `Option<T>` is a struct in Optional, making it impossible to assign a null value to an option itself.
 
-Further, an option type is a lot more explicit than a null value, which can make APIs based on optional values a lot easier to understand.
+Further, an option type is a lot more explicit than a null value, which can make APIs based on optional values a lot easier to understand. Now, the type signature will indicate if a value can be missing!
 
 An either type is conceptually similar to a maybe type. Whereas a maybe type only indicates if a value is present or not, an either type contains an auxiliary value describing how an operation failed. Apart from this *exceptional* value, an either-type behaves much like its simpler counterpart.
 
@@ -112,7 +119,7 @@ Firstly, it is possible to check if a value is actually present:
 var hasValue = option.HasValue;
 ```
 
-If you want to check if an option contains a specific value, you can use the `Contains` or `Exists` methods. The first one checks if the optional contains a specified value, the second if the contained value satisfies some predicate:
+If you want to check if an option contains a specific value, you can use the `Contains` or `Exists` methods. The former checks if the optional contains a specified value, the latter if the contained value satisfies some predicate:
 
 ```csharp
 var isThousand = option.Contains(1000);
@@ -151,6 +158,22 @@ option.Match(
   some: x => Console.WriteLine(x), 
   none: () => Console.WriteLine(10)
 );
+```
+
+Finally, side-effect matching (that is matching without returning a value) can be carried out for each case separately:
+
+```csharp
+// Evaluated if the value is present
+option.MatchSome(x => 
+{
+    Console.WriteLine(x)
+});
+
+// Evaluated if the value is absent
+option.MatchNone(() => 
+{
+    Console.WriteLine("Not found") 
+});
 ```
 
 ### Retrieving values without safety
@@ -226,6 +249,13 @@ var hairstyle = person.FlatMap(p => GetHairstyle(p));
 hairstyle.Match( ... );
 ```
 
+In case you end up with a nested optional (e.g. `Option<Option<T>>`), you might flatten it by flatmapping it onto itself, but a dedicated `Flatten` function is offered for convenience:
+
+```csharp
+Option<Option<T>> nestedOption = ...
+Option<T> option = nestedOption.Flatten(); // same as nestedOption.FlatMap(o => o)
+```
+
 Finally, it is possible to perform filtering. The `Filter` function returns none, if the specified predicate is not satisfied. If the option is already none, it is simply returned as is:
 
 ```csharp
@@ -235,6 +265,15 @@ var stillNone = none.Filter(x => x > 10);
 var some = 10.Some();
 var stillSome = some.Filter(x => x == 10);
 var none = some.Filter(x => x != 10);
+```
+
+A recurring scenario, when working with null-returning APIs, is that of filtering away null values after a mapping. To ease the pain, a specific `NotNull` filter is provided:
+
+```csharp
+// Returns none if the parent node is null
+var parent = GetNode()
+    .Map(node => node.Parent)
+    .NotNull(); 
 ```
 
 ### Enumerating options
@@ -350,6 +389,9 @@ option.Match(
   some: value => Console.WriteLine(value), 
   none: exception => Console.WriteLine(exception)
 );
+
+option.MatchSome(value => Console.WriteLine(value));
+option.MatchNone(exception => Console.WriteLine(exception));
 ```
 
 And again, when `Optional.Unsafe` is imported, it is possible to retrieve the value without safety:
@@ -388,6 +430,9 @@ var some = Option.Some<int, ErrorCode>(10);
 var stillSome = some.FlatMap(x => x.Some<int, ErrorCode>()); 
 var none = some.FlatMap(x => x.None(ErrorCode.GeneralError));
 
+Option<Option<int, ErrorCode>, ErrorCode> nestedOption = ...
+Option<int, ErrorCode> option = nestedOption.Flatten();
+
 // Filtering
 
 var result = Option.Some<int, ErrorCode>(10)
@@ -395,6 +440,10 @@ var result = Option.Some<int, ErrorCode>(10)
     .Filter(x => false, ErrorCode.GeneralError) // Now "GeneralError"
     .Filter(x => false, ErrorCode.IncorrectValue) // Still "GeneralError"
     .Filter(x => false, () => SlowOperation()); // Lazy variant
+
+var result = Option.Some<string, ErrorCode>(null)
+    .NotNull(ErrorCode.GeneralError) // Returns none if the contained value is null
+    .NotNull(() => SlowOperation()); // Lazy variant
 ```
 
 Enumeration works identically to that of `Option<T>`:
