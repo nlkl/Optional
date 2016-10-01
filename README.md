@@ -6,10 +6,10 @@ Version: 3.2.0
 
 ## What and Why?
 
-* Avoid null-reference exceptions by using a type-safe alternative to null values.
+* Avoid null-reference exceptions by using a type-safe alternative to null values
 * Signal intent and model your domain more explictly
-* Transform optional values safely without the hassle manual null-checks.
-* Easily chain and combine optional values using LINQ query syntax.
+* Transform optional values safely without the hassle manual null-checks
+* Easily chain and combine optional values using LINQ query syntax
 
 ## Features
 
