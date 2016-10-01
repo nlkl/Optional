@@ -13,10 +13,16 @@
     <copyright>Copyright 2016</copyright>
     <tags>Option Some None Maybe Either Exception Null Monad Monadic Functional</tags>
     <dependencies> 
-      <group>
-        <dependency id="Optional" version="3.2.0" />
-      </group>
+      <group targetFramework=".NETFramework3.5"><dependency id="Optional" version="3.2.0" /></group>
+      <group targetFramework=".NETFramework4.0"><dependency id="Optional" version="3.2.0" /></group>
+      <group targetFramework=".NETFramework4.5"><dependency id="Optional" version="3.2.0" /></group>
+      <group targetFramework=".NETFramework4.5.1"><dependency id="Optional" version="3.2.0" /></group>
+      <group targetFramework=".NETFramework4.5.2"><dependency id="Optional" version="3.2.0" /></group>
+      <group targetFramework=".NETFramework4.6"><dependency id="Optional" version="3.2.0" /></group>
+      <group targetFramework=".NETFramework4.6.1"><dependency id="Optional" version="3.2.0" /></group>
+      <group targetFramework=".NETFramework4.6.2"><dependency id="Optional" version="3.2.0" /></group>
       <group targetFramework=".NETStandard1.0">
+        <dependency id="Optional" version="3.2.0" />
         <dependency id="System.Runtime" version="4.1.0" />
       </group>
     </dependencies>
