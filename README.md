@@ -15,7 +15,7 @@ Version: 3.2.0
 * **Well tested** and **battle-proven**
 * **Easily installed** through NuGet with **no dependencies**
 * Supports **.NET 3.5+** and **.NET Core** (.NET Standard 1.0+)
-* **Batteries included** 
+* Focused but full featured API
 
 ## Installation
 
