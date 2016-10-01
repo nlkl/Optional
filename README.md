@@ -1,22 +1,25 @@
 ![Optional](https://raw.githubusercontent.com/nlkl/Optional/master/Extras/Icon/Logo.png)
 
-Optional is a simple option/maybe type for C#.
+Optional is a robust option/maybe type for C#.
 
 Version: 3.2.0
 
 ## What and Why?
 
-* Avoid null-reference exceptions by using a type-safe alternative to null values
-* Signal intent and model your domain more explictly
-* Transform optional values safely without the hassle manual null-checks
-* Easily chain and combine optional values using LINQ query syntax
+Optional is a strongly typed alternative to null values that lets you:
+
+* Avoid those pesky null-reference exceptions
+* Signal intent and model your data more explictly
+* Cut down on manual null checks and focus on your domain
+* Simple at its core, but powerful when you need it to be
 
 ## Features
 
-* **Well tested** and **battle-proven**
-* **Easily installed** through NuGet with **no dependencies**
+* Robust and well tested
+* Self contained with no dependencies
+* Easily installed through NuGet
 * Supports **.NET 3.5+** and **.NET Core** (.NET Standard 1.0+)
-* Focused but full featured API
+* Focused but full-featured API
 
 ## Installation
 
