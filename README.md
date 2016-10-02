@@ -11,7 +11,6 @@ Optional is a strongly typed alternative to null values that lets you:
 * Avoid those pesky null-reference exceptions
 * Signal intent and model your data more explictly
 * Cut down on manual null checks and focus on your domain
-* Simple at its core, but powerful when you need it to be
 
 ## Features
 
