@@ -14,7 +14,7 @@ namespace Optional
     [Serializable]
 #endif
     [DebuggerDisplay("{" + nameof(DebugString) + "}")]
-    public struct Option<T> : IEquatable<Option<T>>
+    public struct Option<T> : IEquatable<Option<T>>, IFormattable
     {
         private readonly bool hasValue;
         private readonly T value;
@@ -391,5 +391,12 @@ namespace Optional
         /// </summary>
         /// <returns>The filtered optional.</returns>
         public Option<T> NotNull() => hasValue && value == null ? Option.None<T>() : this;
-    }
+
+        string IFormattable.ToString(string format, IFormatProvider formatProvider)
+        {
+            return hasValue
+                 ? string.Format(formatProvider, "{0:" + format + "}", value)
+                 : string.Empty;
+        }
+}
 }
