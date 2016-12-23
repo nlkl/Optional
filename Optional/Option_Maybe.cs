@@ -97,17 +97,7 @@ namespace Optional
         /// <returns>A string that represents the current optional.</returns>
         public override string ToString()
         {
-            if (hasValue)
-            {
-                if (value == null)
-                {
-                    return "Some(null)";
-                }
-
-                return string.Format("Some({0})", value);
-            }
-
-            return "None";
+            return hasValue && value != null ? value.ToString() : string.Empty;
         }
 
         /// <summary>
