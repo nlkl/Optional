@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -12,6 +13,7 @@ namespace Optional
 #if !NETSTANDARD
     [Serializable]
 #endif
+    [DebuggerDisplay("{" + nameof(DebugString) + "}")]
     public struct Option<T> : IEquatable<Option<T>>
     {
         private readonly bool hasValue;
@@ -89,6 +91,24 @@ namespace Optional
             }
 
             return 0;
+        }
+
+        string DebugString
+        {
+            get
+            {
+                if (hasValue)
+                {
+                    if (value == null)
+                    {
+                        return "Some(null)";
+                    }
+
+                    return string.Format("Some({0})", value);
+                }
+
+                return "None";
+            }
         }
 
         /// <summary>
