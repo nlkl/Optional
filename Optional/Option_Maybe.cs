@@ -392,11 +392,9 @@ namespace Optional
         /// <returns>The filtered optional.</returns>
         public Option<T> NotNull() => hasValue && value == null ? Option.None<T>() : this;
 
-        string IFormattable.ToString(string format, IFormatProvider formatProvider)
-        {
-            return hasValue
-                 ? string.Format(formatProvider, "{0:" + format + "}", value)
-                 : string.Empty;
-        }
-}
+        string IFormattable.ToString(string format, IFormatProvider formatProvider) =>
+            !hasValue
+            ? string.Empty
+            : (value as IFormattable)?.ToString(format, formatProvider) ?? ToString();
+    }
 }
