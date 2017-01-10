@@ -384,7 +384,7 @@ namespace Optional
             if (mapping == null) throw new ArgumentNullException(nameof(mapping));
 
             return Match(
-                some: value => mapping(value),
+                some: mapping,
                 none: exception => Option.None<TResult, TException>(exception)
             );
         }

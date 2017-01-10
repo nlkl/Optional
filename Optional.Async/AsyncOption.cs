@@ -115,7 +115,7 @@ namespace Optional.Async
         /// <returns>The existing or alternative value.</returns>
         public Task<T> ValueOr(Func<T> alternativeFactory)
         {
-            return Match(value => value, () => alternativeFactory());
+            return Match(value => value, alternativeFactory);
         }
 
         // TODO: TEST
@@ -126,7 +126,7 @@ namespace Optional.Async
         /// <returns>The existing or alternative value.</returns>
         public Task<T> ValueOr(Func<Task<T>> alternativeFactory)
         {
-            return Match(value => Task.FromResult(value), () => alternativeFactory());
+            return Match(value => Task.FromResult(value), alternativeFactory);
         }
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace Optional.Async
         {
             return InnerTask.FlatMap(option => option
                 .Match(
-                    some: value => mapping(value),
+                    some: mapping,
                     none: () => Task.FromResult(Option.None<TResult>())
                 )).ToAsyncOption();
         }
@@ -553,7 +553,7 @@ namespace Optional.Async
         {
             return InnerTask.FlatMap(option => option
                 .Match(
-                    some: value => mapping(value),
+                    some: mapping,
                     none: exception => Task.FromResult(Option.None<TResult, TException>(exception))
                 )).ToAsyncOption();
         }
