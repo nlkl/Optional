@@ -110,5 +110,15 @@ namespace Optional.Unsafe
 
             throw new OptionValueMissingException(errorMessageFactory(option.Exception));
         }
+
+        /// <summary>
+        /// Convert the option to a <see cref="Nullable{T}"/> instance
+        /// that is initialzed with some value of <typeparamref name="T"/>
+        /// or <c>null</c> otherwise.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <returns>A <see cref="Nullable{T}"/> that is the result of the conversion.</returns>
+        public static T? ToNullable<T>(this Option<T> option) where T : struct =>
+            option.Map(v => (T?)v).ValueOr(() => null);
     }
 }
