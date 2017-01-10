@@ -13,7 +13,7 @@ namespace Optional
 #if !NETSTANDARD
     [Serializable]
 #endif
-    [DebuggerDisplay("{" + nameof(DebugString) + "}")]
+    [DebuggerDisplay("{ToDebugString()}")]
     public struct Option<T> : IEquatable<Option<T>>
     {
         private readonly bool hasValue;
@@ -93,32 +93,12 @@ namespace Optional
             return 0;
         }
 
-        string DebugString
-        {
-            get
-            {
-                if (hasValue)
-                {
-                    if (value == null)
-                    {
-                        return "Some(null)";
-                    }
-
-                    return string.Format("Some({0})", value);
-                }
-
-                return "None";
-            }
-        }
-
         /// <summary>
         /// Returns a string that represents the current optional.
         /// </summary>
         /// <returns>A string that represents the current optional.</returns>
-        public override string ToString()
-        {
-            return hasValue && value != null ? value.ToString() : string.Empty;
-        }
+        public override string ToString() =>
+            hasValue && value != null ? value.ToString() : string.Empty;
 
         /// <summary>
         /// Converts the current optional into an enumerable with one or zero elements.
@@ -391,5 +371,20 @@ namespace Optional
         /// </summary>
         /// <returns>The filtered optional.</returns>
         public Option<T> NotNull() => hasValue && value == null ? Option.None<T>() : this;
+
+        private string ToDebugString()
+        {
+            if (hasValue)
+            {
+                if (value == null)
+                {
+                    return "Some(null)";
+                }
+
+                return string.Format("Some({0})", value);
+            }
+
+            return "None";
+        }
     }
 }
