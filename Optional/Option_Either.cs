@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
 
 namespace Optional
 {
@@ -13,6 +12,7 @@ namespace Optional
 #if !NETSTANDARD
     [Serializable]
 #endif
+    [DebuggerDisplay("{ToDebugString()}")]
     public struct Option<T, TException> : IEquatable<Option<T, TException>>
     {
         private readonly bool hasValue;
@@ -104,25 +104,8 @@ namespace Optional
         /// Returns a string that represents the current optional.
         /// </summary>
         /// <returns>A string that represents the current optional.</returns>
-        public override string ToString()
-        {
-            if (hasValue)
-            {
-                if (value == null)
-                {
-                    return "Some(null)";
-                }
-
-                return string.Format("Some({0})", value);
-            }
-
-            if (exception == null)
-            {
-                return "None(null)";
-            }
-
-            return string.Format("None({0})", exception);
-        }
+        public override string ToString() =>
+            hasValue && value != null ? value.ToString() : string.Empty;
 
         /// <summary>
         /// Converts the current optional into an enumerable with one or zero elements.
@@ -489,6 +472,26 @@ namespace Optional
         {
             if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
             return hasValue && value == null ? Option.None<T, TException>(exceptionFactory()) : this;
+        }
+
+        private string ToDebugString()
+        {
+            if (hasValue)
+            {
+                if (value == null)
+                {
+                    return "Some(null)";
+                }
+
+                return string.Format("Some({0})", value);
+            }
+
+            if (exception == null)
+            {
+                return "None(null)";
+            }
+
+            return string.Format("None({0})", exception);
         }
     }
 }

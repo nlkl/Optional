@@ -166,23 +166,23 @@ namespace Optional.Tests
         [TestMethod]
         public void Either_StringRepresentation()
         {
-            Assert.AreEqual(Option.None<int?, int?>(null).ToString(), "None(null)");
-            Assert.AreEqual(Option.None<string, string>(null).ToString(), "None(null)");
+            Assert.AreEqual(Option.None<int?, int?>(null).ToString(), "");
+            Assert.AreEqual(Option.None<string, string>(null).ToString(), "");
 
-            Assert.AreEqual(Option.None<int, int>(1).ToString(), "None(1)");
-            Assert.AreEqual(Option.None<int?, int?>(1).ToString(), "None(1)");
-            Assert.AreEqual(Option.None<string, string>("ex").ToString(), "None(ex)");
+            Assert.AreEqual(Option.None<int, int>(1).ToString(), "");
+            Assert.AreEqual(Option.None<int?, int?>(1).ToString(), "");
+            Assert.AreEqual(Option.None<string, string>("ex").ToString(), "");
 
-            Assert.AreEqual(Option.Some<int?, string>(null).ToString(), "Some(null)");
-            Assert.AreEqual(Option.Some<string, string>(null).ToString(), "Some(null)");
+            Assert.AreEqual(Option.Some<int?, string>(null).ToString(), "");
+            Assert.AreEqual(Option.Some<string, string>(null).ToString(), "");
 
-            Assert.AreEqual(Option.Some<int, string>(1).ToString(), "Some(1)");
-            Assert.AreEqual(Option.Some<int?, string>(1).ToString(), "Some(1)");
-            Assert.AreEqual(Option.Some<string, string>("1").ToString(), "Some(1)");
+            Assert.AreEqual(Option.Some<int, string>(1).ToString(), "1");
+            Assert.AreEqual(Option.Some<int?, string>(1).ToString(), "1");
+            Assert.AreEqual(Option.Some<string, string>("1").ToString(), "1");
 
             var now = DateTime.Now;
-            Assert.AreEqual(Option.Some<DateTime, DateTime>(now).ToString(), "Some(" + now.ToString() + ")");
-            Assert.AreEqual(Option.None<DateTime, DateTime>(now).ToString(), "None(" + now.ToString() + ")");
+            Assert.AreEqual(Option.Some<DateTime, DateTime>(now).ToString(), now.ToString());
+            Assert.AreEqual(Option.None<DateTime, DateTime>(now).ToString(), "");
         }
 
         [TestMethod]
