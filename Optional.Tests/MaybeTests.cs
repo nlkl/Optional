@@ -150,19 +150,19 @@ namespace Optional.Tests
         [TestMethod]
         public void Maybe_StringRepresentation()
         {
-            Assert.AreEqual(Option.None<int>().ToString(), "None");
-            Assert.AreEqual(Option.None<int?>().ToString(), "None");
-            Assert.AreEqual(Option.None<string>().ToString(), "None");
+            Assert.AreEqual(Option.None<int>().ToString(), "");
+            Assert.AreEqual(Option.None<int?>().ToString(), "");
+            Assert.AreEqual(Option.None<string>().ToString(), "");
 
-            Assert.AreEqual(Option.Some<int?>(null).ToString(), "Some(null)");
-            Assert.AreEqual(Option.Some<string>(null).ToString(), "Some(null)");
+            Assert.AreEqual(Option.Some<int?>(null).ToString(), "");
+            Assert.AreEqual(Option.Some<string>(null).ToString(), "");
 
-            Assert.AreEqual(Option.Some<int>(1).ToString(), "Some(1)");
-            Assert.AreEqual(Option.Some<int?>(1).ToString(), "Some(1)");
-            Assert.AreEqual(Option.Some<string>("1").ToString(), "Some(1)");
+            Assert.AreEqual(Option.Some<int>(1).ToString(), "1");
+            Assert.AreEqual(Option.Some<int?>(1).ToString(), "1");
+            Assert.AreEqual(Option.Some<string>("1").ToString(), "1");
 
             var now = DateTime.Now;
-            Assert.AreEqual(Option.Some<DateTime>(now).ToString(), "Some(" + now.ToString() + ")");
+            Assert.AreEqual(Option.Some<DateTime>(now).ToString(), now.ToString());
         }
 
         [TestMethod]
