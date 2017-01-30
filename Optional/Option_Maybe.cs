@@ -35,8 +35,12 @@ namespace Optional
         /// </summary>
         /// <param name="other">The optional to compare with the current one.</param>
         /// <returns>A boolean indicating whether or not the optionals are equal.</returns>
-        public bool Equals(Option<T> other)
-        {
+        public bool Equals(Option<T> other) {
+            //Comparison with null (obj == null), same as !hasValue
+	        bool isOtherNull = ReferenceEquals(other, null);
+	        if (isOtherNull)
+		        return !hasValue;
+
             if (!hasValue && !other.hasValue)
             {
                 return true;
@@ -62,7 +66,17 @@ namespace Optional
         /// <param name="left">The first optional to compare.</param>
         /// <param name="right">The second optional to compare.</param>
         /// <returns>A boolean indicating whether or not the optionals are equal.</returns>
-        public static bool operator ==(Option<T> left, Option<T> right) => left.Equals(right);
+        public static bool operator ==(Option<T> left, Option<T> right) {
+            //(null == null) is true
+            if (ReferenceEquals(left, null) &&
+	                ReferenceEquals(right, null))
+		        return true;
+
+	        if (ReferenceEquals(left, null))
+                return right.Equals(null);
+
+            return left.Equals(right);
+        }
 
         /// <summary>
         /// Determines whether two optionals are unequal.
@@ -70,7 +84,18 @@ namespace Optional
         /// <param name="left">The first optional to compare.</param>
         /// <param name="right">The second optional to compare.</param>
         /// <returns>A boolean indicating whether or not the optionals are unequal.</returns>
-        public static bool operator !=(Option<T> left, Option<T> right) => !left.Equals(right);
+        public static bool operator !=(Option<T> left, Option<T> right) {
+            //(null != null) is false
+            if (ReferenceEquals(left, null) &&
+    		        ReferenceEquals(right, null))
+			    return false;
+
+
+            if (ReferenceEquals(left, null))
+                return !right.Equals(null);
+
+            return !left.Equals(right);
+	    }
 
         /// <summary>
         /// Generates a hash code for the current optional.

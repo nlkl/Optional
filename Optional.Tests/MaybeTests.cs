@@ -132,6 +132,26 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+	    public void Maybe_Null_Comparison_Doesnt_Throw() {
+	        try {
+                var result = (Option.Some("val") != null);
+                result = (null != Option.Some("val"));
+
+                result = (Option.Some("val") == null);
+                result = (null == Option.Some("val"));
+
+		        Option<string> nullOption = null;
+                result = (nullOption != null);
+                result = (null != nullOption);
+
+                result = (nullOption == null);
+                result = (null == nullOption);
+            } catch (NullReferenceException exc) {
+		        Assert.Fail("NullReferenceException was thrown.");
+	        }
+	    }
+
+        [TestMethod]
         public void Maybe_Hashing()
         {
             Assert.AreEqual(Option.None<string>().GetHashCode(), Option.None<string>().GetHashCode());

@@ -145,6 +145,30 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+        public void Either_Null_Comparison_Doesnt_Throw()
+        {
+            try
+            {
+                var result = (Option.Some<string, string>("val") != null);
+                result = (null != Option.Some<string, string>("val"));
+
+                result = (Option.Some<string, string>("val") == null);
+                result = (null == Option.Some<string, string>("val"));
+
+                Option<string, string> nullOption = null;
+                result = (nullOption != null);
+                result = (null != nullOption);
+
+                result = (nullOption == null);
+                result = (null == nullOption);
+            }
+            catch (NullReferenceException exc)
+            {
+                Assert.Fail("NullReferenceException was thrown.");
+            }
+        }
+
+        [TestMethod]
         public void Either_Hashing()
         {
             Assert.AreEqual(Option.None<string, string>("ex").GetHashCode(), Option.None<string, string>("ex").GetHashCode());
