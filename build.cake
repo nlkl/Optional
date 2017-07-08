@@ -10,7 +10,7 @@ Task("Default")
 Task("Build")
     .Does(() =>
     {
-        MSBuild("./Optional.sln", new MSBuildSettings 
+        MSBuild("./src/Optional.sln", new MSBuildSettings 
         {
             Verbosity = Verbosity.Minimal,
             ToolVersion = MSBuildToolVersion.VS2017,
@@ -23,7 +23,7 @@ Task("Test")
     .IsDependentOn("Build")
     .Does(() =>
     {
-        MSTest("./Optional.Tests/bin/release/**/Optional.Tests.dll");
+        MSTest("./src/Optional.Tests/bin/release/**/Optional.Tests.dll");
     });
 
 Task("Pack")
@@ -43,8 +43,8 @@ public void Pack(string projectName, string[] targets)
     var nuGetPackSettings   = new NuGetPackSettings 
     {
         NoPackageAnalysis = true,
-        BasePath = "./" + projectName + "/bin/release",
-        OutputDirectory = "./Extras/Nuget/" + projectName,
+        BasePath = "./src/" + projectName + "/bin/release",
+        OutputDirectory = "./nuget/" + projectName,
         Files = targets
             .SelectMany(target => new []
             {
@@ -53,5 +53,5 @@ public void Pack(string projectName, string[] targets)
             })
             .ToArray()
     };
-    NuGetPack("./Extras/Nuget/" + projectName + ".nuspec", nuGetPackSettings);
+    NuGetPack("./nuget/" + projectName + ".nuspec", nuGetPackSettings);
 }

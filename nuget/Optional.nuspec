@@ -7,9 +7,9 @@
     <authors>Nils Lück</authors>
     <owners>Nils Lück</owners>
     <projectUrl>https://github.com/nlkl/Optional</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/nlkl/Optional/master/Extras/Icon/Icon.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/nlkl/Optional/master/icon/Icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A simple option type.</description>
+    <description>A robust option type.</description>
     <copyright>Copyright 2015</copyright>
     <tags>Option Some None Maybe Either Exception Null Monad Monadic Functional</tags>
   </metadata>
