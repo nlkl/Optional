@@ -10,7 +10,7 @@ namespace Optional
     /// </summary>
     /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
     /// <typeparam name="TException">A exceptional value describing the lack of an actual value.</typeparam>
-#if !NETSTANDARD
+#if !NETSTANDARD10
     [Serializable]
 #endif
     public struct Option<T, TException> : IEquatable<Option<T, TException>>

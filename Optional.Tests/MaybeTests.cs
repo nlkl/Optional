@@ -3,7 +3,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+
+#if !NETSTANDARD10
 using System.Runtime.Serialization.Formatters.Binary;
+#endif
 
 namespace Optional.Tests
 {
@@ -598,6 +601,7 @@ namespace Optional.Tests
             Assert.AreEqual(some3.ValueOr("-1"), "1");
         }
 
+#if !NETSTANDARD10
         [TestMethod]
         public void Maybe_Serialization()
         {
@@ -622,5 +626,6 @@ namespace Optional.Tests
                 Assert.AreEqual(none, noneDeserialized);
             }
         }
+#endif
     }
 }

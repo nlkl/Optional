@@ -259,7 +259,7 @@ namespace Optional.Utilities
             return char.TryParse(s, out result) ? result.Some() : result.None();
         }
 
-#if !NET35
+#if NET4PLUS
         /// <summary>
         /// Tries to parse a string into a guid.
         /// </summary>
@@ -341,7 +341,7 @@ namespace Optional.Utilities
             return TimeSpan.TryParse(s, out result) ? result.Some() : result.None();
         }
 
-#if !NET35
+#if NET4PLUS
         /// <summary>
         /// Tries to parse a string into a timespan.
         /// </summary>

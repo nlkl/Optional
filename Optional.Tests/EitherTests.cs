@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+#if !NETSTANDARD10
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
+#endif
 
 namespace Optional.Tests
 {
@@ -840,6 +842,7 @@ namespace Optional.Tests
             Assert.AreEqual(some3.ValueOr("-1"), "1");
         }
 
+#if !NETSTANDARD10
         [TestMethod]
         public void Either_Serialization()
         {
@@ -864,5 +867,6 @@ namespace Optional.Tests
                 Assert.AreEqual(none, noneDeserialized);
             }
         }
+#endif
     }
 }

@@ -25,7 +25,7 @@ namespace Optional.Collections
                 TValue value;
                 return dictionary.TryGetValue(key, out value) ? value.Some() : value.None();
             }
-#if !NET35 && !NET40
+#if NET45PLUS
             else if (source is IReadOnlyDictionary<TKey, TValue>)
             {
                 var dictionary = (IReadOnlyDictionary<TKey, TValue>)source;

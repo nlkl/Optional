@@ -9,8 +9,6 @@ using Ex3 = System.FormatException;
 using Ex4 = System.NullReferenceException;
 using Ex5 = System.NotImplementedException;
 using Ex6 = System.RankException;
-using BaseEx = System.MemberAccessException;
-using SubEx = System.MethodAccessException;
 
 namespace Optional.Tests.Extensions
 {
@@ -225,6 +223,28 @@ namespace Optional.Tests.Extensions
 
             var success = Safe.Try<bool, Ex1, Ex2, Ex3, Ex4, Ex5>(() => true);
             Assert.IsTrue(success.ValueOr(false));
+        }
+
+        private class BaseEx : System.Exception
+        {
+            public BaseEx()
+            {
+            }
+
+            public BaseEx(string message) : base(message)
+            {
+            }
+        }
+
+        private class SubEx : BaseEx
+        {
+            public SubEx() : base()
+            {
+            }
+
+            public SubEx(string message) : base(message)
+            {
+            }
         }
     }
 }
