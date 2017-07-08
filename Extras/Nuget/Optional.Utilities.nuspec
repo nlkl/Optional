@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Optional.Utilities</id>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <title>Optional.Utilities</title>
     <authors>Nils Lück</authors>
     <owners>Nils Lück</owners>
@@ -16,7 +16,7 @@
       <group targetFramework=".NETFramework3.5"><dependency id="Optional" version="3.2.0" /></group>
       <group targetFramework=".NETFramework4.0"><dependency id="Optional" version="3.2.0" /></group>
       <group targetFramework=".NETStandard1.0">
-        <dependency id="Optional" version="3.2.0" />
+        <dependency id="Optional" version="3.3.0" />
       </group>
     </dependencies>
   </metadata>
