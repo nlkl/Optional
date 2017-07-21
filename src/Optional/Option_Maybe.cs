@@ -12,7 +12,7 @@ namespace Optional
 #if !NETSTANDARD10
     [Serializable]
 #endif
-    public struct Option<T> : IEquatable<Option<T>>
+    public struct Option<T> : IEquatable<Option<T>>, IComparable<Option<T>>
     {
         private readonly bool hasValue;
         private readonly T value;
@@ -89,6 +89,18 @@ namespace Optional
             }
 
             return 0;
+        }
+
+        /// <summary>
+        /// Compares the current instance with another object of the same type and returns an
+        /// integer that indicates whether the current instance precedes, follows, or occurs in
+        /// the same position in the sort order as the other object.
+        /// </summary>
+        /// <param name="other">An object to compare with this instance.</param>
+        /// <returns>A value that indicates the relative order of the objects being compared.</returns>
+        public int CompareTo(Option<T> other)
+        {
+            return Comparer<T>.Default.Compare(value, other.value);
         }
 
         /// <summary>

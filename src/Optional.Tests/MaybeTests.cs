@@ -135,6 +135,49 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+        public void Maybe_CompareTo()
+        {
+            // Value type comparisons
+            var noneStruct = Option.None<int>();
+            var someStruct1 = Option.Some<int>(1);
+            var someStruct2 = Option.Some<int>(2);
+
+            Assert.AreEqual(someStruct1, new[] {someStruct1, someStruct2}.Min());
+            Assert.AreEqual(noneStruct, new[] {noneStruct, someStruct1}.Min());
+            Assert.AreEqual(noneStruct, new[] {noneStruct, noneStruct}.Min());
+
+            Assert.AreEqual(someStruct2, new[] {someStruct1, someStruct2}.Max());
+            Assert.AreEqual(someStruct1, new[] {noneStruct, someStruct1}.Max());
+            Assert.AreEqual(noneStruct, new[] {noneStruct, noneStruct}.Max());
+
+            // IComparable comparisons
+            var noneComparable = Option.None<string>();
+            var someComparable1 = Option.Some<string>("1");
+            var someComparable2 = Option.Some<string>("2");
+
+            Assert.AreEqual(someComparable1, new[] {someComparable1, someComparable2}.Min());
+            Assert.AreEqual(noneComparable, new[] {noneComparable, someComparable1}.Min());
+            Assert.AreEqual(noneComparable, new[] {noneComparable, noneComparable}.Min());
+
+            Assert.AreEqual(someComparable2, new[] {someComparable1, someComparable2}.Max());
+            Assert.AreEqual(someComparable1, new[] {noneComparable, someComparable1}.Max());
+            Assert.AreEqual(noneComparable, new[] {noneComparable, noneComparable}.Max());
+
+            // Non-IComparable comparisons
+            var noneNotComparable = Option.None<Dictionary<string, string>>();
+            var someNotComparable1 = Option.Some<Dictionary<string, string>>(new Dictionary<string, string>());
+            var someNotComparable2 = Option.Some<Dictionary<string, string>>(new Dictionary<string, string>());
+
+            Assert.ThrowsException<ArgumentException>(() => new[] {someNotComparable1, someNotComparable2}.Min());
+            Assert.AreEqual(noneNotComparable, new[] {noneNotComparable, someNotComparable1}.Min());
+            Assert.AreEqual(noneNotComparable, new[] {noneNotComparable, noneNotComparable}.Min());
+
+            Assert.ThrowsException<ArgumentException>(() => new[] {someNotComparable1, someNotComparable2}.Max());
+            Assert.AreEqual(someNotComparable1, new[] {noneNotComparable, someNotComparable1}.Max());
+            Assert.AreEqual(noneNotComparable, new[] {noneNotComparable, noneNotComparable}.Max());
+        }
+
+        [TestMethod]
         public void Maybe_Hashing()
         {
             Assert.AreEqual(Option.None<string>().GetHashCode(), Option.None<string>().GetHashCode());
