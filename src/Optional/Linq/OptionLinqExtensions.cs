@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Optional.Linq
+﻿namespace Optional.Linq
 {
+    using System;
+
     public static class OptionLinqExtensions
     {
         public static Option<TResult> Select<TSource, TResult>(this Option<TSource> source, Func<TSource, TResult> selector)

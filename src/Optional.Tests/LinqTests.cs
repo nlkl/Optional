@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Optional.Linq;
-
-namespace Optional.Tests
+﻿namespace Optional.Tests
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using Linq;
+
     [TestClass]
     public class LinqTests
     {

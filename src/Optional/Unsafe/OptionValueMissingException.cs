@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Optional.Unsafe
+﻿namespace Optional.Unsafe
 {
+    using System;
+
     /// <summary>
     /// Indicates a failed retrieval of a value from an empty optional.
     /// </summary>

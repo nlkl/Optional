@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Optional.Unsafe;
-
-namespace Optional.Tests
+﻿namespace Optional.Tests
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using Unsafe;
+
     [TestClass]
     public class UnsafeTests
     {

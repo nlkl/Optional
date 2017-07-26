@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-
-namespace Optional.Sandbox
+﻿namespace Optional.Sandbox
 {
+    using System;
+    using System.Diagnostics;
+
     public static class Timing
     {
         public static double RunningTimeInMs<TResult>(Func<TResult> action, int count)

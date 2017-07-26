@@ -1,15 +1,11 @@
 ﻿#if !NOASYNC
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Optional.Async;
-
 namespace Optional.Tests.Extensions
 {
+    using System.Threading.Tasks;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using Async;
+
     [TestClass]
     public class AsyncOptionTests
     {

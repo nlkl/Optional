@@ -2,13 +2,11 @@
 // Implementation closely inspired by the official source code for FirstOrDefault, etc.
 // Refer to reference source for original source code: referencesource.microsoft.com
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace Optional.Collections
 {
+    using System;
+    using System.Collections.Generic;
+
     public static class LinqEnumerableExtensions
     {
         /// <summary>

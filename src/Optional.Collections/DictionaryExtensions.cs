@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Optional.Collections
+﻿namespace Optional.Collections
 {
+    using System;
+    using System.Collections.Generic;
+
     public static class DictionaryExtensions
     {
         /// <summary>
