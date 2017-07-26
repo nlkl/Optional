@@ -1,15 +1,15 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
+﻿namespace Optional.Tests
+{
+    using System;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.IO;
 
 #if !NETSTANDARD10
-using System.Runtime.Serialization.Formatters.Binary;
+    using System.Runtime.Serialization.Formatters.Binary;
 #endif
 
-namespace Optional.Tests
-{
     [TestClass]
     public class MaybeTests
     {

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Optional.Utilities
+﻿namespace Optional.Utilities
 {
+    using System;
+
     /// <summary>
     /// Utility functionality for catching and wrapping exceptions in an optional.
     /// </summary>

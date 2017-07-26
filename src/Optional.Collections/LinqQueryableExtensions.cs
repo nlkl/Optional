@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
-
-namespace Optional.Collections
+﻿namespace Optional.Collections
 {
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
+
     public static class LinqQueryableExtensions
     {
         /// <summary>

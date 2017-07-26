@@ -1,11 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Optional.Tests
+﻿namespace Optional.Tests
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     [TestClass]
     public class MaybeEitherInteropTests
     {

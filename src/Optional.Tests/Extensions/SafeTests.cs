@@ -1,17 +1,19 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Optional.Utilities;
-using Optional.Tests.Utilities;
-
-using Ex = System.Exception;
-using Ex1 = System.ArgumentNullException;
-using Ex2 = System.Text.EncoderFallbackException;
-using Ex3 = System.FormatException;
-using Ex4 = System.NullReferenceException;
-using Ex5 = System.NotImplementedException;
-using Ex6 = System.RankException;
-
-namespace Optional.Tests.Extensions
+﻿namespace Optional.Tests.Extensions
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using Optional.Utilities;
+    using Utilities;
+
+    using Ex = System.Exception;
+    using Ex1 = System.ArgumentNullException;
+    using Ex2 = System.Text.EncoderFallbackException;
+    using Ex3 = System.FormatException;
+    using Ex4 = System.NullReferenceException;
+    using Ex5 = System.NotImplementedException;
+    using Ex6 = System.RankException;
+
+
     [TestClass]
     public class SafeTests
     {

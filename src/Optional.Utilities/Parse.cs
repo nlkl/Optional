@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-
-namespace Optional.Utilities
+﻿namespace Optional.Utilities
 {
+    using System;
+    using System.Globalization;
+
     /// <summary>
     /// A collection of static helper methods, for parsing strings into simple types.
     /// </summary>

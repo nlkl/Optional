@@ -1,13 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Optional.Collections;
-using System.Collections;
-
-namespace Optional.Tests.Extensions
+﻿namespace Optional.Tests.Extensions
 {
+    using System;
+    using System.Linq;
+    using System.Collections;
+    using System.Collections.Generic;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using Collections;
+
     [TestClass]
     public class LinqTests
     {

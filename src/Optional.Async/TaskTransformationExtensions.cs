@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Optional.Async
+﻿namespace Optional.Async
 {
+    using System;
+    using System.Threading.Tasks;
+
     internal static class TaskTransformationExtensions
     {
         public static async Task<TResult> Map<TResult>(this Task task, Func<TResult> mapping)
