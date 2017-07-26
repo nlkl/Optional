@@ -13,7 +13,7 @@ namespace Optional
 #if !NETSTANDARD10
     [Serializable]
 #endif
-    public struct Option<T, TException> : IEquatable<Option<T, TException>>
+    public struct Option<T, TException> : IEquatable<Option<T, TException>>, IComparable<Option<T, TException>>
     {
         private readonly bool hasValue;
         private readonly T value;
@@ -98,6 +98,39 @@ namespace Optional
             }
 
             return exception.GetHashCode();
+        }
+
+
+        /// <summary>
+        /// Compares the current instance with another object of the same type and returns an
+        /// integer that indicates whether the current instance precedes, follows, or occurs in
+        /// the same position in the sort order as the other object.
+        /// </summary>
+        /// <param name="other">An object to compare with this instance.</param>
+        /// <returns>A value that indicates the relative order of the objects being compared.</returns>
+        public int CompareTo(Option<T, TException> other)
+        {
+            if (!hasValue && !other.hasValue)
+            {
+                // If both have exceptions, sort by the exceptions
+                return Comparer<TException>.Default.Compare(exception, other.exception);
+            }
+            else if (hasValue && other.hasValue)
+            {
+                // If both have values, sort by the values
+                return Comparer<T>.Default.Compare(value, other.value);
+            }
+
+            // If one has an exception and the other has a value, sort the exceptions before the values
+            // to maintain the ComapresTo contract, which sorts nulls before values
+            if (!hasValue)
+            {
+                return -1;
+            }
+            else
+            {
+                return 1;
+            }
         }
 
         /// <summary>
