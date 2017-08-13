@@ -182,28 +182,28 @@ namespace Optional.Tests
             Assert.AreEqual(noneComparable2, new[] { noneComparable1, noneComparable2 }.Max());
 
             // Non-IComparable comparisons
-            var noneNotComparable1 = Option.None<Dictionary<string, string>, Dictionary<string, string>>(null);
+            var noneNotComparableNull = Option.None<Dictionary<string, string>, Dictionary<string, string>>(null);
+            var noneNotComparable1 = Option.None<Dictionary<string, string>, Dictionary<string, string>>(new Dictionary<string, string>());
             var noneNotComparable2 = Option.None<Dictionary<string, string>, Dictionary<string, string>>(new Dictionary<string, string>());
-            var noneNotComparable3 = Option.None<Dictionary<string, string>, Dictionary<string, string>>(new Dictionary<string, string>());
-            var someNotComparable1 = Option.Some<Dictionary<string, string>, Dictionary<string, string>>(null);
+            var someNotComparableNull = Option.Some<Dictionary<string, string>, Dictionary<string, string>>(null);
+            var someNotComparable1 = Option.Some<Dictionary<string, string>, Dictionary<string, string>>(new Dictionary<string, string>());
             var someNotComparable2 = Option.Some<Dictionary<string, string>, Dictionary<string, string>>(new Dictionary<string, string>());
-            var someNotComparable3 = Option.Some<Dictionary<string, string>, Dictionary<string, string>>(new Dictionary<string, string>());
 
-            Assert.ThrowsException<ArgumentException>(() => new[] { someNotComparable2, someNotComparable3 }.Min());
-            Assert.ThrowsException<ArgumentException>(() => new[] { noneNotComparable2, noneNotComparable3 }.Min());
-            Assert.AreEqual(someNotComparable2, new[] { someNotComparable2, someNotComparable2 }.Min());
-            Assert.AreEqual(noneNotComparable2, new[] { noneNotComparable2, noneNotComparable2 }.Min());
-            Assert.AreEqual(noneNotComparable2, new[] { noneNotComparable2, someNotComparable2 }.Min());
-            Assert.AreEqual(someNotComparable1, new[] { someNotComparable1, someNotComparable2 }.Min());
-            Assert.AreEqual(noneNotComparable1, new[] { noneNotComparable1, noneNotComparable2 }.Min());
+            Assert.ThrowsException<ArgumentException>(() => new[] { someNotComparable1, someNotComparable2 }.Min());
+            Assert.ThrowsException<ArgumentException>(() => new[] { noneNotComparable1, noneNotComparable2 }.Min());
+            Assert.AreEqual(someNotComparable1, new[] { someNotComparable1, someNotComparable1 }.Min());
+            Assert.AreEqual(noneNotComparable1, new[] { noneNotComparable1, noneNotComparable1 }.Min());
+            Assert.AreEqual(noneNotComparable1, new[] { noneNotComparable1, someNotComparable1 }.Min());
+            Assert.AreEqual(someNotComparableNull, new[] { someNotComparableNull, someNotComparable1 }.Min());
+            Assert.AreEqual(noneNotComparableNull, new[] { noneNotComparableNull, noneNotComparable1 }.Min());
 
-            Assert.ThrowsException<ArgumentException>(() => new[] { someNotComparable2, someNotComparable3 }.Max());
-            Assert.ThrowsException<ArgumentException>(() => new[] { noneNotComparable2, noneNotComparable3 }.Max());
-            Assert.AreEqual(someNotComparable2, new[] { someNotComparable2, someNotComparable2 }.Max());
-            Assert.AreEqual(noneNotComparable2, new[] { noneNotComparable2, noneNotComparable2 }.Max());
-            Assert.AreEqual(someNotComparable2, new[] { noneNotComparable2, someNotComparable2 }.Max());
-            Assert.AreEqual(someNotComparable2, new[] { someNotComparable1, someNotComparable2 }.Max());
-            Assert.AreEqual(noneNotComparable2, new[] { noneNotComparable1, noneNotComparable2 }.Max());
+            Assert.ThrowsException<ArgumentException>(() => new[] { someNotComparable1, someNotComparable2 }.Max());
+            Assert.ThrowsException<ArgumentException>(() => new[] { noneNotComparable1, noneNotComparable2 }.Max());
+            Assert.AreEqual(someNotComparable1, new[] { someNotComparable1, someNotComparable1 }.Max());
+            Assert.AreEqual(noneNotComparable1, new[] { noneNotComparable1, noneNotComparable1 }.Max());
+            Assert.AreEqual(someNotComparable1, new[] { noneNotComparable1, someNotComparable1 }.Max());
+            Assert.AreEqual(someNotComparable1, new[] { someNotComparableNull, someNotComparable1 }.Max());
+            Assert.AreEqual(noneNotComparable1, new[] { noneNotComparableNull, noneNotComparable1 }.Max());
         }
 
         [TestMethod]
