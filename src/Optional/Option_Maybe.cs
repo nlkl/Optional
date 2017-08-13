@@ -92,12 +92,11 @@ namespace Optional
         }
 
         /// <summary>
-        /// Compares the current instance with another object of the same type and returns an
-        /// integer that indicates whether the current instance precedes, follows, or occurs in
-        /// the same position in the sort order as the other object.
+        /// Compares the relative order of two optionals. An empty optional is
+        /// ordered before a non-empty one.
         /// </summary>
-        /// <param name="other">An object to compare with this instance.</param>
-        /// <returns>A value that indicates the relative order of the objects being compared.</returns>
+        /// <param name="other">The optional to compare with the current one.</param>
+        /// <returns>An integer indicating the relative order of the optionals being compared.</returns>
         public int CompareTo(Option<T> other)
         {
             return Comparer<T>.Default.Compare(value, other.value);
