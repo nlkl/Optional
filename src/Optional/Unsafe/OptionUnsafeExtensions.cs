@@ -5,6 +5,21 @@ namespace Optional.Unsafe
     public static class OptionUnsafeExtensions
     {
         /// <summary>
+        /// Returns the existing value if present, otherwise default(T).
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <returns>The existing value or a default value.</returns>
+        public static T ValueOrDefault<T>(this Option<T> option)
+        {
+            if (option.HasValue)
+            {
+                return option.Value;
+            }
+
+            return default(T);
+        }
+
+        /// <summary>
         /// Returns the existing value if present, or throws an OptionValueMissingException.
         /// </summary>
         /// <param name="option">The specified optional.</param>
@@ -18,6 +33,21 @@ namespace Optional.Unsafe
             }
 
             throw new OptionValueMissingException();
+        }
+
+        /// <summary>
+        /// Returns the existing value if present, otherwise default(T).
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <returns>The existing value or a default value.</returns>
+        public static T ValueOrDefault<T, TException>(this Option<T, TException> option)
+        {
+            if (option.HasValue)
+            {
+                return option.Value;
+            }
+
+            return default(T);
         }
 
         /// <summary>

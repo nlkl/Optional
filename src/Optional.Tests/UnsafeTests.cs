@@ -8,6 +8,19 @@ namespace Optional.Tests
     public class UnsafeTests
     {
         [TestMethod]
+        public void Maybe_GetValueOrDefault()
+        {
+            Assert.AreEqual(default(int), Option.None<int>().ValueOrDefault());
+            Assert.AreEqual(1, Option.Some(1).ValueOrDefault());
+
+            Assert.AreEqual(default(int?), Option.None<int?>().ValueOrDefault());
+            Assert.AreEqual(1, Option.Some<int?>(1).ValueOrDefault());
+
+            Assert.AreEqual(default(string), Option.None<string>().ValueOrDefault());
+            Assert.AreEqual("a", Option.Some("a").ValueOrDefault());
+        }
+
+        [TestMethod]
         public void Maybe_GetUnsafeValue()
         {
             var none = "a".None();
@@ -44,6 +57,19 @@ namespace Optional.Tests
             {
                 Assert.AreEqual(ex.Message, "Error message");
             }
+        }
+
+        [TestMethod]
+        public void Either_GetValueOrDefault()
+        {
+            Assert.AreEqual(default(int), Option.None<int, bool>(false).ValueOrDefault());
+            Assert.AreEqual(1, Option.Some<int, bool>(1).ValueOrDefault());
+
+            Assert.AreEqual(default(int?), Option.None<int?, bool>(false).ValueOrDefault());
+            Assert.AreEqual(1, Option.Some<int?, bool>(1).ValueOrDefault());
+
+            Assert.AreEqual(default(string), Option.None<string, bool>(false).ValueOrDefault());
+            Assert.AreEqual("a", Option.Some<string, bool>("a").ValueOrDefault());
         }
 
         [TestMethod]
