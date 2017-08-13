@@ -2,7 +2,7 @@
 
 Optional is a robust option/maybe type for C#.
 
-Version: 3.2.0
+Version: 4.0.0
 
 ## What and Why?
 
