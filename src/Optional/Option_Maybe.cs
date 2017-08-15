@@ -97,6 +97,8 @@ namespace Optional
         /// <returns>An integer indicating the relative order of the optionals being compared.</returns>
         public int CompareTo(Option<T> other)
         {
+            if (hasValue && !other.hasValue) return 1;
+            if (!hasValue && other.hasValue) return -1;
             return Comparer<T>.Default.Compare(value, other.value);
         }
 

@@ -155,31 +155,62 @@ namespace Optional.Tests
             var someStruct1 = Option.Some<int, int>(1);
             var someStruct2 = Option.Some<int, int>(2);
 
-            Assert.AreEqual(someStruct1, new[] { someStruct1, someStruct2 }.Min());
-            Assert.AreEqual(noneStruct1, new[] { noneStruct1, someStruct1 }.Min());
-            Assert.AreEqual(noneStruct1, new[] { noneStruct1, noneStruct1 }.Min());
-            Assert.AreEqual(noneStruct1, new[] { noneStruct1, noneStruct2 }.Min());
+            Assert.IsTrue(noneStruct1.CompareTo(noneStruct2) < 0);
+            Assert.IsTrue(noneStruct2.CompareTo(noneStruct1) > 0);
+            Assert.IsTrue(someStruct1.CompareTo(someStruct2) < 0);
+            Assert.IsTrue(someStruct2.CompareTo(someStruct1) > 0);
 
-            Assert.AreEqual(someStruct2, new[] { someStruct1, someStruct2 }.Max());
-            Assert.AreEqual(someStruct1, new[] { noneStruct1, someStruct1 }.Max());
-            Assert.AreEqual(noneStruct1, new[] { noneStruct1, noneStruct1 }.Max());
-            Assert.AreEqual(noneStruct2, new[] { noneStruct1, noneStruct2 }.Max());
+            Assert.IsTrue(noneStruct1.CompareTo(someStruct1) < 0);
+            Assert.IsTrue(someStruct1.CompareTo(noneStruct1) > 0);
+            Assert.IsTrue(noneStruct1.CompareTo(someStruct2) < 0);
+            Assert.IsTrue(someStruct2.CompareTo(noneStruct1) > 0);
+
+            Assert.IsTrue(noneStruct2.CompareTo(someStruct1) < 0);
+            Assert.IsTrue(someStruct1.CompareTo(noneStruct2) > 0);
+            Assert.IsTrue(noneStruct2.CompareTo(someStruct2) < 0);
+            Assert.IsTrue(someStruct2.CompareTo(noneStruct2) > 0);
+
+            Assert.IsTrue(noneStruct1.CompareTo(noneStruct1) == 0);
+            Assert.IsTrue(someStruct1.CompareTo(someStruct1) == 0);
 
             // IComparable comparisons
+            var noneComparableNull = Option.None<string, string>(null);
             var noneComparable1 = Option.None<string, string>("1");
             var noneComparable2 = Option.None<string, string>("2");
+            var someComparableNull = Option.Some<string, string>(null);
             var someComparable1 = Option.Some<string, string>("1");
             var someComparable2 = Option.Some<string, string>("2");
 
-            Assert.AreEqual(someComparable1, new[] { someComparable1, someComparable2 }.Min());
-            Assert.AreEqual(noneComparable1, new[] { noneComparable1, someComparable1 }.Min());
-            Assert.AreEqual(noneComparable1, new[] { noneComparable1, noneComparable1 }.Min());
-            Assert.AreEqual(noneComparable1, new[] { noneComparable1, noneComparable2 }.Min());
+            Assert.IsTrue(noneComparableNull.CompareTo(noneComparable1) < 0);
+            Assert.IsTrue(noneComparable1.CompareTo(noneComparableNull) > 0);
+            Assert.IsTrue(noneComparable1.CompareTo(noneComparable2) < 0);
+            Assert.IsTrue(noneComparable2.CompareTo(noneComparable1) > 0);
+            Assert.IsTrue(someComparableNull.CompareTo(someComparable1) < 0);
+            Assert.IsTrue(someComparable1.CompareTo(someComparableNull) > 0);
+            Assert.IsTrue(someComparable1.CompareTo(someComparable2) < 0);
+            Assert.IsTrue(someComparable2.CompareTo(someComparable1) > 0);
 
-            Assert.AreEqual(someComparable2, new[] { someComparable1, someComparable2 }.Max());
-            Assert.AreEqual(someComparable1, new[] { noneComparable1, someComparable1 }.Max());
-            Assert.AreEqual(noneComparable1, new[] { noneComparable1, noneComparable1 }.Max());
-            Assert.AreEqual(noneComparable2, new[] { noneComparable1, noneComparable2 }.Max());
+            Assert.IsTrue(noneComparable1.CompareTo(someComparable1) < 0);
+            Assert.IsTrue(someComparable1.CompareTo(noneComparable1) > 0);
+            Assert.IsTrue(noneComparable1.CompareTo(someComparable2) < 0);
+            Assert.IsTrue(someComparable2.CompareTo(noneComparable1) > 0);
+
+            Assert.IsTrue(noneComparable2.CompareTo(someComparable1) < 0);
+            Assert.IsTrue(someComparable1.CompareTo(noneComparable2) > 0);
+            Assert.IsTrue(noneComparable2.CompareTo(someComparable2) < 0);
+            Assert.IsTrue(someComparable2.CompareTo(noneComparable2) > 0);
+
+            Assert.IsTrue(noneComparableNull.CompareTo(someComparableNull) < 0);
+            Assert.IsTrue(someComparableNull.CompareTo(noneComparableNull) > 0);
+            Assert.IsTrue(noneComparableNull.CompareTo(someComparable1) < 0);
+            Assert.IsTrue(someComparable1.CompareTo(noneComparableNull) > 0);
+            Assert.IsTrue(noneComparable1.CompareTo(someComparableNull) < 0);
+            Assert.IsTrue(someComparableNull.CompareTo(noneComparable1) > 0);
+
+            Assert.IsTrue(noneComparableNull.CompareTo(noneComparableNull) == 0);
+            Assert.IsTrue(noneComparable1.CompareTo(noneComparable1) == 0);
+            Assert.IsTrue(someComparableNull.CompareTo(someComparableNull) == 0);
+            Assert.IsTrue(someComparable1.CompareTo(someComparable1) == 0);
 
             // Non-IComparable comparisons
             var noneNotComparableNull = Option.None<Dictionary<string, string>, Dictionary<string, string>>(null);
@@ -189,21 +220,37 @@ namespace Optional.Tests
             var someNotComparable1 = Option.Some<Dictionary<string, string>, Dictionary<string, string>>(new Dictionary<string, string>());
             var someNotComparable2 = Option.Some<Dictionary<string, string>, Dictionary<string, string>>(new Dictionary<string, string>());
 
-            Assert.ThrowsException<ArgumentException>(() => new[] { someNotComparable1, someNotComparable2 }.Min());
-            Assert.ThrowsException<ArgumentException>(() => new[] { noneNotComparable1, noneNotComparable2 }.Min());
-            Assert.AreEqual(someNotComparable1, new[] { someNotComparable1, someNotComparable1 }.Min());
-            Assert.AreEqual(noneNotComparable1, new[] { noneNotComparable1, noneNotComparable1 }.Min());
-            Assert.AreEqual(noneNotComparable1, new[] { noneNotComparable1, someNotComparable1 }.Min());
-            Assert.AreEqual(someNotComparableNull, new[] { someNotComparableNull, someNotComparable1 }.Min());
-            Assert.AreEqual(noneNotComparableNull, new[] { noneNotComparableNull, noneNotComparable1 }.Min());
+            Assert.ThrowsException<ArgumentException>(() => someNotComparable1.CompareTo(someNotComparable2));
+            Assert.ThrowsException<ArgumentException>(() => someNotComparable2.CompareTo(someNotComparable1));
+            Assert.ThrowsException<ArgumentException>(() => noneNotComparable1.CompareTo(noneNotComparable2));
+            Assert.ThrowsException<ArgumentException>(() => noneNotComparable2.CompareTo(noneNotComparable1));
 
-            Assert.ThrowsException<ArgumentException>(() => new[] { someNotComparable1, someNotComparable2 }.Max());
-            Assert.ThrowsException<ArgumentException>(() => new[] { noneNotComparable1, noneNotComparable2 }.Max());
-            Assert.AreEqual(someNotComparable1, new[] { someNotComparable1, someNotComparable1 }.Max());
-            Assert.AreEqual(noneNotComparable1, new[] { noneNotComparable1, noneNotComparable1 }.Max());
-            Assert.AreEqual(someNotComparable1, new[] { noneNotComparable1, someNotComparable1 }.Max());
-            Assert.AreEqual(someNotComparable1, new[] { someNotComparableNull, someNotComparable1 }.Max());
-            Assert.AreEqual(noneNotComparable1, new[] { noneNotComparableNull, noneNotComparable1 }.Max());
+            Assert.IsTrue(noneNotComparableNull.CompareTo(noneNotComparable1) < 0);
+            Assert.IsTrue(noneNotComparable1.CompareTo(noneNotComparableNull) > 0);
+            Assert.IsTrue(someNotComparableNull.CompareTo(someNotComparable1) < 0);
+            Assert.IsTrue(someNotComparable1.CompareTo(someNotComparableNull) > 0);
+
+            Assert.IsTrue(noneNotComparable1.CompareTo(someNotComparable1) < 0);
+            Assert.IsTrue(someNotComparable1.CompareTo(noneNotComparable1) > 0);
+            Assert.IsTrue(noneNotComparable1.CompareTo(someNotComparable2) < 0);
+            Assert.IsTrue(someNotComparable2.CompareTo(noneNotComparable1) > 0);
+
+            Assert.IsTrue(noneNotComparable2.CompareTo(someNotComparable1) < 0);
+            Assert.IsTrue(someNotComparable1.CompareTo(noneNotComparable2) > 0);
+            Assert.IsTrue(noneNotComparable2.CompareTo(someNotComparable2) < 0);
+            Assert.IsTrue(someNotComparable2.CompareTo(noneNotComparable2) > 0);
+
+            Assert.IsTrue(noneNotComparableNull.CompareTo(someNotComparableNull) < 0);
+            Assert.IsTrue(someNotComparableNull.CompareTo(noneNotComparableNull) > 0);
+            Assert.IsTrue(noneNotComparableNull.CompareTo(someNotComparable1) < 0);
+            Assert.IsTrue(someNotComparable1.CompareTo(noneNotComparableNull) > 0);
+            Assert.IsTrue(noneNotComparable1.CompareTo(someNotComparableNull) < 0);
+            Assert.IsTrue(someNotComparableNull.CompareTo(noneNotComparable1) > 0);
+
+            Assert.IsTrue(noneNotComparableNull.CompareTo(noneNotComparableNull) == 0);
+            Assert.IsTrue(noneNotComparable1.CompareTo(noneNotComparable1) == 0);
+            Assert.IsTrue(someNotComparableNull.CompareTo(someNotComparableNull) == 0);
+            Assert.IsTrue(someNotComparable1.CompareTo(someNotComparable1) == 0);
         }
 
         [TestMethod]
