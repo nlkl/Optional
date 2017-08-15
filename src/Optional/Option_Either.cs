@@ -116,6 +116,38 @@ namespace Optional
         }
 
         /// <summary>
+        /// Determines if an optional is less than another optional.
+        /// </summary>
+        /// <param name="left">The first optional to compare.</param>
+        /// <param name="right">The second optional to compare.</param>
+        /// <returns>A boolean indicating whether or not the left optional is less than the right optional.</returns>
+        public static bool operator <(Option<T, TException> left, Option<T, TException> right) => left.CompareTo(right) < 0;
+
+        /// <summary>
+        /// Determines if an optional is less than or equal to another optional.
+        /// </summary>
+        /// <param name="left">The first optional to compare.</param>
+        /// <param name="right">The second optional to compare.</param>
+        /// <returns>A boolean indicating whether or not the left optional is less than or equal the right optional.</returns>
+        public static bool operator <=(Option<T, TException> left, Option<T, TException> right) => left.CompareTo(right) <= 0;
+
+        /// <summary>
+        /// Determines if an optional is greater than another optional.
+        /// </summary>
+        /// <param name="left">The first optional to compare.</param>
+        /// <param name="right">The second optional to compare.</param>
+        /// <returns>A boolean indicating whether or not the left optional is greater than the right optional.</returns>
+        public static bool operator >(Option<T, TException> left, Option<T, TException> right) => left.CompareTo(right) > 0;
+
+        /// <summary>
+        /// Determines if an optional is greater than or equal to another optional.
+        /// </summary>
+        /// <param name="left">The first optional to compare.</param>
+        /// <param name="right">The second optional to compare.</param>
+        /// <returns>A boolean indicating whether or not the left optional is greater than or equal the right optional.</returns>
+        public static bool operator >=(Option<T, TException> left, Option<T, TException> right) => left.CompareTo(right) >= 0;
+
+        /// <summary>
         /// Returns a string that represents the current optional.
         /// </summary>
         /// <returns>A string that represents the current optional.</returns>
