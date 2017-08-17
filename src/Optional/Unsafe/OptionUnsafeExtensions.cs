@@ -5,6 +5,21 @@ namespace Optional.Unsafe
     public static class OptionUnsafeExtensions
     {
         /// <summary>
+        /// Converts an optional to a Nullable&lt;T&gt;.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <returns>The Nullable&lt;T&gt; instance.</returns>
+        public static T? ToNullable<T>(this Option<T> option) where T : struct
+        {
+            if (option.HasValue)
+            {
+                return option.Value;
+            }
+
+            return default(T?);
+        }
+
+        /// <summary>
         /// Returns the existing value if present, otherwise default(T).
         /// </summary>
         /// <param name="option">The specified optional.</param>
@@ -33,6 +48,21 @@ namespace Optional.Unsafe
             }
 
             throw new OptionValueMissingException();
+        }
+
+        /// <summary>
+        /// Converts an optional to a Nullable&lt;T&gt;.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <returns>The Nullable&lt;T&gt; instance.</returns>
+        public static T? ToNullable<T, TException>(this Option<T, TException> option) where T : struct
+        {
+            if (option.HasValue)
+            {
+                return option.Value;
+            }
+
+            return default(T?);
         }
 
         /// <summary>

@@ -8,6 +8,13 @@ namespace Optional.Tests
     public class UnsafeTests
     {
         [TestMethod]
+        public void Maybe_ToNullable()
+        {
+            Assert.AreEqual(default(int?), Option.None<int>().ToNullable());
+            Assert.AreEqual(1, Option.Some(1).ToNullable());
+        }
+
+        [TestMethod]
         public void Maybe_GetValueOrDefault()
         {
             Assert.AreEqual(default(int), Option.None<int>().ValueOrDefault());
@@ -57,6 +64,13 @@ namespace Optional.Tests
             {
                 Assert.AreEqual(ex.Message, "Error message");
             }
+        }
+
+        [TestMethod]
+        public void Either_ToNullable()
+        {
+            Assert.AreEqual(default(int?), Option.None<int, bool>(false).ToNullable());
+            Assert.AreEqual(1, Option.Some<int, bool>(1).ToNullable());
         }
 
         [TestMethod]
