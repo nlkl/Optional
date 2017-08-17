@@ -149,57 +149,42 @@ namespace Optional.Tests
         [TestMethod]
         public void Either_CompareTo()
         {
+            void LessThan<TValue, TException>(Option<TValue, TException> lesser, Option<TValue, TException> greater)
+            {
+                Assert.IsTrue(lesser.CompareTo(greater) < 0);
+                Assert.IsTrue(greater.CompareTo(lesser) > 0);
+                Assert.IsTrue(lesser < greater);
+                Assert.IsTrue(lesser <= greater);
+                Assert.IsTrue(greater > lesser);
+                Assert.IsTrue(greater >= lesser);
+            }
+
+            void EqualTo<TValue, TException>(Option<TValue, TException> left, Option<TValue, TException> right)
+            {
+                Assert.IsTrue(left.CompareTo(right) == 0);
+                Assert.IsTrue(right.CompareTo(left) == 0);
+                Assert.IsTrue(left <= right);
+                Assert.IsTrue(left >= right);
+                Assert.IsTrue(right <= left);
+                Assert.IsTrue(right >= left);
+            }
+
             // Value type comparisons
             var noneStruct1 = Option.None<int, int>(1);
             var noneStruct2 = Option.None<int, int>(2);
             var someStruct1 = Option.Some<int, int>(1);
             var someStruct2 = Option.Some<int, int>(2);
 
-            Assert.IsTrue(noneStruct1.CompareTo(noneStruct2) < 0);
-            Assert.IsTrue(noneStruct2.CompareTo(noneStruct1) > 0);
-            Assert.IsTrue(someStruct1.CompareTo(someStruct2) < 0);
-            Assert.IsTrue(someStruct2.CompareTo(someStruct1) > 0);
-            Assert.IsTrue(noneStruct1 < noneStruct2);
-            Assert.IsTrue(noneStruct2 > noneStruct1);
-            Assert.IsTrue(someStruct1 < someStruct2);
-            Assert.IsTrue(someStruct2 > someStruct1);
-            Assert.IsTrue(noneStruct1 <= noneStruct2);
-            Assert.IsTrue(noneStruct2 >= noneStruct1);
-            Assert.IsTrue(someStruct1 <= someStruct2);
-            Assert.IsTrue(someStruct2 >= someStruct1);
+            LessThan(noneStruct1, noneStruct2);
+            LessThan(someStruct1, someStruct2);
 
-            Assert.IsTrue(noneStruct1.CompareTo(someStruct1) < 0);
-            Assert.IsTrue(someStruct1.CompareTo(noneStruct1) > 0);
-            Assert.IsTrue(noneStruct1.CompareTo(someStruct2) < 0);
-            Assert.IsTrue(someStruct2.CompareTo(noneStruct1) > 0);
-            Assert.IsTrue(noneStruct1 < someStruct1);
-            Assert.IsTrue(someStruct1 > noneStruct1);
-            Assert.IsTrue(noneStruct1 < someStruct2);
-            Assert.IsTrue(someStruct2 > noneStruct1);
-            Assert.IsTrue(noneStruct1 <= someStruct1);
-            Assert.IsTrue(someStruct1 >= noneStruct1);
-            Assert.IsTrue(noneStruct1 <= someStruct2);
-            Assert.IsTrue(someStruct2 >= noneStruct1);
+            LessThan(noneStruct1, someStruct1);
+            LessThan(noneStruct1, someStruct2);
+            LessThan(noneStruct2, someStruct1);
+            LessThan(noneStruct2, someStruct2);
 
-            Assert.IsTrue(noneStruct2.CompareTo(someStruct1) < 0);
-            Assert.IsTrue(someStruct1.CompareTo(noneStruct2) > 0);
-            Assert.IsTrue(noneStruct2.CompareTo(someStruct2) < 0);
-            Assert.IsTrue(someStruct2.CompareTo(noneStruct2) > 0);
-            Assert.IsTrue(noneStruct2 < someStruct1);
-            Assert.IsTrue(someStruct1 > noneStruct2);
-            Assert.IsTrue(noneStruct2 < someStruct2);
-            Assert.IsTrue(someStruct2 > noneStruct2);
-            Assert.IsTrue(noneStruct2 <= someStruct1);
-            Assert.IsTrue(someStruct1 >= noneStruct2);
-            Assert.IsTrue(noneStruct2 <= someStruct2);
-            Assert.IsTrue(someStruct2 >= noneStruct2);
-
-            Assert.IsTrue(noneStruct1.CompareTo(noneStruct1) == 0);
-            Assert.IsTrue(someStruct1.CompareTo(someStruct1) == 0);
-            Assert.IsTrue(noneStruct1 <= noneStruct1);
-            Assert.IsTrue(someStruct1 <= someStruct1);
-            Assert.IsTrue(noneStruct1 >= noneStruct1);
-            Assert.IsTrue(someStruct1 >= someStruct1);
+            EqualTo(noneStruct1, noneStruct1);
+            EqualTo(someStruct1, someStruct1);
 
             // IComparable comparisons
             var noneComparableNull = Option.None<string, string>(null);
@@ -209,88 +194,24 @@ namespace Optional.Tests
             var someComparable1 = Option.Some<string, string>("1");
             var someComparable2 = Option.Some<string, string>("2");
 
-            Assert.IsTrue(noneComparableNull.CompareTo(noneComparable1) < 0);
-            Assert.IsTrue(noneComparable1.CompareTo(noneComparableNull) > 0);
-            Assert.IsTrue(noneComparable1.CompareTo(noneComparable2) < 0);
-            Assert.IsTrue(noneComparable2.CompareTo(noneComparable1) > 0);
-            Assert.IsTrue(someComparableNull.CompareTo(someComparable1) < 0);
-            Assert.IsTrue(someComparable1.CompareTo(someComparableNull) > 0);
-            Assert.IsTrue(someComparable1.CompareTo(someComparable2) < 0);
-            Assert.IsTrue(someComparable2.CompareTo(someComparable1) > 0);
-            Assert.IsTrue(noneComparableNull < noneComparable1);
-            Assert.IsTrue(noneComparable1 > noneComparableNull);
-            Assert.IsTrue(noneComparable1 < noneComparable2);
-            Assert.IsTrue(noneComparable2 > noneComparable1);
-            Assert.IsTrue(someComparableNull < someComparable1);
-            Assert.IsTrue(someComparable1 > someComparableNull);
-            Assert.IsTrue(someComparable1 < someComparable2);
-            Assert.IsTrue(someComparable2 > someComparable1);
-            Assert.IsTrue(noneComparableNull <= noneComparable1);
-            Assert.IsTrue(noneComparable1 >= noneComparableNull);
-            Assert.IsTrue(noneComparable1 <= noneComparable2);
-            Assert.IsTrue(noneComparable2 >= noneComparable1);
-            Assert.IsTrue(someComparableNull <= someComparable1);
-            Assert.IsTrue(someComparable1 >= someComparableNull);
-            Assert.IsTrue(someComparable1 <= someComparable2);
-            Assert.IsTrue(someComparable2 >= someComparable1);
+            LessThan(noneComparableNull, noneComparable1);
+            LessThan(noneComparable1, noneComparable2);
+            LessThan(someComparableNull, someComparable1);
+            LessThan(someComparable1, someComparable2);
 
-            Assert.IsTrue(noneComparable1.CompareTo(someComparable1) < 0);
-            Assert.IsTrue(someComparable1.CompareTo(noneComparable1) > 0);
-            Assert.IsTrue(noneComparable1.CompareTo(someComparable2) < 0);
-            Assert.IsTrue(someComparable2.CompareTo(noneComparable1) > 0);
-            Assert.IsTrue(noneComparable1 < someComparable1);
-            Assert.IsTrue(someComparable1 > noneComparable1);
-            Assert.IsTrue(noneComparable1 < someComparable2);
-            Assert.IsTrue(someComparable2 > noneComparable1);
-            Assert.IsTrue(noneComparable1 <= someComparable1);
-            Assert.IsTrue(someComparable1 >= noneComparable1);
-            Assert.IsTrue(noneComparable1 <= someComparable2);
-            Assert.IsTrue(someComparable2 >= noneComparable1);
+            LessThan(noneComparable1, someComparable1);
+            LessThan(noneComparable1, someComparable2);
+            LessThan(noneComparable2, someComparable1);
+            LessThan(noneComparable2, someComparable2);
 
-            Assert.IsTrue(noneComparable2.CompareTo(someComparable1) < 0);
-            Assert.IsTrue(someComparable1.CompareTo(noneComparable2) > 0);
-            Assert.IsTrue(noneComparable2.CompareTo(someComparable2) < 0);
-            Assert.IsTrue(someComparable2.CompareTo(noneComparable2) > 0);
-            Assert.IsTrue(noneComparable2 < someComparable1);
-            Assert.IsTrue(someComparable1 > noneComparable2);
-            Assert.IsTrue(noneComparable2 < someComparable2);
-            Assert.IsTrue(someComparable2 > noneComparable2);
-            Assert.IsTrue(noneComparable2 <= someComparable1);
-            Assert.IsTrue(someComparable1 >= noneComparable2);
-            Assert.IsTrue(noneComparable2 <= someComparable2);
-            Assert.IsTrue(someComparable2 >= noneComparable2);
+            LessThan(noneComparableNull, someComparableNull);
+            LessThan(noneComparableNull, someComparable1);
+            LessThan(noneComparable1, someComparableNull);
 
-            Assert.IsTrue(noneComparableNull.CompareTo(someComparableNull) < 0);
-            Assert.IsTrue(someComparableNull.CompareTo(noneComparableNull) > 0);
-            Assert.IsTrue(noneComparableNull.CompareTo(someComparable1) < 0);
-            Assert.IsTrue(someComparable1.CompareTo(noneComparableNull) > 0);
-            Assert.IsTrue(noneComparable1.CompareTo(someComparableNull) < 0);
-            Assert.IsTrue(someComparableNull.CompareTo(noneComparable1) > 0);
-            Assert.IsTrue(noneComparableNull < someComparableNull);
-            Assert.IsTrue(someComparableNull > noneComparableNull);
-            Assert.IsTrue(noneComparableNull < someComparable1);
-            Assert.IsTrue(someComparable1 > noneComparableNull);
-            Assert.IsTrue(noneComparable1 < someComparableNull);
-            Assert.IsTrue(someComparableNull > noneComparable1);
-            Assert.IsTrue(noneComparableNull <= someComparableNull);
-            Assert.IsTrue(someComparableNull >= noneComparableNull);
-            Assert.IsTrue(noneComparableNull <= someComparable1);
-            Assert.IsTrue(someComparable1 >= noneComparableNull);
-            Assert.IsTrue(noneComparable1 <= someComparableNull);
-            Assert.IsTrue(someComparableNull >= noneComparable1);
-
-            Assert.IsTrue(noneComparableNull.CompareTo(noneComparableNull) == 0);
-            Assert.IsTrue(noneComparable1.CompareTo(noneComparable1) == 0);
-            Assert.IsTrue(someComparableNull.CompareTo(someComparableNull) == 0);
-            Assert.IsTrue(someComparable1.CompareTo(someComparable1) == 0);
-            Assert.IsTrue(noneComparableNull <= noneComparableNull);
-            Assert.IsTrue(noneComparable1 <= noneComparable1);
-            Assert.IsTrue(someComparableNull <= someComparableNull);
-            Assert.IsTrue(someComparable1 <= someComparable1);
-            Assert.IsTrue(noneComparableNull >= noneComparableNull);
-            Assert.IsTrue(noneComparable1 >= noneComparable1);
-            Assert.IsTrue(someComparableNull >= someComparableNull);
-            Assert.IsTrue(someComparable1 >= someComparable1);
+            EqualTo(noneComparableNull, noneComparableNull);
+            EqualTo(noneComparable1, noneComparable1);
+            EqualTo(someComparableNull, someComparableNull);
+            EqualTo(someComparable1, someComparable1);
 
             // Non-IComparable comparisons
             var noneNotComparableNull = Option.None<Dictionary<string, string>, Dictionary<string, string>>(null);
@@ -305,76 +226,22 @@ namespace Optional.Tests
             Assert.ThrowsException<ArgumentException>(() => noneNotComparable1.CompareTo(noneNotComparable2));
             Assert.ThrowsException<ArgumentException>(() => noneNotComparable2.CompareTo(noneNotComparable1));
 
-            Assert.IsTrue(noneNotComparableNull.CompareTo(noneNotComparable1) < 0);
-            Assert.IsTrue(noneNotComparable1.CompareTo(noneNotComparableNull) > 0);
-            Assert.IsTrue(someNotComparableNull.CompareTo(someNotComparable1) < 0);
-            Assert.IsTrue(someNotComparable1.CompareTo(someNotComparableNull) > 0);
-            Assert.IsTrue(noneNotComparableNull < noneNotComparable1);
-            Assert.IsTrue(noneNotComparable1 > noneNotComparableNull);
-            Assert.IsTrue(someNotComparableNull < someNotComparable1);
-            Assert.IsTrue(someNotComparable1 > someNotComparableNull);
-            Assert.IsTrue(noneNotComparableNull <= noneNotComparable1);
-            Assert.IsTrue(noneNotComparable1 >= noneNotComparableNull);
-            Assert.IsTrue(someNotComparableNull <= someNotComparable1);
-            Assert.IsTrue(someNotComparable1 >= someNotComparableNull);
+            LessThan(noneNotComparableNull, noneNotComparable1);
+            LessThan(someNotComparableNull, someNotComparable1);
 
-            Assert.IsTrue(noneNotComparable1.CompareTo(someNotComparable1) < 0);
-            Assert.IsTrue(someNotComparable1.CompareTo(noneNotComparable1) > 0);
-            Assert.IsTrue(noneNotComparable1.CompareTo(someNotComparable2) < 0);
-            Assert.IsTrue(someNotComparable2.CompareTo(noneNotComparable1) > 0);
-            Assert.IsTrue(noneNotComparable1 < someNotComparable1);
-            Assert.IsTrue(someNotComparable1 > noneNotComparable1);
-            Assert.IsTrue(noneNotComparable1 < someNotComparable2);
-            Assert.IsTrue(someNotComparable2 > noneNotComparable1);
-            Assert.IsTrue(noneNotComparable1 <= someNotComparable1);
-            Assert.IsTrue(someNotComparable1 >= noneNotComparable1);
-            Assert.IsTrue(noneNotComparable1 <= someNotComparable2);
-            Assert.IsTrue(someNotComparable2 >= noneNotComparable1);
+            LessThan(noneNotComparable1, someNotComparable1);
+            LessThan(noneNotComparable1, someNotComparable2);
+            LessThan(noneNotComparable2, someNotComparable1);
+            LessThan(noneNotComparable2, someNotComparable2);
 
-            Assert.IsTrue(noneNotComparable2.CompareTo(someNotComparable1) < 0);
-            Assert.IsTrue(someNotComparable1.CompareTo(noneNotComparable2) > 0);
-            Assert.IsTrue(noneNotComparable2.CompareTo(someNotComparable2) < 0);
-            Assert.IsTrue(someNotComparable2.CompareTo(noneNotComparable2) > 0);
-            Assert.IsTrue(noneNotComparable2 < someNotComparable1);
-            Assert.IsTrue(someNotComparable1 > noneNotComparable2);
-            Assert.IsTrue(noneNotComparable2 < someNotComparable2);
-            Assert.IsTrue(someNotComparable2 > noneNotComparable2);
-            Assert.IsTrue(noneNotComparable2 <= someNotComparable1);
-            Assert.IsTrue(someNotComparable1 >= noneNotComparable2);
-            Assert.IsTrue(noneNotComparable2 <= someNotComparable2);
-            Assert.IsTrue(someNotComparable2 >= noneNotComparable2);
+            LessThan(noneNotComparableNull, someNotComparableNull);
+            LessThan(noneNotComparableNull, someNotComparable1);
+            LessThan(noneNotComparable1, someNotComparableNull);
 
-            Assert.IsTrue(noneNotComparableNull.CompareTo(someNotComparableNull) < 0);
-            Assert.IsTrue(someNotComparableNull.CompareTo(noneNotComparableNull) > 0);
-            Assert.IsTrue(noneNotComparableNull.CompareTo(someNotComparable1) < 0);
-            Assert.IsTrue(someNotComparable1.CompareTo(noneNotComparableNull) > 0);
-            Assert.IsTrue(noneNotComparable1.CompareTo(someNotComparableNull) < 0);
-            Assert.IsTrue(someNotComparableNull.CompareTo(noneNotComparable1) > 0);
-            Assert.IsTrue(noneNotComparableNull < someNotComparableNull);
-            Assert.IsTrue(someNotComparableNull > noneNotComparableNull);
-            Assert.IsTrue(noneNotComparableNull < someNotComparable1);
-            Assert.IsTrue(someNotComparable1 > noneNotComparableNull);
-            Assert.IsTrue(noneNotComparable1 < someNotComparableNull);
-            Assert.IsTrue(someNotComparableNull > noneNotComparable1);
-            Assert.IsTrue(noneNotComparableNull <= someNotComparableNull);
-            Assert.IsTrue(someNotComparableNull >= noneNotComparableNull);
-            Assert.IsTrue(noneNotComparableNull <= someNotComparable1);
-            Assert.IsTrue(someNotComparable1 >= noneNotComparableNull);
-            Assert.IsTrue(noneNotComparable1 <= someNotComparableNull);
-            Assert.IsTrue(someNotComparableNull >= noneNotComparable1);
-
-            Assert.IsTrue(noneNotComparableNull.CompareTo(noneNotComparableNull) == 0);
-            Assert.IsTrue(noneNotComparable1.CompareTo(noneNotComparable1) == 0);
-            Assert.IsTrue(someNotComparableNull.CompareTo(someNotComparableNull) == 0);
-            Assert.IsTrue(someNotComparable1.CompareTo(someNotComparable1) == 0);
-            Assert.IsTrue(noneNotComparableNull <= noneNotComparableNull);
-            Assert.IsTrue(noneNotComparable1 <= noneNotComparable1);
-            Assert.IsTrue(someNotComparableNull <= someNotComparableNull);
-            Assert.IsTrue(someNotComparable1 <= someNotComparable1);
-            Assert.IsTrue(noneNotComparableNull >= noneNotComparableNull);
-            Assert.IsTrue(noneNotComparable1 >= noneNotComparable1);
-            Assert.IsTrue(someNotComparableNull >= someNotComparableNull);
-            Assert.IsTrue(someNotComparable1 >= someNotComparable1);
+            EqualTo(noneNotComparableNull, noneNotComparableNull);
+            EqualTo(noneNotComparable1, noneNotComparable1);
+            EqualTo(someNotComparableNull, someNotComparableNull);
+            EqualTo(someNotComparable1, someNotComparable1);
         }
 
         [TestMethod]
