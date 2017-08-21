@@ -1,11 +1,7 @@
-﻿// Note: 
-// Implementation closely inspired by the official source code for FirstOrDefault, etc.
-// Refer to reference source for original source code: referencesource.microsoft.com
+﻿// Note: The implementation is closely inspired by the corefx source code for FirstOrDefault, etc.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Optional.Collections
 {
@@ -20,8 +16,12 @@ namespace Optional.Collections
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
-            IList<TSource> list = source as IList<TSource>;
-            if (list != null)
+            //if (source is IPartition<TSource> partition)
+            //{
+            //    return partition.TryGetFirst(out found);
+            //}
+
+            if (source is IList<TSource> list)
             {
                 if (list.Count > 0)
                 {
@@ -30,11 +30,11 @@ namespace Optional.Collections
             }
             else
             {
-                using (IEnumerator<TSource> e = source.GetEnumerator())
+                using (var enumerator = source.GetEnumerator())
                 {
-                    if (e.MoveNext())
+                    if (enumerator.MoveNext())
                     {
-                        return e.Current.Some();
+                        return enumerator.Current.Some();
                     }
                 }
             }
@@ -53,6 +53,11 @@ namespace Optional.Collections
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+
+            //if (source is OrderedEnumerable<TSource> ordered)
+            //{
+            //    return ordered.TryGetFirst(predicate, out found);
+            //}
 
             foreach (var element in source)
             {
@@ -74,8 +79,12 @@ namespace Optional.Collections
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
-            IList<TSource> list = source as IList<TSource>;
-            if (list != null)
+            //if (source is IPartition<TSource> partition)
+            //{
+            //    return partition.TryGetLast(out found);
+            //}
+
+            if (source is IList<TSource> list)
             {
                 int count = list.Count;
                 if (count > 0)
@@ -85,15 +94,16 @@ namespace Optional.Collections
             }
             else
             {
-                using (IEnumerator<TSource> e = source.GetEnumerator())
+                using (var enumerator = source.GetEnumerator())
                 {
-                    if (e.MoveNext())
+                    if (enumerator.MoveNext())
                     {
                         TSource result;
                         do
                         {
-                            result = e.Current;
-                        } while (e.MoveNext());
+                            result = enumerator.Current;
+                        }
+                        while (enumerator.MoveNext());
 
                         return result.Some();
                     }
@@ -115,18 +125,47 @@ namespace Optional.Collections
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
-            TSource result = default(TSource);
-            bool exists = false;
-            foreach (TSource element in source)
+            //if (source is OrderedEnumerable<TSource> ordered)
+            //{
+            //    return ordered.TryGetLast(predicate, out found);
+            //}
+
+            if (source is IList<TSource> list)
             {
-                if (predicate(element))
+                for (int i = list.Count - 1; i >= 0; --i)
                 {
-                    exists = true;
-                    result = element;
+                    var result = list[i];
+                    if (predicate(result))
+                    {
+                        return result.Some();
+                    }
+                }
+            }
+            else
+            {
+                using (var enumerator = source.GetEnumerator())
+                {
+                    while (enumerator.MoveNext())
+                    {
+                        var result = enumerator.Current;
+                        if (predicate(result))
+                        {
+                            while (enumerator.MoveNext())
+                            {
+                                var element = enumerator.Current;
+                                if (predicate(element))
+                                {
+                                    result = element;
+                                }
+                            }
+
+                            return result.Some();
+                        }
+                    }
                 }
             }
 
-            return exists ? result.Some() : result.None();
+            return Option.None<TSource>();
         }
 
         /// <summary>
@@ -139,26 +178,25 @@ namespace Optional.Collections
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
-            IList<TSource> list = source as IList<TSource>;
-            if (list != null)
+            if (source is IList<TSource> list)
             {
-                if (list.Count == 1)
+                switch (list.Count)
                 {
-                    return list[0].Some();
+                    case 0: return Option.None<TSource>();
+                    case 1: return list[0].Some();
                 }
             }
             else
             {
-                using (IEnumerator<TSource> e = source.GetEnumerator())
+                using (var enumerator = source.GetEnumerator())
                 {
-                    if (!e.MoveNext())
+                    if (!enumerator.MoveNext())
                     {
                         return Option.None<TSource>();
                     }
 
-                    TSource result = e.Current;
-
-                    if (!e.MoveNext())
+                    var result = enumerator.Current;
+                    if (!enumerator.MoveNext())
                     {
                         return result.Some();
                     }
@@ -180,23 +218,27 @@ namespace Optional.Collections
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
-            TSource result = default(TSource);
-            long count = 0;
-            foreach (TSource element in source)
+            using (var enumerator = source.GetEnumerator())
             {
-                if (predicate(element))
+                while (enumerator.MoveNext())
                 {
-                    result = element;
-                    checked { count++; }
-
-                    if (count > 1)
+                    var result = enumerator.Current;
+                    if (predicate(result))
                     {
-                        return result.None();
+                        while (enumerator.MoveNext())
+                        {
+                            if (predicate(enumerator.Current))
+                            {
+                                return Option.None<TSource>();
+                            }
+                        }
+
+                        return result.Some();
                     }
                 }
             }
 
-            return count == 1 ? result.Some() : result.None();
+            return Option.None<TSource>();
         }
 
         /// <summary>
@@ -211,8 +253,7 @@ namespace Optional.Collections
 
             if (index >= 0)
             {
-                IList<TSource> list = source as IList<TSource>;
-                if (list != null)
+                if (source is IList<TSource> list)
                 {
                     if (index < list.Count)
                     {
@@ -221,18 +262,13 @@ namespace Optional.Collections
                 }
                 else
                 {
-                    using (IEnumerator<TSource> e = source.GetEnumerator())
+                    using (var enumerator = source.GetEnumerator())
                     {
-                        while (true)
+                        while (enumerator.MoveNext())
                         {
-                            if (!e.MoveNext())
-                            {
-                                break;
-                            }
-
                             if (index == 0)
                             {
-                                return e.Current.Some();
+                                return enumerator.Current.Some();
                             }
 
                             index--;

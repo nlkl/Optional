@@ -1,18 +1,17 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Optional.Collections;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Optional.Collections;
-using System.Collections;
 
-namespace Optional.Tests.Extensions
+namespace Optional.Tests
 {
     [TestClass]
-    public class LinqTests
+    public class CollectionTests
     {
         [TestMethod]
-        public void Extensions_FirstOperatorEnumerable()
+        public void Collections_FirstOperatorEnumerable()
         {
             var full = Enumerable.Range(0, 100);
             var empty = Enumerable.Empty<int>();
@@ -28,7 +27,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void Extensions_FirstOperatorQueryable()
+        public void Collections_FirstOperatorQueryable()
         {
             var full = Enumerable.Range(0, 100).AsQueryable();
             var empty = Enumerable.Empty<int>().AsQueryable();
@@ -38,7 +37,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void Extensions_LastOperatorEnumerable()
+        public void Collections_LastOperatorEnumerable()
         {
             var full = Enumerable.Range(0, 100);
             var empty = Enumerable.Empty<int>();
@@ -54,7 +53,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void Extensions_LastOperatorQueryable()
+        public void Collections_LastOperatorQueryable()
         {
             var full = Enumerable.Range(0, 100).AsQueryable();
             var empty = Enumerable.Empty<int>().AsQueryable();
@@ -64,7 +63,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void Extensions_SingleOperatorEnumerable()
+        public void Collections_SingleOperatorEnumerable()
         {
             var full = Enumerable.Range(0, 100);
             var empty = Enumerable.Empty<int>();
@@ -80,7 +79,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void Extensions_SingleOperatorQueryable()
+        public void Collections_SingleOperatorQueryable()
         {
             var full = Enumerable.Range(0, 100).AsQueryable();
             var empty = Enumerable.Empty<int>().AsQueryable();
@@ -90,7 +89,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void Extensions_ElementAtOperatorEnumerable()
+        public void Collections_ElementAtOperatorEnumerable()
         {
             var full = Enumerable.Range(0, 100);
             var empty = Enumerable.Empty<int>();
@@ -106,7 +105,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void Extensions_ElementAtOperatorQueryable()
+        public void Collections_ElementAtOperatorQueryable()
         {
             var full = Enumerable.Range(0, 100).AsQueryable();
             var empty = Enumerable.Empty<int>().AsQueryable();
@@ -116,7 +115,7 @@ namespace Optional.Tests.Extensions
         }
 
         [TestMethod]
-        public void Extensions_GetValueOperatorDictionary()
+        public void Collections_GetValueOperatorDictionary()
         {
             var dictionaryA = Enumerable.Range(50, 50).ToDictionary(i => i, i => i.ToString());
             var excludedKeysA = Enumerable.Range(-50, 50);
