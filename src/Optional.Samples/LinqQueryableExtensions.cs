@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace Optional.Collections
+namespace Optional.Samples
 {
     public static class LinqQueryableExtensions
     {
