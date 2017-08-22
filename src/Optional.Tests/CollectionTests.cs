@@ -79,7 +79,7 @@ namespace Optional.Tests
         {
             var dictionaryA = Enumerable.Range(50, 50).ToDictionary(i => i, i => i.ToString());
             var excludedKeysA = Enumerable.Range(-50, 50);
-#if NET45PLUS
+#if !NET35
             GetValueOperator(new TestReadOnlyDictionary<int, string>(dictionaryA), excludedKeysA);
 #endif
             GetValueOperator(new TestDictionary<int, string>(dictionaryA), excludedKeysA);
@@ -94,7 +94,7 @@ namespace Optional.Tests
                 { "e", Guid.NewGuid() },
             };
             var excludedKeysB = new List<string> { "h", "i", "j", "k" };
-#if NET45PLUS
+#if !NET35
             GetValueOperator(new TestReadOnlyDictionary<string, Guid>(dictionaryB), excludedKeysB);
 #endif
             GetValueOperator(new TestDictionary<string, Guid>(dictionaryB), excludedKeysB);
@@ -192,7 +192,7 @@ namespace Optional.Tests
             }
         }
 
-#if NET45PLUS
+#if !NET35
         private class TestReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
         {
             private readonly Dictionary<TKey, TValue> dictionary;

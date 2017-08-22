@@ -23,6 +23,15 @@ namespace Optional.Collections
                     return list[0].Some();
                 }
             }
+#if !NET35
+            else if (source is IReadOnlyList<TSource> readOnlyList)
+            {
+                if (readOnlyList.Count > 0)
+                {
+                    return readOnlyList[0].Some();
+                }
+            }
+#endif
             else
             {
                 using (var enumerator = source.GetEnumerator())
@@ -71,12 +80,22 @@ namespace Optional.Collections
 
             if (source is IList<TSource> list)
             {
-                int count = list.Count;
+                var count = list.Count;
                 if (count > 0)
                 {
                     return list[count - 1].Some();
                 }
             }
+#if !NET35
+            else if (source is IReadOnlyList<TSource> readOnlyList)
+            {
+                var count = readOnlyList.Count;
+                if (count > 0)
+                {
+                    return readOnlyList[count - 1].Some();
+                }
+            }
+#endif
             else
             {
                 using (var enumerator = source.GetEnumerator())
@@ -112,7 +131,7 @@ namespace Optional.Collections
 
             if (source is IList<TSource> list)
             {
-                for (int i = list.Count - 1; i >= 0; --i)
+                for (var i = list.Count - 1; i >= 0; --i)
                 {
                     var result = list[i];
                     if (predicate(result))
@@ -121,6 +140,19 @@ namespace Optional.Collections
                     }
                 }
             }
+#if !NET35
+            else if (source is IReadOnlyList<TSource> readOnlyList)
+            {
+                for (var i = readOnlyList.Count - 1; i >= 0; --i)
+                {
+                    var result = readOnlyList[i];
+                    if (predicate(result))
+                    {
+                        return result.Some();
+                    }
+                }
+            }
+#endif
             else
             {
                 using (var enumerator = source.GetEnumerator())
@@ -166,6 +198,16 @@ namespace Optional.Collections
                     case 1: return list[0].Some();
                 }
             }
+#if !NET35
+            else if (source is IReadOnlyList<TSource> readOnlyList)
+            {
+                switch (readOnlyList.Count)
+                {
+                    case 0: return Option.None<TSource>();
+                    case 1: return readOnlyList[0].Some();
+                }
+            }
+#endif
             else
             {
                 using (var enumerator = source.GetEnumerator())
@@ -240,6 +282,15 @@ namespace Optional.Collections
                         return list[index].Some();
                     }
                 }
+#if !NET35
+                else if (source is IReadOnlyList<TSource> readOnlyList)
+                {
+                    if (index < readOnlyList.Count)
+                    {
+                        return readOnlyList[index].Some();
+                    }
+                }
+#endif
                 else
                 {
                     using (var enumerator = source.GetEnumerator())

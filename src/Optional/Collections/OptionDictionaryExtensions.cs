@@ -21,7 +21,7 @@ namespace Optional.Collections
             {
                 return dictionary.TryGetValue(key, out var value) ? value.Some() : value.None();
             }
-#if NET45PLUS
+#if !NET35
             else if (source is IReadOnlyDictionary<TKey, TValue> readOnlyDictionary)
             {
                 return readOnlyDictionary.TryGetValue(key, out var value) ? value.Some() : value.None();
