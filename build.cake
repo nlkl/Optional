@@ -31,7 +31,7 @@ Task("Pack")
     .IsDependentOn("Test")
     .Does(() =>
     {
-        Pack("Optional", new [] { "net35", "net45", "netstandard1.0" });
+        Pack("Optional", new [] { "net35", "net45", "netstandard1.0", "netstandard2.0" });
     });
     
 RunTarget(target);
