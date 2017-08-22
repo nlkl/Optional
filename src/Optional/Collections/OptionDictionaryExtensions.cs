@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Optional.Collections
 {
-    public static class DictionaryExtensions
+    public static class OptionDictionaryExtensions
     {
         /// <summary>
         /// Returns the value associated with the specified key if such exists.

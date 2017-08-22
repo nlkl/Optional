@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Optional.Collections
 {
-    public static class LinqEnumerableExtensions
+    public static class OptionEnumerableExtensions
     {
         /// <summary>
         /// Returns the first element of a sequence if such exists.
