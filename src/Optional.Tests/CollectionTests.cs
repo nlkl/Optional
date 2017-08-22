@@ -24,6 +24,14 @@ namespace Optional.Tests
             var singleList = Enumerable.Repeat(0, 1).ToList();
 
             FirstOperator(fullList, singleList, emptyList);
+
+#if !NET35
+            var fullReadOnlyList = new TestReadOnlyList<int>(Enumerable.Range(0, 100).ToList());
+            var emptyReadOnlyList = new TestReadOnlyList<int>(Enumerable.Empty<int>().ToList());
+            var singleReadOnlyList = new TestReadOnlyList<int>(Enumerable.Repeat(0, 1).ToList());
+
+            FirstOperator(fullReadOnlyList, singleReadOnlyList, emptyReadOnlyList);
+#endif
         }
 
         [TestMethod]
@@ -40,6 +48,14 @@ namespace Optional.Tests
             var singleList = Enumerable.Repeat(0, 1).ToList();
 
             LastOperator(fullList, singleList, emptyList);
+
+#if !NET35
+            var fullReadOnlyList = new TestReadOnlyList<int>(Enumerable.Range(0, 100).ToList());
+            var emptyReadOnlyList = new TestReadOnlyList<int>(Enumerable.Empty<int>().ToList());
+            var singleReadOnlyList = new TestReadOnlyList<int>(Enumerable.Repeat(0, 1).ToList());
+
+            LastOperator(fullReadOnlyList, singleReadOnlyList, emptyReadOnlyList);
+#endif
         }
 
         [TestMethod]
@@ -56,6 +72,14 @@ namespace Optional.Tests
             var singleList = Enumerable.Repeat(0, 1).ToList();
 
             SingleOperator(fullList, singleList, emptyList);
+
+#if !NET35
+            var fullReadOnlyList = new TestReadOnlyList<int>(Enumerable.Range(0, 100).ToList());
+            var emptyReadOnlyList = new TestReadOnlyList<int>(Enumerable.Empty<int>().ToList());
+            var singleReadOnlyList = new TestReadOnlyList<int>(Enumerable.Repeat(0, 1).ToList());
+
+            SingleOperator(fullReadOnlyList, singleReadOnlyList, emptyReadOnlyList);
+#endif
         }
 
         [TestMethod]
@@ -72,6 +96,14 @@ namespace Optional.Tests
             var singleList = Enumerable.Repeat(0, 1).ToList();
 
             ElementAtOperator(fullList, singleList, emptyList);
+
+#if !NET35
+            var fullReadOnlyList = new TestReadOnlyList<int>(Enumerable.Range(0, 100).ToList());
+            var emptyReadOnlyList = new TestReadOnlyList<int>(Enumerable.Empty<int>().ToList());
+            var singleReadOnlyList = new TestReadOnlyList<int>(Enumerable.Repeat(0, 1).ToList());
+
+            ElementAtOperator(fullReadOnlyList, singleReadOnlyList, emptyReadOnlyList);
+#endif
         }
 
         [TestMethod]
@@ -210,6 +242,21 @@ namespace Optional.Tests
             public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => dictionary.GetEnumerator();
             public bool TryGetValue(TKey key, out TValue value) => dictionary.TryGetValue(key, out value);
             IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)dictionary).GetEnumerator();
+        }
+
+        private class TestReadOnlyList<T> : IReadOnlyList<T>
+        {
+            private readonly List<T> list;
+
+            public TestReadOnlyList(List<T> list)
+            {
+                this.list = list;
+            }
+
+            public T this[int index] => list[index];
+            public int Count => list.Count;
+            public IEnumerator<T> GetEnumerator() => list.GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)list).GetEnumerator();
         }
 #endif
 
