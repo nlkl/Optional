@@ -22,9 +22,9 @@ namespace Optional.Collections
                 return dictionary.TryGetValue(key, out var value) ? value.Some() : value.None();
             }
 #if NET45PLUS
-            else if (source is IReadOnlyDictionary<TKey, TValue> dictionary)
+            else if (source is IReadOnlyDictionary<TKey, TValue> readOnlyDictionary)
             {
-                return dictionary.TryGetValue(key, out var value) ? value.Some() : value.None();
+                return readOnlyDictionary.TryGetValue(key, out var value) ? value.Some() : value.None();
             }
 #endif
 

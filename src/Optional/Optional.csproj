@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;netstandard1.0</TargetFrameworks>
+    <TargetFrameworks>net35;net45;netstandard1.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Version>3.2.0</Version>
@@ -12,6 +12,10 @@
   
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
     <DefineConstants>NETSTANDARD10</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <DefineConstants>NET45PLUS</DefineConstants>
   </PropertyGroup>
     
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.0' ">
