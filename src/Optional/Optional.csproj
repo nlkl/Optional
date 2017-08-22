@@ -17,9 +17,5 @@
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <DefineConstants>NET45PLUS</DefineConstants>
   </PropertyGroup>
-    
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' Or '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System" />
-  </ItemGroup>
   
 </Project>

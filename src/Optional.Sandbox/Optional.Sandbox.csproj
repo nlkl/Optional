@@ -17,10 +17,6 @@
     <DefineConstants>NETSTANDARD10</DefineConstants>
   </PropertyGroup>
     
-  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.0' ">
-    <Reference Include="System" />
-  </ItemGroup>
-    
   <ItemGroup>
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
