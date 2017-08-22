@@ -16,11 +16,6 @@ namespace Optional.Collections
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
-            //if (source is IPartition<TSource> partition)
-            //{
-            //    return partition.TryGetFirst(out found);
-            //}
-
             if (source is IList<TSource> list)
             {
                 if (list.Count > 0)
@@ -54,11 +49,6 @@ namespace Optional.Collections
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
-            //if (source is OrderedEnumerable<TSource> ordered)
-            //{
-            //    return ordered.TryGetFirst(predicate, out found);
-            //}
-
             foreach (var element in source)
             {
                 if (predicate(element))
@@ -78,11 +68,6 @@ namespace Optional.Collections
         public static Option<TSource> LastOrNone<TSource>(this IEnumerable<TSource> source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-
-            //if (source is IPartition<TSource> partition)
-            //{
-            //    return partition.TryGetLast(out found);
-            //}
 
             if (source is IList<TSource> list)
             {
@@ -124,11 +109,6 @@ namespace Optional.Collections
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-
-            //if (source is OrderedEnumerable<TSource> ordered)
-            //{
-            //    return ordered.TryGetLast(predicate, out found);
-            //}
 
             if (source is IList<TSource> list)
             {
