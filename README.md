@@ -1,4 +1,4 @@
-![Optional](https://raw.githubusercontent.com/nlkl/Optional/master/Extras/Icon/Logo.png)
+![Optional](https://raw.githubusercontent.com/nlkl/Optional/master/icon/Logo.png)
 
 Optional is a robust option/maybe type for C#.
 

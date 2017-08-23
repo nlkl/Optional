@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net45;netstandard1.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Version>0.1.0</Version>
+    <Authors>Nils Lück</Authors>
+    <Copyright>Copyright © 2016</Copyright>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
+    <DefineConstants>NETSTANDARD10</DefineConstants>
+  </PropertyGroup>
+    
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.0' ">
+    <Reference Include="System" />
+    <Reference Include="System.Runtime" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <ProjectReference Include="..\Optional\Optional.csproj" />
+  </ItemGroup>
+
+</Project>
