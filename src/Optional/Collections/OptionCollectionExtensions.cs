@@ -1,12 +1,38 @@
-﻿// Note: The implementation is closely inspired by the corefx source code for FirstOrDefault, etc.
+﻿// Note: Several of the below implementations are closely inspired by the corefx source code for FirstOrDefault, etc.
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Optional.Collections
 {
     public static class OptionCollectionExtensions
     {
+
+        /// <summary>
+        /// Flattens a sequence of optionals into a sequence containing
+        /// all inner values. Empty elements are discarded.
+        /// </summary>
+        /// <param name="source">The sequence of optionals.</param>
+        /// <returns>A flattened sequence of values.</returns>
+        public static IEnumerable<T> Flatten<T>(this IEnumerable<Option<T>> source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            return source.SelectMany(option => option.ToEnumerable());
+        }
+
+        /// <summary>
+        /// Flattens a sequence of optionals into a sequence containing
+        /// all inner values. Empty elements and their exceptional values are discarded.
+        /// </summary>
+        /// <param name="source">The sequence of optionals.</param>
+        /// <returns>A flattened sequence of values.</returns>
+        public static IEnumerable<T> Flatten<T, TException>(this IEnumerable<Option<T, TException>> source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            return source.SelectMany(option => option.ToEnumerable());
+        }
+
         /// <summary>
         /// Returns the value associated with the specified key if such exists.
         /// A dictionary lookup will be used if available, otherwise falling

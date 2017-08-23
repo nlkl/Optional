@@ -11,6 +11,68 @@ namespace Optional.Tests
     public class CollectionTests
     {
         [TestMethod]
+        public void Collections_Enumerable_FlattenMaybe()
+        {
+            var list1 = new List<Option<string>>
+            {
+                Option.Some<string>("a"),
+                Option.None<string>(),
+                Option.None<string>(),
+                Option.Some<string>("b"),
+                Option.Some<string>(null),
+                Option.None<string>(),
+                Option.Some<string>("c"),
+            };
+            var list1Expected = new List<string> { "a", "b", null, "c" };
+
+            var list2 = new List<Option<string>>();
+            var list2Expected = new List<string>();
+
+            var list3 = new List<Option<string>> { "a".Some() };
+            var list3Expected = new List<string> { "a" };
+
+            var list4 = new List<Option<string>> { Option.None<string>() };
+            var list4Expected = new List<string>();
+
+
+            CollectionAssert.AreEqual(list1.Flatten().ToList(), list1Expected);
+            CollectionAssert.AreEqual(list2.Flatten().ToList(), list2Expected);
+            CollectionAssert.AreEqual(list3.Flatten().ToList(), list3Expected);
+            CollectionAssert.AreEqual(list4.Flatten().ToList(), list4Expected);
+        }
+
+        [TestMethod]
+        public void Collections_Enumerable_FlattenEither()
+        {
+            var list1 = new List<Option<string, string>>
+            {
+                Option.Some<string, string>("a"),
+                Option.None<string, string>("error"),
+                Option.None<string, string>("error"),
+                Option.Some<string, string>("b"),
+                Option.Some<string, string>(null),
+                Option.None<string, string>("error"),
+                Option.Some<string, string>("c"),
+            };
+            var list1Expected = new List<string> { "a", "b", null, "c" };
+
+            var list2 = new List<Option<string, string>>();
+            var list2Expected = new List<string>();
+
+            var list3 = new List<Option<string, string>> { "a".Some<string, string>() };
+            var list3Expected = new List<string> { "a" };
+
+            var list4 = new List<Option<string, string>> { Option.None<string, string>("error") };
+            var list4Expected = new List<string>();
+
+
+            CollectionAssert.AreEqual(list1.Flatten().ToList(), list1Expected);
+            CollectionAssert.AreEqual(list2.Flatten().ToList(), list2Expected);
+            CollectionAssert.AreEqual(list3.Flatten().ToList(), list3Expected);
+            CollectionAssert.AreEqual(list4.Flatten().ToList(), list4Expected);
+        }
+
+        [TestMethod]
         public void Collections_Enumerable_FirstOrNone()
         {
             var full = Enumerable.Range(0, 100);
