@@ -137,7 +137,7 @@ var value = option.ValueOr(10);
 var value = option.ValueOr(() => SlowOperation());  // Lazy variant
 ```
 
-In more elobarate scenarios, the `Match` method evaluates a specified function:
+In more elaborate scenarios, the `Match` method evaluates a specified function:
 
 ```csharp
 // Evaluates one of the provided functions and returns the result
