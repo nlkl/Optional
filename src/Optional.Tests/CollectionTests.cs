@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Optional.Collections;
+using Optional.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -76,8 +77,9 @@ namespace Optional.Tests
         [TestMethod]
         public void Collections_Enumerable_ChooseMaybe()
         {
-            var evens = Enumerable.Range(1, 10).Choose(x => x % 2 == 0 ? x.Some() : x.None());
-            CollectionAssert.AreEqual(evens.ToArray(), new[] { 2, 4, 6, 8, 10 });
+            var inputs = new[] { "O", "l", "2", "3", "4", "S", "6", "7", "B", "9" };
+            var actuals = inputs.Choose(s => Parse.ToInt(s, CultureInfo.InvariantCulture, NumberStyles.Integer));
+            CollectionAssert.AreEqual(actuals.ToArray(), new[] { 2, 3, 4, 6, 7, 9 });
         }
 
         [TestMethod]
