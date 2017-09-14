@@ -34,6 +34,36 @@ namespace Optional.Collections
         }
 
         /// <summary>
+        /// Applies a function to each element of the sequence and returns a
+        /// sequence comprised of only those elements for which the function
+        /// returns some value.
+        /// </summary>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="chooser">The function to apply.</param>
+        /// <returns>A sequence of chosen values.</returns>
+        public static IEnumerable<TResult> Choose<T, TResult>(this IEnumerable<T> source, Func<T, Option<TResult>> chooser)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (chooser == null) throw new ArgumentNullException(nameof(chooser));
+            return source.Select(chooser).Flatten();
+        }
+
+        /// <summary>
+        /// Applies a function to each element of the sequence and returns a
+        /// sequence comprised of only those elements for which the function
+        /// returns some value.
+        /// </summary>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="chooser">The function to apply.</param>
+        /// <returns>A sequence of chosen values.</returns>
+        public static IEnumerable<TResult> Choose<T, TException, TResult>(this IEnumerable<T> source, Func<T, Option<TResult, TException>> chooser)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (chooser == null) throw new ArgumentNullException(nameof(chooser));
+            return source.Select(chooser).Flatten();
+        }
+
+        /// <summary>
         /// Returns the value associated with the specified key if such exists.
         /// A dictionary lookup will be used if available, otherwise falling
         /// back to a linear scan of the enumerable.

@@ -3,6 +3,7 @@ using Optional.Collections;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Optional.Tests
@@ -70,6 +71,27 @@ namespace Optional.Tests
             CollectionAssert.AreEqual(list2.Flatten().ToList(), list2Expected);
             CollectionAssert.AreEqual(list3.Flatten().ToList(), list3Expected);
             CollectionAssert.AreEqual(list4.Flatten().ToList(), list4Expected);
+        }
+
+        [TestMethod]
+        public void Collections_Enumerable_ChooseMaybe()
+        {
+            var evens = Enumerable.Range(1, 10).Choose(x => x % 2 == 0 ? x.Some() : x.None());
+            CollectionAssert.AreEqual(evens.ToArray(), new[] { 2, 4, 6, 8, 10 });
+        }
+
+        [TestMethod]
+        public void Collections_Enumerable_ChooseEither()
+        {
+            var inputs = new[] { "O", "l", "2", "3", "4", "S", "6", "7", "B", "9" };
+
+            Func<string, Option<int, FormatException>> TryParseInt32(NumberStyles styles, IFormatProvider fp) =>
+                s => int.TryParse(s, styles, fp, out var x)
+                     ? x.Some<int, FormatException>()
+                     : x.None(new FormatException($"Invalid 32-bit integer: {s}"));
+
+            var actuals = inputs.Choose(TryParseInt32(NumberStyles.Integer, CultureInfo.InvariantCulture));
+            CollectionAssert.AreEqual(actuals.ToArray(), new[] { 2, 3, 4, 6, 7, 9 });
         }
 
         [TestMethod]
