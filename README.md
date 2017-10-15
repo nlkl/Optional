@@ -538,4 +538,25 @@ var option = values.ElementAtOrNone(10);
 
 (Note that unlike `SingleOrDefault`, `SingleOrNone` never throws an exception but returns None in all "invalid" cases. This slight deviation in semantics was considered a safer alternative to the existing behavior, and is easy to work around in practice, if the finer granularity is needed.)
 
-TODO
+Optional provides a safe way to retrieve values from a dictionary:
+
+```csharp
+var option = dictionary.GetValueOrNone("key");
+```
+
+`GetValueOrNone` behaves similarly to `TryGetValue` on an `IDictionary<TKey, TValue>` or `IReadOnlyDictionary<TKey, TValue>`, but actually supports any `IEnumerable<KeyValuePair<TKey, TValue>>` (falling back to iteration, when a direct lookup is not possible).
+
+Another common scenario, is to perform various transformations on an enumerable and ending up with a sequence of options (e.g. `IEnumerable<Option<T>>`). In many cases, only the non-empty options are relevant, and as such Optional provides a convenient method to flatten a sequence of options into a sequence containing all the inner values (whereas empty options are simply thrown away):
+
+```csharp
+var options = new List<Option<int>> { Option.Some(1), Option.Some(2), Option.None<int>() };
+var values = option.Values(); // IEnumerable<int> { 1, 2 }
+```
+
+When working with a sequence of `Option<T, TException>` a similar method is provided, as well a way to extract all the exceptional values:
+
+```csharp
+var options = GetOptions(); // IEnumerable<Option<int, string>> { Some(1), None("error"), Some(2) }
+var values = options.Values(); // IEnumerable<int> { 1, 2 }
+var exceptions = options.Exceptions(); // IEnumerable<string> { "error" }
+```
