@@ -204,6 +204,13 @@ In a lot of interop scenarios, it might be necessary to convert an option into a
 var value = option.ValueOrDefault(); // value will be default(T) if the option is empty.
 ```
 
+Similarly, it is possible to convert an option into to a nullable (insofar as the inner value is a value type):
+
+
+```csharp
+var nullable = option.ToNullable();
+```
+
 As a rule of thumb, such conversions should be performed only just before the nullable value is needed (e.g. passed to an external library), to minimize and localize the potential for null reference exceptions and the like. 
 
 ### Transforming and filtering values
