@@ -10,27 +10,48 @@ namespace Optional.Collections
     {
 
         /// <summary>
-        /// Flattens a sequence of optionals into a sequence containing
-        /// all inner values. Empty elements are discarded.
+        /// Flattens a sequence of optionals into a sequence containing all inner values.
+        /// Empty elements are discarded.
         /// </summary>
         /// <param name="source">The sequence of optionals.</param>
         /// <returns>A flattened sequence of values.</returns>
-        public static IEnumerable<T> Flatten<T>(this IEnumerable<Option<T>> source)
+        public static IEnumerable<T> Values<T>(this IEnumerable<Option<T>> source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             return source.SelectMany(option => option.ToEnumerable());
         }
 
         /// <summary>
-        /// Flattens a sequence of optionals into a sequence containing
-        /// all inner values. Empty elements and their exceptional values are discarded.
+        /// Flattens a sequence of optionals into a sequence containing all inner values.
+        /// Empty elements and their exceptional values are discarded.
         /// </summary>
         /// <param name="source">The sequence of optionals.</param>
         /// <returns>A flattened sequence of values.</returns>
-        public static IEnumerable<T> Flatten<T, TException>(this IEnumerable<Option<T, TException>> source)
+        public static IEnumerable<T> Values<T, TException>(this IEnumerable<Option<T, TException>> source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             return source.SelectMany(option => option.ToEnumerable());
+        }
+
+        /// <summary>
+        /// Flattens a sequence of optionals into a sequence containing all exceptional values.
+        /// Non-empty elements and their values are discarded.
+        /// </summary>
+        /// <param name="source">The sequence of optionals.</param>
+        /// <returns>A flattened sequence of exceptional values.</returns>
+        public static IEnumerable<TException> Exceptions<T, TException>(this IEnumerable<Option<T, TException>> source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            IEnumerable<TException> ExceptionToEnumerable(Option<T, TException> option)
+            {
+                if (!option.HasValue)
+                {
+                    yield return option.Exception;
+                }
+            }
+
+            return source.SelectMany(ExceptionToEnumerable);
         }
 
         /// <summary>
@@ -45,7 +66,7 @@ namespace Optional.Collections
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (chooser == null) throw new ArgumentNullException(nameof(chooser));
-            return source.Select(chooser).Flatten();
+            return source.Select(chooser).Values();
         }
 
         /// <summary>
@@ -60,7 +81,7 @@ namespace Optional.Collections
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
             if (chooser == null) throw new ArgumentNullException(nameof(chooser));
-            return source.Select(chooser).Flatten();
+            return source.Select(chooser).Values();
         }
 
         /// <summary>

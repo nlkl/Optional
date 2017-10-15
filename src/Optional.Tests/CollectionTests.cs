@@ -13,7 +13,7 @@ namespace Optional.Tests
     public class CollectionTests
     {
         [TestMethod]
-        public void Collections_Enumerable_FlattenMaybe()
+        public void Collections_Enumerable_ValuesMaybe()
         {
             var list1 = new List<Option<string>>
             {
@@ -37,14 +37,14 @@ namespace Optional.Tests
             var list4Expected = new List<string>();
 
 
-            CollectionAssert.AreEqual(list1.Flatten().ToList(), list1Expected);
-            CollectionAssert.AreEqual(list2.Flatten().ToList(), list2Expected);
-            CollectionAssert.AreEqual(list3.Flatten().ToList(), list3Expected);
-            CollectionAssert.AreEqual(list4.Flatten().ToList(), list4Expected);
+            CollectionAssert.AreEqual(list1.Values().ToList(), list1Expected);
+            CollectionAssert.AreEqual(list2.Values().ToList(), list2Expected);
+            CollectionAssert.AreEqual(list3.Values().ToList(), list3Expected);
+            CollectionAssert.AreEqual(list4.Values().ToList(), list4Expected);
         }
 
         [TestMethod]
-        public void Collections_Enumerable_FlattenEither()
+        public void Collections_Enumerable_ValuesEither()
         {
             var list1 = new List<Option<string, string>>
             {
@@ -68,10 +68,41 @@ namespace Optional.Tests
             var list4Expected = new List<string>();
 
 
-            CollectionAssert.AreEqual(list1.Flatten().ToList(), list1Expected);
-            CollectionAssert.AreEqual(list2.Flatten().ToList(), list2Expected);
-            CollectionAssert.AreEqual(list3.Flatten().ToList(), list3Expected);
-            CollectionAssert.AreEqual(list4.Flatten().ToList(), list4Expected);
+            CollectionAssert.AreEqual(list1.Values().ToList(), list1Expected);
+            CollectionAssert.AreEqual(list2.Values().ToList(), list2Expected);
+            CollectionAssert.AreEqual(list3.Values().ToList(), list3Expected);
+            CollectionAssert.AreEqual(list4.Values().ToList(), list4Expected);
+        }
+
+        [TestMethod]
+        public void Collections_Enumerable_ExceptionsEither()
+        {
+            var list1 = new List<Option<string, string>>
+            {
+                Option.None<string, string>("a"),
+                Option.Some<string, string>("value"),
+                Option.Some<string, string>("value"),
+                Option.None<string, string>("b"),
+                Option.None<string, string>(null),
+                Option.Some<string, string>("value"),
+                Option.None<string, string>("c"),
+            };
+            var list1Expected = new List<string> { "a", "b", null, "c" };
+
+            var list2 = new List<Option<string, string>>();
+            var list2Expected = new List<string>();
+
+            var list3 = new List<Option<string, string>> { Option.None<string, string>("a") };
+            var list3Expected = new List<string> { "a" };
+
+            var list4 = new List<Option<string, string>> { Option.Some<string, string>("error") };
+            var list4Expected = new List<string>();
+
+
+            CollectionAssert.AreEqual(list1.Exceptions().ToList(), list1Expected);
+            CollectionAssert.AreEqual(list2.Exceptions().ToList(), list2Expected);
+            CollectionAssert.AreEqual(list3.Exceptions().ToList(), list3Expected);
+            CollectionAssert.AreEqual(list4.Exceptions().ToList(), list4Expected);
         }
 
         [TestMethod]
