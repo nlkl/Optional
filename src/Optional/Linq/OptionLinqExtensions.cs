@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Optional.Internals;
 
 namespace Optional.Linq
 {
@@ -9,13 +10,15 @@ namespace Optional.Linq
     {
         public static Option<TResult> Select<TSource, TResult>(this Option<TSource> source, Func<TSource, TResult> selector)
         {
-            if (selector == null) throw new ArgumentNullException(nameof(selector));
+            Guard.ArgumentNotNull(selector);
+
             return source.Map(selector);
         }
 
         public static Option<TResult> SelectMany<TSource, TResult>(this Option<TSource> source, Func<TSource, Option<TResult>> selector)
         {
-            if (selector == null) throw new ArgumentNullException(nameof(selector));
+            Guard.ArgumentNotNull(selector);
+
             return source.FlatMap(selector);
         }
 
@@ -24,20 +27,22 @@ namespace Optional.Linq
                 Func<TSource, Option<TCollection>> collectionSelector,
                 Func<TSource, TCollection, TResult> resultSelector)
         {
-            if (collectionSelector == null) throw new ArgumentNullException(nameof(collectionSelector));
-            if (resultSelector == null) throw new ArgumentNullException(nameof(resultSelector));
+            Guard.ArgumentsNotNull(collectionSelector, resultSelector);
+
             return source.FlatMap(src => collectionSelector(src).Map(elem => resultSelector(src, elem)));
         }
 
         public static Option<TSource> Where<TSource>(this Option<TSource> source, Func<TSource, bool> predicate)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            Guard.ArgumentNotNull(predicate);
+
             return source.Filter(predicate);
         }
 
         public static Option<TResult, TException> Select<TSource, TException, TResult>(this Option<TSource, TException> source, Func<TSource, TResult> selector)
         {
-            if (selector == null) throw new ArgumentNullException(nameof(selector));
+            Guard.ArgumentNotNull(selector);
+
             return source.Map(selector);
         }
 
@@ -46,7 +51,8 @@ namespace Optional.Linq
                 Func<TSource,
                 Option<TResult, TException>> selector)
         {
-            if (selector == null) throw new ArgumentNullException(nameof(selector));
+            Guard.ArgumentNotNull(selector);
+
             return source.FlatMap(selector);
         }
 
@@ -55,8 +61,8 @@ namespace Optional.Linq
                 Func<TSource, Option<TCollection, TException>> collectionSelector,
                 Func<TSource, TCollection, TResult> resultSelector)
         {
-            if (collectionSelector == null) throw new ArgumentNullException(nameof(collectionSelector));
-            if (resultSelector == null) throw new ArgumentNullException(nameof(resultSelector));
+            Guard.ArgumentsNotNull(collectionSelector, resultSelector);
+
             return source.FlatMap(src => collectionSelector(src).Map(elem => resultSelector(src, elem)));
         }
     }

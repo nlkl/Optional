@@ -13,9 +13,17 @@
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
     <DefineConstants>NETSTANDARD10</DefineConstants>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net35|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NET35</DefineConstants>
+  </PropertyGroup>
     
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.0' ">
     <Reference Include="System" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <ProjectReference Include="..\Optional.Internals\Optional.Internals.csproj" />
   </ItemGroup>
   
 </Project>

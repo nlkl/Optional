@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Optional.Internals;
 
 namespace Optional
 {
@@ -162,7 +163,8 @@ namespace Optional
         /// <returns>A boolean indicating whether or not the predicate was satisfied.</returns>
         public bool Exists(Func<T, bool> predicate)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            Guard.ArgumentNotNull(predicate);
+
             return hasValue && predicate(value);
         }
 
@@ -180,7 +182,8 @@ namespace Optional
         /// <returns>The existing or alternative value.</returns>
         public T ValueOr(Func<T> alternativeFactory)
         {
-            if (alternativeFactory == null) throw new ArgumentNullException(nameof(alternativeFactory));
+            Guard.ArgumentNotNull(alternativeFactory);
+
             return hasValue ? value : alternativeFactory();
         }
 
@@ -198,7 +201,8 @@ namespace Optional
         /// <returns>A new optional, containing either the existing or alternative value.</returns>
         public Option<T> Or(Func<T> alternativeFactory)
         {
-            if (alternativeFactory == null) throw new ArgumentNullException(nameof(alternativeFactory));
+            Guard.ArgumentNotNull(alternativeFactory);
+
             return hasValue ? this : Option.Some(alternativeFactory());
         }
 
@@ -216,7 +220,8 @@ namespace Optional
         /// <returns>The alternative optional, if no value is present, otherwise itself.</returns>
         public Option<T> Else(Func<Option<T>> alternativeOptionFactory)
         {
-            if (alternativeOptionFactory == null) throw new ArgumentNullException(nameof(alternativeOptionFactory));
+            Guard.ArgumentNotNull(alternativeOptionFactory);
+
             return hasValue ? this : alternativeOptionFactory();
         }
 
@@ -240,7 +245,7 @@ namespace Optional
         /// <returns>An optional with an exceptional value.</returns>
         public Option<T, TException> WithException<TException>(Func<TException> exceptionFactory)
         {
-            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            Guard.ArgumentNotNull(exceptionFactory);
 
             return Match(
                 some: value => Option.Some<T, TException>(value),
@@ -256,8 +261,8 @@ namespace Optional
         /// <returns>The result of the evaluated function.</returns>
         public TResult Match<TResult>(Func<T, TResult> some, Func<TResult> none)
         {
-            if (some == null) throw new ArgumentNullException(nameof(some));
-            if (none == null) throw new ArgumentNullException(nameof(none));
+            Guard.ArgumentsNotNull(some, none);
+
             return hasValue ? some(value) : none();
         }
 
@@ -268,8 +273,7 @@ namespace Optional
         /// <param name="none">The action to evaluate if the value is missing.</param>
         public void Match(Action<T> some, Action none)
         {
-            if (some == null) throw new ArgumentNullException(nameof(some));
-            if (none == null) throw new ArgumentNullException(nameof(none));
+            Guard.ArgumentsNotNull(some, none);
 
             if (hasValue)
             {
@@ -287,7 +291,7 @@ namespace Optional
         /// <param name="some">The action to evaluate if the value is present.</param>
         public void MatchSome(Action<T> some)
         {
-            if (some == null) throw new ArgumentNullException(nameof(some));
+            Guard.ArgumentNotNull(some);
 
             if (hasValue)
             {
@@ -301,7 +305,7 @@ namespace Optional
         /// <param name="none">The action to evaluate if the value is missing.</param>
         public void MatchNone(Action none)
         {
-            if (none == null) throw new ArgumentNullException(nameof(none));
+            Guard.ArgumentNotNull(none);
 
             if (!hasValue)
             {
@@ -317,7 +321,7 @@ namespace Optional
         /// <returns>The transformed optional.</returns>
         public Option<TResult> Map<TResult>(Func<T, TResult> mapping)
         {
-            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
+            Guard.ArgumentNotNull(mapping);
 
             return Match(
                 some: value => Option.Some(mapping(value)),
@@ -334,7 +338,7 @@ namespace Optional
         /// <returns>The transformed optional.</returns>
         public Option<TResult> FlatMap<TResult>(Func<T, Option<TResult>> mapping)
         {
-            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
+            Guard.ArgumentNotNull(mapping);
 
             return Match(
                 some: mapping,
@@ -352,7 +356,8 @@ namespace Optional
         /// <returns>The transformed optional.</returns>
         public Option<TResult> FlatMap<TResult, TException>(Func<T, Option<TResult, TException>> mapping)
         {
-            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
+            Guard.ArgumentNotNull(mapping);
+
             return FlatMap(value => mapping(value).WithoutException());
         }
 
@@ -372,7 +377,8 @@ namespace Optional
         /// <returns>The filtered optional.</returns>
         public Option<T> Filter(Func<T, bool> predicate)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            Guard.ArgumentNotNull(predicate);
+
             return hasValue && !predicate(value) ? Option.None<T>() : this;
         }
 

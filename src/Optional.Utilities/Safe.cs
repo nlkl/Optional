@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Optional.Internals;
 
 namespace Optional.Utilities
 {
@@ -18,7 +19,7 @@ namespace Optional.Utilities
         /// <returns>An Option&lt;T&gt; instance containing the result or a caught exception.</returns>
         public static Option<T, Exception> Try<T>(Func<T> operation)
         {
-            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            Guard.ArgumentNotNull(operation);
 
             try
             {
@@ -40,7 +41,7 @@ namespace Optional.Utilities
         public static Option<T, Exception> Try<T, TException>(Func<T> operation)
             where TException : Exception
         {
-            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            Guard.ArgumentNotNull(operation);
 
             try
             {
@@ -63,7 +64,7 @@ namespace Optional.Utilities
             where TException1 : Exception
             where TException2 : Exception
         {
-            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            Guard.ArgumentNotNull(operation);
 
             try
             {
@@ -91,7 +92,7 @@ namespace Optional.Utilities
             where TException2 : Exception
             where TException3 : Exception
         {
-            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            Guard.ArgumentNotNull(operation);
 
             try
             {
@@ -124,7 +125,7 @@ namespace Optional.Utilities
             where TException3 : Exception
             where TException4 : Exception
         {
-            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            Guard.ArgumentNotNull(operation);
 
             try
             {
@@ -162,7 +163,7 @@ namespace Optional.Utilities
             where TException4 : Exception
             where TException5 : Exception
         {
-            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            Guard.ArgumentNotNull(operation);
 
             try
             {

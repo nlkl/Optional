@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Optional.Internals;
 
 namespace Optional.Unsafe
 {
@@ -65,7 +66,7 @@ namespace Optional.Unsafe
         /// <exception cref="OptionValueMissingException">Thrown when a value is not present.</exception>
         public static T ValueOrFailure<T>(this Option<T> option, Func<string> errorMessageFactory)
         {
-            if (errorMessageFactory == null) throw new ArgumentNullException(nameof(errorMessageFactory));
+            Guard.ArgumentNotNull(errorMessageFactory);
 
             if (option.HasValue)
             {
@@ -101,7 +102,7 @@ namespace Optional.Unsafe
         /// <exception cref="OptionValueMissingException">Thrown when a value is not present.</exception>
         public static T ValueOrFailure<T, TException>(this Option<T, TException> option, Func<TException, string> errorMessageFactory)
         {
-            if (errorMessageFactory == null) throw new ArgumentNullException(nameof(errorMessageFactory));
+            Guard.ArgumentNotNull(errorMessageFactory);
 
             if (option.HasValue)
             {

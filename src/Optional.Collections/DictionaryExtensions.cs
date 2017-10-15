@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Optional.Internals;
 
 namespace Optional.Collections
 {
@@ -17,7 +18,7 @@ namespace Optional.Collections
         /// <returns>An Option&lt;TValue&gt; instance containing the associated value if located.</returns>
         public static Option<TValue> GetValueOrNone<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
+            Guard.ArgumentNotNull(source);
 
             if (source is IDictionary<TKey, TValue>)
             {

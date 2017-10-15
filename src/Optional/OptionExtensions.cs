@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Optional.Internals;
 
 namespace Optional
 {
@@ -49,7 +50,8 @@ namespace Optional
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T> SomeWhen<T>(this T value, Func<T, bool> predicate)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            Guard.ArgumentNotNull(predicate);
+
             return predicate(value) ? Option.Some(value) : Option.None<T>();
         }
 
@@ -64,7 +66,8 @@ namespace Optional
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> SomeWhen<T, TException>(this T value, Func<T, bool> predicate, TException exception)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            Guard.ArgumentNotNull(predicate);
+
             return predicate(value) ? Option.Some<T, TException>(value) : Option.None<T, TException>(exception);
         }
 
@@ -79,8 +82,8 @@ namespace Optional
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> SomeWhen<T, TException>(this T value, Func<T, bool> predicate, Func<TException> exceptionFactory)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            Guard.ArgumentsNotNull(predicate, exceptionFactory);
+
             return predicate(value) ? Option.Some<T, TException>(value) : Option.None<T, TException>(exceptionFactory());
         }
 
@@ -94,7 +97,8 @@ namespace Optional
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T> NoneWhen<T>(this T value, Func<T, bool> predicate)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            Guard.ArgumentNotNull(predicate);
+
             return value.SomeWhen(val => !predicate(val));
         }
 
@@ -109,7 +113,8 @@ namespace Optional
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> NoneWhen<T, TException>(this T value, Func<T, bool> predicate, TException exception)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            Guard.ArgumentNotNull(predicate);
+
             return value.SomeWhen(val => !predicate(val), exception);
         }
 
@@ -124,8 +129,8 @@ namespace Optional
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> NoneWhen<T, TException>(this T value, Func<T, bool> predicate, Func<TException> exceptionFactory)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            Guard.ArgumentsNotNull(predicate, exceptionFactory);
+
             return value.SomeWhen(val => !predicate(val), exceptionFactory);
         }
 
@@ -158,7 +163,8 @@ namespace Optional
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> SomeNotNull<T, TException>(this T value, Func<TException> exceptionFactory)
         {
-            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            Guard.ArgumentNotNull(exceptionFactory);
+
             return value.SomeWhen(val => val != null, exceptionFactory);
         }
 
@@ -189,7 +195,8 @@ namespace Optional
         /// <returns>The Option&lt;T, TException&gt; instance.</returns>
         public static Option<T, TException> ToOption<T, TException>(this T? value, Func<TException> exceptionFactory) where T : struct
         {
-            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            Guard.ArgumentNotNull(exceptionFactory);
+
             return value.HasValue ? Option.Some<T, TException>(value.Value) : Option.None<T, TException>(exceptionFactory());
         }
 
