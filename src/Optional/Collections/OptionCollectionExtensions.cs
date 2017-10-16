@@ -18,7 +18,14 @@ namespace Optional.Collections
         public static IEnumerable<T> Values<T>(this IEnumerable<Option<T>> source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            return source.SelectMany(option => option.ToEnumerable());
+
+            foreach (var option in source)
+            {
+                if (option.HasValue)
+                {
+                    yield return option.Value;
+                }
+            }
         }
 
         /// <summary>
@@ -30,7 +37,14 @@ namespace Optional.Collections
         public static IEnumerable<T> Values<T, TException>(this IEnumerable<Option<T, TException>> source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            return source.SelectMany(option => option.ToEnumerable());
+
+            foreach (var option in source)
+            {
+                if (option.HasValue)
+                {
+                    yield return option.Value;
+                }
+            }
         }
 
         /// <summary>
@@ -43,15 +57,13 @@ namespace Optional.Collections
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
-            IEnumerable<TException> ExceptionToEnumerable(Option<T, TException> option)
+            foreach (var option in source)
             {
                 if (!option.HasValue)
                 {
                     yield return option.Exception;
                 }
             }
-
-            return source.SelectMany(ExceptionToEnumerable);
         }
 
         /// <summary>
