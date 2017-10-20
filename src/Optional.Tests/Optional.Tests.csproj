@@ -10,26 +10,21 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
+    <DefineConstants>NET35</DefineConstants>
+  </PropertyGroup>
+  
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
     <DefineConstants>NETSTANDARD10</DefineConstants>
   </PropertyGroup>
-    
-  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.0' ">
-    <Reference Include="System" />
-  </ItemGroup>
     
   <ItemGroup>
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.18" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.18" />
   </ItemGroup>
-  
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
-    <PackageReference Include="System.Linq.Queryable" Version="4.3.0" />
-  </ItemGroup>
-    
+
   <ItemGroup>
     <ProjectReference Include="..\Optional.Async\Optional.Async.csproj" />
-    <ProjectReference Include="..\Optional.Collections\Optional.Collections.csproj" />
     <ProjectReference Include="..\Optional.Utilities\Optional.Utilities.csproj" />
     <ProjectReference Include="..\Optional\Optional.csproj" />
   </ItemGroup>
