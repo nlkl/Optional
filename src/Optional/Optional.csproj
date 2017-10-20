@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net45;netstandard1.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net35;netstandard1.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Version>3.2.0</Version>
@@ -10,14 +10,9 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
-    <DefineConstants>NET35</DefineConstants>
-  </PropertyGroup>
-  
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
     <DefineConstants>NETSTANDARD10</DefineConstants>
   </PropertyGroup>
-<<<<<<< HEAD
   
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net35|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NET35</DefineConstants>
@@ -30,7 +25,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Optional.Internals\Optional.Internals.csproj" />
   </ItemGroup>
-=======
->>>>>>> 61aadc6e7c45d61b11f980cf03c544f4da043980
   
 </Project>

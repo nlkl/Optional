@@ -1,46 +1,13 @@
 ﻿using System;
-<<<<<<< HEAD
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Optional.Internals;
-=======
->>>>>>> 61aadc6e7c45d61b11f980cf03c544f4da043980
 
 namespace Optional.Unsafe
 {
     public static class OptionUnsafeExtensions
     {
-        /// <summary>
-        /// Converts an optional to a Nullable&lt;T&gt;.
-        /// </summary>
-        /// <param name="option">The specified optional.</param>
-        /// <returns>The Nullable&lt;T&gt; instance.</returns>
-        public static T? ToNullable<T>(this Option<T> option) where T : struct
-        {
-            if (option.HasValue)
-            {
-                return option.Value;
-            }
-
-            return default(T?);
-        }
-
-        /// <summary>
-        /// Returns the existing value if present, otherwise default(T).
-        /// </summary>
-        /// <param name="option">The specified optional.</param>
-        /// <returns>The existing value or a default value.</returns>
-        public static T ValueOrDefault<T>(this Option<T> option)
-        {
-            if (option.HasValue)
-            {
-                return option.Value;
-            }
-
-            return default(T);
-        }
-
         /// <summary>
         /// Returns the existing value if present, or throws an OptionValueMissingException.
         /// </summary>
@@ -55,36 +22,6 @@ namespace Optional.Unsafe
             }
 
             throw new OptionValueMissingException();
-        }
-
-        /// <summary>
-        /// Converts an optional to a Nullable&lt;T&gt;.
-        /// </summary>
-        /// <param name="option">The specified optional.</param>
-        /// <returns>The Nullable&lt;T&gt; instance.</returns>
-        public static T? ToNullable<T, TException>(this Option<T, TException> option) where T : struct
-        {
-            if (option.HasValue)
-            {
-                return option.Value;
-            }
-
-            return default(T?);
-        }
-
-        /// <summary>
-        /// Returns the existing value if present, otherwise default(T).
-        /// </summary>
-        /// <param name="option">The specified optional.</param>
-        /// <returns>The existing value or a default value.</returns>
-        public static T ValueOrDefault<T, TException>(this Option<T, TException> option)
-        {
-            if (option.HasValue)
-            {
-                return option.Value;
-            }
-
-            return default(T);
         }
 
         /// <summary>

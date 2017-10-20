@@ -1,16 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-<<<<<<< HEAD:src/Optional.Collections/LinqQueryableExtensions.cs
 using System.Reflection;
 using System.Text;
 using Optional.Internals;
-=======
->>>>>>> 61aadc6e7c45d61b11f980cf03c544f4da043980:src/Optional.Samples/OptionQueryableExtensions.cs
 
-namespace Optional.Samples
+namespace Optional.Collections
 {
-    public static class OptionQueryableExtensions
+    public static class LinqQueryableExtensions
     {
         /// <summary>
         /// Returns the first element of a sequence if such exists.
