@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+<<<<<<< HEAD
 using System.Linq;
 using System.Text;
 using Optional.Internals;
+=======
+>>>>>>> 61aadc6e7c45d61b11f980cf03c544f4da043980
 
 namespace Optional
 {
@@ -14,7 +17,7 @@ namespace Optional
 #if !NETSTANDARD10
     [Serializable]
 #endif
-    public struct Option<T, TException> : IEquatable<Option<T, TException>>
+    public struct Option<T, TException> : IEquatable<Option<T, TException>>, IComparable<Option<T, TException>>
     {
         private readonly bool hasValue;
         private readonly T value;
@@ -100,6 +103,55 @@ namespace Optional
 
             return exception.GetHashCode();
         }
+
+
+        /// <summary>
+        /// Compares the relative order of two optionals. An empty optional is
+        /// ordered by its exceptional value and always before a non-empty one.
+        /// </summary>
+        /// <param name="other">The optional to compare with the current one.</param>
+        /// <returns>An integer indicating the relative order of the optionals being compared.</returns>
+        public int CompareTo(Option<T, TException> other)
+        {
+            if (hasValue && !other.hasValue) return 1;
+            if (!hasValue && other.hasValue) return -1;
+
+            return hasValue
+                ? Comparer<T>.Default.Compare(value, other.value)
+                : Comparer<TException>.Default.Compare(exception, other.exception);
+        }
+
+        /// <summary>
+        /// Determines if an optional is less than another optional.
+        /// </summary>
+        /// <param name="left">The first optional to compare.</param>
+        /// <param name="right">The second optional to compare.</param>
+        /// <returns>A boolean indicating whether or not the left optional is less than the right optional.</returns>
+        public static bool operator <(Option<T, TException> left, Option<T, TException> right) => left.CompareTo(right) < 0;
+
+        /// <summary>
+        /// Determines if an optional is less than or equal to another optional.
+        /// </summary>
+        /// <param name="left">The first optional to compare.</param>
+        /// <param name="right">The second optional to compare.</param>
+        /// <returns>A boolean indicating whether or not the left optional is less than or equal the right optional.</returns>
+        public static bool operator <=(Option<T, TException> left, Option<T, TException> right) => left.CompareTo(right) <= 0;
+
+        /// <summary>
+        /// Determines if an optional is greater than another optional.
+        /// </summary>
+        /// <param name="left">The first optional to compare.</param>
+        /// <param name="right">The second optional to compare.</param>
+        /// <returns>A boolean indicating whether or not the left optional is greater than the right optional.</returns>
+        public static bool operator >(Option<T, TException> left, Option<T, TException> right) => left.CompareTo(right) > 0;
+
+        /// <summary>
+        /// Determines if an optional is greater than or equal to another optional.
+        /// </summary>
+        /// <param name="left">The first optional to compare.</param>
+        /// <param name="right">The second optional to compare.</param>
+        /// <returns>A boolean indicating whether or not the left optional is greater than or equal the right optional.</returns>
+        public static bool operator >=(Option<T, TException> left, Option<T, TException> right) => left.CompareTo(right) >= 0;
 
         /// <summary>
         /// Returns a string that represents the current optional.

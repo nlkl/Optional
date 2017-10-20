@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>Optional</id>
-    <version>3.3.0</version>
-    <title>Optional</title>
+    <version>4.0.0</version>
+    <title>Optional: A robust option type</title>
     <authors>Nils Lück</authors>
     <owners>Nils Lück</owners>
     <projectUrl>https://github.com/nlkl/Optional</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/nlkl/Optional/master/icon/Icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A robust option type.</description>
+    <description>Optional is a robust option type for C#.</description>
     <copyright>Copyright 2015</copyright>
     <tags>Option Some None Maybe Either Exception Null Monad Monadic Functional</tags>
   </metadata>

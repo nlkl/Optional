@@ -1,8 +1,11 @@
 ﻿using System;
+<<<<<<< HEAD
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Optional.Internals;
+=======
+>>>>>>> 61aadc6e7c45d61b11f980cf03c544f4da043980
 
 namespace Optional.Linq
 {

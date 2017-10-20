@@ -18,10 +18,6 @@
     <DefineConstants>NET40PLUS</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.0' ">
-    <Reference Include="System" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Optional\Optional.csproj" />
   </ItemGroup>

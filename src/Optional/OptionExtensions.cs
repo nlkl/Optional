@@ -1,8 +1,11 @@
 ﻿using System;
+<<<<<<< HEAD
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Optional.Internals;
+=======
+>>>>>>> 61aadc6e7c45d61b11f980cf03c544f4da043980
 
 namespace Optional
 {
@@ -207,7 +210,6 @@ namespace Optional
         /// <param name="option">The specified optional.</param>
         /// <returns>The existing or exceptional value.</returns>
         public static T ValueOrException<T>(this Option<T, T> option) => option.HasValue ? option.Value : option.Exception;
-
 
         /// <summary>
         /// Flattens two nested optionals into one. The resulting optional
