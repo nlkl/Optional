@@ -1,0 +1,9 @@
+language: csharp
+solution: "./src/Optional.sln"
+install:
+- nuget restore "./src/Optional.sln"
+- nuget install NUnit.Runners -Version 3.7.0 -OutputDirectory testrunner
+script:
+- msbuild /p:Configuration=Release "./src/Optional.sln"
+- mono ./testrunner/Nunit.Runners.*/tools/nunit-console.exe "./../../src/Optional.Tests/bin/Release/Optional.Tests.dll"
+
