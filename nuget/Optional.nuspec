@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Optional</id>
-    <version>4.0.0</version>
+    <version>4.1.0</version>
     <title>Optional: A robust option type</title>
     <authors>Nils Lück</authors>
     <owners>Nils Lück</owners>
