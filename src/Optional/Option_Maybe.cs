@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Optional
 {
@@ -10,6 +11,7 @@ namespace Optional
 #if !NETSTANDARD10
     [Serializable]
 #endif
+    [DebuggerTypeProxy(typeof(OptionDebugView<>))]
     public struct Option<T> : IEquatable<Option<T>>, IComparable<Option<T>>
     {
         private readonly bool hasValue;
@@ -424,5 +426,20 @@ namespace Optional
         /// </summary>
         /// <returns>The filtered optional.</returns>
         public Option<T> NotNull() => hasValue && value == null ? Option.None<T>() : this;
+    }
+
+    internal sealed class OptionDebugView<T>
+    {
+        private readonly Option<T> option;
+
+        public bool HasValue => option.HasValue;
+        public T Value => option.Value;
+
+        public OptionDebugView(Option<T> option)
+        {
+            this.option = option;
+        }
+
+        public override string ToString() => option.ToString();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Optional
 {
@@ -11,6 +12,7 @@ namespace Optional
 #if !NETSTANDARD10
     [Serializable]
 #endif
+    [DebuggerTypeProxy(typeof(OptionDebugView<,>))]
     public struct Option<T, TException> : IEquatable<Option<T, TException>>, IComparable<Option<T, TException>>
     {
         private readonly bool hasValue;
@@ -537,5 +539,21 @@ namespace Optional
             if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
             return hasValue && value == null ? Option.None<T, TException>(exceptionFactory()) : this;
         }
+    }
+
+    internal sealed class OptionDebugView<T, TException>
+    {
+        private readonly Option<T, TException> option;
+
+        public bool HasValue => option.HasValue;
+        public T Value => option.Value;
+        public TException Exception => option.Exception;
+
+        public OptionDebugView(Option<T, TException> option)
+        {
+            this.option = option;
+        }
+
+        public override string ToString() => option.ToString();
     }
 }
