@@ -40,8 +40,7 @@ namespace Optional.Linq
 
         public static Option<TResult, TException> SelectMany<TSource, TException, TResult>(
                 this Option<TSource, TException> source,
-                Func<TSource,
-                Option<TResult, TException>> selector)
+                Func<TSource, Option<TResult, TException>> selector)
         {
             if (selector == null) throw new ArgumentNullException(nameof(selector));
             return source.FlatMap(selector);
