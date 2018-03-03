@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Optional.Async
 {
-    public static class OptionTaskExtensions
+    public static partial class OptionTaskExtensions
     {
         public static async Task<Option<TResult>> MapAsync<T, TResult>(this Option<T> option, Func<T, Task<TResult>> mapping)
         {
@@ -38,17 +38,17 @@ namespace Optional.Async
             return await option.MapAsync(mapping).ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public static async Task<Option<TResult>> FlatMapAsync<T, TResult>(this Option<T> option, Func<T, Task<Option<TResult>>> mapping)
+        public static Task<Option<TResult>> FlatMapAsync<T, TResult>(this Option<T> option, Func<T, Task<Option<TResult>>> mapping)
         {
             if (mapping == null) throw new ArgumentNullException(nameof(mapping));
 
             foreach (var resultOptionTask in option.Map(mapping))
             {
                 if (resultOptionTask == null) throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
-                return await resultOptionTask.ConfigureAwait(continueOnCapturedContext: false);
+                return resultOptionTask;
             }
 
-            return Option.None<TResult>();
+            return Task.FromResult(Option.None<TResult>());
         }
 
         public static async Task<Option<TResult>> FlatMapAsync<T, TResult>(this Task<Option<T>> optionTask, Func<T, Option<TResult>> mapping, bool executeOnCapturedContext = false)
@@ -108,7 +108,7 @@ namespace Optional.Async
             foreach (var value in option)
             {
                 var predicateTask = predicate(value);
-                if (predicateTask == null) throw new InvalidOperationException("Predicate must not return a null task.");
+                if (predicateTask == null) throw new InvalidOperationException($"{nameof(predicate)} must not return a null task.");
 
                 var condition = await predicateTask.ConfigureAwait(continueOnCapturedContext: false);
                 return option.Filter(condition);
