@@ -203,21 +203,8 @@ namespace Optional.Async
             return await option.ElseAsync(alternativeOptionFactory).ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public static async Task<Option<T, TException>> WithExceptionAsync<T, TException>(this Option<T> option, Func<Task<TException>> exceptionFactory)
-        {
-            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
-
-            foreach (var value in option)
-            {
-                return Option.Some<T, TException>(value);
-            }
-
-            var exceptionTask = exceptionFactory();
-            if (exceptionFactory == null) throw new InvalidOperationException($"{nameof(exceptionFactory)} must not return a null task.");
-
-            var exception = await exceptionTask.ConfigureAwait(continueOnCapturedContext: false);
-            return Option.None<T, TException>(exception);
-        }
+        public static Task<Option<T, TException>> WithExceptionAsync<T, TException>(this Task<Option<T>> optionTask, TException exception) =>
+            optionTask.WithExceptionAsync(() => exception);
 
         public static async Task<Option<T, TException>> WithExceptionAsync<T, TException>(this Task<Option<T>> optionTask, Func<TException> exceptionFactory, bool executeOnCapturedContext = false)
         {
@@ -226,15 +213,6 @@ namespace Optional.Async
 
             var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
             return option.WithException(exceptionFactory);
-        }
-
-        public static async Task<Option<T, TException>> WithExceptionAsync<T, TException>(this Task<Option<T>> optionTask, Func<Task<TException>> exceptionFactory, bool executeOnCapturedContext = false)
-        {
-            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
-            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
-
-            var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
-            return await option.WithExceptionAsync(exceptionFactory).ConfigureAwait(continueOnCapturedContext: false);
         }
 
         public static async Task<Option<T>> FlattenAsync<T>(this Task<Option<Option<T>>> optionTask)
