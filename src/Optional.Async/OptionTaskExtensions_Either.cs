@@ -13,7 +13,6 @@ namespace Optional.Async
                 some: async valueTask =>
                 {
                     if (valueTask == null) throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
-
                     var value = await valueTask.ConfigureAwait(continueOnCapturedContext: false);
                     return value.Some<TResult, TException>();
                 },
@@ -37,6 +36,37 @@ namespace Optional.Async
 
             var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
             return await option.MapAsync(mapping).ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public static Task<Option<T, TExceptionResult>> MapExceptionAsync<T, TException, TExceptionResult>(this Option<T, TException> option, Func<TException, Task<TExceptionResult>> mapping)
+        {
+            return option.MapException(mapping).Match(
+                some: value => Task.FromResult(Option.Some<T, TExceptionResult>(value)),
+                none: async exceptionTask =>
+                {
+                    if (exceptionTask == null) throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
+                    var exception = await exceptionTask.ConfigureAwait(continueOnCapturedContext: false);
+                    return Option.None<T, TExceptionResult>(exception);
+                }
+            );
+        }
+
+        public static async Task<Option<T, TExceptionResult>> MapExceptionAsync<T, TException, TExceptionResult>(this Task<Option<T, TException>> optionTask, Func<TException, TExceptionResult> mapping, bool executeOnCapturedContext = false)
+        {
+            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
+            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
+
+            var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
+            return option.MapException(mapping);
+        }
+
+        public static async Task<Option<T, TExceptionResult>> MapExceptionAsync<T, TException, TExceptionResult>(this Task<Option<T, TException>> optionTask, Func<TException, Task<TExceptionResult>> mapping, bool executeOnCapturedContext = false)
+        {
+            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
+            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
+
+            var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
+            return await option.MapExceptionAsync(mapping).ConfigureAwait(false);
         }
 
         public static Task<Option<TResult, TException>> FlatMapAsync<T, TException, TResult>(this Option<T, TException> option, Func<T, Task<Option<TResult, TException>>> mapping)
