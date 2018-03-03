@@ -196,6 +196,7 @@ namespace Optional.Async
         public static Task<Option<T, TException>> NotNullAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<TException> exceptionFactory)
         {
             if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
+            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
             return optionTask.FilterAsync(value => value != null, exceptionFactory);
         }
 

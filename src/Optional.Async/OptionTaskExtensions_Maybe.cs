@@ -5,19 +5,19 @@ namespace Optional.Async
 {
     public static partial class OptionTaskExtensions
     {
-        public static async Task<Option<TResult>> MapAsync<T, TResult>(this Option<T> option, Func<T, Task<TResult>> mapping)
+        public static Task<Option<TResult>> MapAsync<T, TResult>(this Option<T> option, Func<T, Task<TResult>> mapping)
         {
             if (mapping == null) throw new ArgumentNullException(nameof(mapping));
 
-            foreach (var valueTask in option.Map(mapping))
-            {
-                if (valueTask == null) throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
-
-                var value = await valueTask.ConfigureAwait(continueOnCapturedContext: false);
-                return value.Some();
-            }
-
-            return Option.None<TResult>();
+            return option.Map(mapping).Match(
+                some: async valueTask =>
+                {
+                    if (valueTask == null) throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
+                    var value = await valueTask.ConfigureAwait(continueOnCapturedContext: false);
+                    return value.Some();
+                },
+                none: () => Task.FromResult(Option.None<TResult>())
+            );
         }
 
         public static async Task<Option<TResult>> MapAsync<T, TResult>(this Task<Option<T>> optionTask, Func<T, TResult> mapping, bool executeOnCapturedContext = false)
@@ -42,13 +42,14 @@ namespace Optional.Async
         {
             if (mapping == null) throw new ArgumentNullException(nameof(mapping));
 
-            foreach (var resultOptionTask in option.Map(mapping))
-            {
-                if (resultOptionTask == null) throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
-                return resultOptionTask;
-            }
-
-            return Task.FromResult(Option.None<TResult>());
+            return option.Map(mapping).Match(
+                some: resultOptionTask =>
+                {
+                    if (resultOptionTask == null) throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
+                    return resultOptionTask;
+                },
+                none: () => Task.FromResult(Option.None<TResult>())
+            );
         }
 
         public static async Task<Option<TResult>> FlatMapAsync<T, TResult>(this Task<Option<T>> optionTask, Func<T, Option<TResult>> mapping, bool executeOnCapturedContext = false)
@@ -69,18 +70,16 @@ namespace Optional.Async
             return await option.FlatMapAsync(mapping).ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public static async Task<Option<TResult>> FlatMapAsync<T, TResult, TException>(this Option<T> option, Func<T, Task<Option<TResult, TException>>> mapping)
+        public static Task<Option<TResult>> FlatMapAsync<T, TResult, TException>(this Option<T> option, Func<T, Task<Option<TResult, TException>>> mapping)
         {
             if (mapping == null) throw new ArgumentNullException(nameof(mapping));
 
-            foreach (var resultOptionTask in option.Map(mapping))
+            return option.FlatMapAsync(async value =>
             {
-                if (resultOptionTask == null) throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
-                var resultOption = await resultOptionTask.ConfigureAwait(continueOnCapturedContext: false);
+                var resultOptionTask = mapping(value) ?? throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
+                var resultOption = await (resultOptionTask).ConfigureAwait(false);
                 return resultOption.WithoutException();
-            }
-
-            return Option.None<TResult>();
+            });
         }
 
         public static async Task<Option<TResult>> FlatMapAsync<T, TResult, TException>(this Task<Option<T>> optionTask, Func<T, Option<TResult, TException>> mapping, bool executeOnCapturedContext = false)
@@ -101,20 +100,21 @@ namespace Optional.Async
             return await option.FlatMapAsync(mapping).ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public static async Task<Option<T>> FilterAsync<T>(this Option<T> option, Func<T, Task<bool>> predicate)
+        public static Task<Option<T>> FilterAsync<T>(this Option<T> option, Func<T, Task<bool>> predicate)
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
-            foreach (var value in option)
-            {
-                var predicateTask = predicate(value);
-                if (predicateTask == null) throw new InvalidOperationException($"{nameof(predicate)} must not return a null task.");
+            return option.Match(
+                some: async value =>
+                {
+                    var predicateTask = predicate(value);
+                    if (predicateTask == null) throw new InvalidOperationException($"{nameof(predicate)} must not return a null task.");
 
-                var condition = await predicateTask.ConfigureAwait(continueOnCapturedContext: false);
-                return option.Filter(condition);
-            }
-
-            return Option.None<T>();
+                    var condition = await predicateTask.ConfigureAwait(continueOnCapturedContext: false);
+                    return option.Filter(condition);
+                },
+                none: () => Task.FromResult(option)
+            );
         }
 
         public static async Task<Option<T>> FilterAsync<T>(this Task<Option<T>> optionTask, Func<T, bool> predicate, bool executeOnCapturedContext = false)
@@ -125,7 +125,6 @@ namespace Optional.Async
             var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
             return option.Filter(predicate);
         }
-
 
         public static async Task<Option<T>> FilterAsync<T>(this Task<Option<T>> optionTask, Func<T, Task<bool>> predicate, bool executeOnCapturedContext = false)
         {
