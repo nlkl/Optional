@@ -3,8 +3,14 @@
     /// <summary>
     /// Provides a set of functions for creating optional values.
     /// </summary>
-    public static class Option
+    public sealed class Option
     {
+        private static readonly Option Empty = new Option();
+
+        private Option()
+        {
+        }
+
         /// <summary>
         /// Wraps an existing value in an Option&lt;T&gt; instance.
         /// </summary>
@@ -19,6 +25,12 @@
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> Some<T, TException>(T value) =>
             new Option<T, TException>(value, default(TException), true);
+
+        /// <summary>
+        /// Creates an empty Option instance.
+        /// </summary>
+        /// <returns>An empty optional.</returns>
+        public static Option None() => Empty;
 
         /// <summary>
         /// Creates an empty Option&lt;T&gt; instance.

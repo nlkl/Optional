@@ -3,15 +3,17 @@ using System.Collections.Generic;
 
 namespace Optional
 {
-    /// <summary>
-    /// Represents an optional value.
-    /// </summary>
-    /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
+   
+        /// <summary>
+        /// Represents an optional value.
+        /// </summary>
+        /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
 #if !NETSTANDARD10
-    [Serializable]
+        [Serializable]
 #endif
     public struct Option<T> : IEquatable<Option<T>>, IComparable<Option<T>>
     {
+        public static readonly Option<T> None = new Option<T>(default(T), false);
         private readonly bool hasValue;
         private readonly T value;
 
@@ -424,5 +426,19 @@ namespace Optional
         /// </summary>
         /// <returns>The filtered optional.</returns>
         public Option<T> NotNull() => hasValue && value == null ? Option.None<T>() : this;
+
+        //Exists as convenience operator to allow easier declaration of a typed Option<T>.None object.
+        //Allows the use of the following syntax:
+        //  Option<T> option = Option.None();
+        //or
+        //  return Option.None()
+        //rather than the more verbose (especially when T is verbose):
+        //  Option<T> option = Option<T>.None();
+        //Due to the fact that the non-generic Option cannot be constructed, its only possible value is the None value
+        //so it is safe to ignore the input parameter and return the more specialised Option<T>.None that represents the same thing
+        public static implicit operator Option<T>(Option maybe)
+        {
+            return None;
+        }
     }
 }
