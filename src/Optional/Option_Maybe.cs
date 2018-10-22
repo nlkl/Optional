@@ -424,5 +424,22 @@ namespace Optional
         /// </summary>
         /// <returns>The filtered optional.</returns>
         public Option<T> NotNull() => hasValue && value == null ? Option.None<T>() : this;
+
+        /// <summary>
+        /// Aggregates this optional with another optional.
+        /// Applies the merge function if both have a value,
+        /// otherwise returns the optional not empty.
+        /// If both are empty, an empty optional is returned.
+        /// </summary>
+        /// <param name="other">The other optional.</param>
+        /// <param name="combine">The merge function.</param>
+        /// <returns>The combined optional.</returns>
+        public Option<T> Combine(Option<T> other, Func<T, T, T> combine)
+        {
+            if (!hasValue) return other;
+            if (!other.hasValue) return this;
+
+            return FlatMap(thisValue => other.Map(otherValue => combine(thisValue, otherValue)));
+        }
     }
 }

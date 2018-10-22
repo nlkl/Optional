@@ -668,6 +668,50 @@ namespace Optional.Tests
             Assert.AreEqual(some3.ValueOr("-1"), "1");
         }
 
+        [TestMethod]
+        public void Maybe_CombineStrings()
+        {
+            var some1 = Option.Some("a");
+            var some2 = Option.Some("b");
+            var none = Option.None<string>();
+
+            var some1And2 = some1.Combine(some2, StringConcat);
+            var some2And1 = some2.Combine(some1, StringConcat);
+            var some1AndNone = some1.Combine(none, StringConcat);
+            var noneAndSome1 = none.Combine(some1, StringConcat);
+            var noneAndNone = none.Combine(none, StringConcat);
+
+            Assert.AreEqual(some1And2.ValueOr(""), "ab");
+            Assert.AreEqual(some2And1.ValueOr(""), "ba");
+            Assert.AreEqual(some1AndNone.ValueOr(""), "a");
+            Assert.AreEqual(noneAndSome1.ValueOr(""), "a");
+            Assert.IsFalse(noneAndNone.HasValue);
+        }
+
+        private static string StringConcat(string a, string b) => a + b;
+
+        [TestMethod]
+        public void Maybe_CombineInts()
+        {
+            var some1 = Option.Some(3);
+            var some2 = Option.Some(4);
+            var none = Option.None<int>();
+
+            var some1And2 = some1.Combine(some2, IntSum);
+            var some2And1 = some2.Combine(some1, IntSum);
+            var some1AndNone = some1.Combine(none, IntSum);
+            var noneAndSome1 = none.Combine(some1, IntSum);
+            var noneAndNone = none.Combine(none, IntSum);
+
+            Assert.AreEqual(some1And2.ValueOr(-1), 7);
+            Assert.AreEqual(some2And1.ValueOr(-1), 7);
+            Assert.AreEqual(some1AndNone.ValueOr(-1), 3);
+            Assert.AreEqual(noneAndSome1.ValueOr(-1), 3);
+            Assert.IsFalse(noneAndNone.HasValue);
+        }
+
+        private static int IntSum(int a, int b) => a + b;
+
 #if !NETSTANDARD10
         [TestMethod]
         public void Maybe_Serialization()
