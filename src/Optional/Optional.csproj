@@ -4,7 +4,7 @@
     <TargetFrameworks>net35;net45;netstandard1.0;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>3.2.0</Version>
+    <Version>4.1.0</Version>
     <Authors>Nils Lück</Authors>
     <Copyright>Copyright © 2014</Copyright>
     <NoWarn>1591</NoWarn>
