@@ -542,6 +542,12 @@ namespace Optional.Tests
             Assert.AreEqual(noneLargerThanTen.ValueOr(-1), -1);
             Assert.AreEqual(someLargerThanTen.ValueOr(-1), 20);
 
+            var someNotLargerThanTen = 1.NoneWhen<int, string>(x => x > 10, "ex");
+            var noneNotLargerThanTen = 20.NoneWhen<int, string>(x => x > 10, "ex");
+
+            Assert.AreEqual(someNotLargerThanTen.ValueOr(-1), 1);
+            Assert.AreEqual(noneNotLargerThanTen.ValueOr(-1), -1);
+
             var noneNotNull = ((string)null).SomeNotNull<string, string>("ex");
             var someNotNull = "1".SomeNotNull<string, string>("ex");
 
@@ -573,6 +579,24 @@ namespace Optional.Tests
 
             Assert.AreEqual(noneIsTen.ValueOrException(), "ex");
             Assert.AreEqual(someIsTen.ValueOrException(), "10");
+
+            var noneIsTen2 = "1".SomeWhen<string, string>(x => x == "10", x => x + "ex");
+            var someIsTen2 = "10".SomeWhen<string, string>(x => x == "10", x => x + "ex");
+
+            Assert.AreEqual(noneIsTen2.ValueOrException(), "1ex");
+            Assert.AreEqual(someIsTen2.ValueOrException(), "10");
+
+            var someIsNotTen = "1".NoneWhen<string, string>(x => x == "10", () => "ex");
+            var noneIsNotTen = "10".NoneWhen<string, string>(x => x == "10", () => "ex");
+
+            Assert.AreEqual(someIsNotTen.ValueOrException(), "1");
+            Assert.AreEqual(noneIsNotTen.ValueOrException(), "ex");
+
+            var someIsNotTen2 = "1".NoneWhen<string, string>(x => x == "10", x => x + "ex");
+            var noneIsNotTen2 = "10".NoneWhen<string, string>(x => x == "10", x => x + "ex");
+
+            Assert.AreEqual(someIsNotTen2.ValueOrException(), "1");
+            Assert.AreEqual(noneIsNotTen2.ValueOrException(), "10ex");
 
             var noneNotNull = ((string)null).SomeNotNull<string, string>(() => "ex");
             var someNotNull = "1".SomeNotNull<string, string>(() => "ex");

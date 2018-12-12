@@ -74,11 +74,11 @@ namespace Optional
         /// <param name="predicate">The predicate.</param>
         /// <param name="exceptionFactory">A factory function to create an exceptional value.</param>
         /// <returns>An optional containing the specified value.</returns>
-        public static Option<T, TException> SomeWhen<T, TException>(this T value, Func<T, bool> predicate, Func<T, TException> exceptionFactory)
+        public static Option<T, TException> SomeWhen<T, TException>(this T value, Func<T, bool> predicate, Func<TException> exceptionFactory)
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
-            return predicate(value) ? Option.Some<T, TException>(value) : Option.None<T, TException>(exceptionFactory(value));
+            return predicate(value) ? Option.Some<T, TException>(value) : Option.None<T, TException>(exceptionFactory());
         }
 
         /// <summary>
@@ -90,11 +90,11 @@ namespace Optional
         /// <param name="predicate">The predicate.</param>
         /// <param name="exceptionFactory">A factory function to create an exceptional value.</param>
         /// <returns>An optional containing the specified value.</returns>
-        public static Option<T, TException> SomeWhen<T, TException>(this T value, Func<T, bool> predicate, Func<TException> exceptionFactory)
+        public static Option<T, TException> SomeWhen<T, TException>(this T value, Func<T, bool> predicate, Func<T, TException> exceptionFactory)
         {
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
-            return predicate(value) ? Option.Some<T, TException>(value) : Option.None<T, TException>(exceptionFactory());
+            return predicate(value) ? Option.Some<T, TException>(value) : Option.None<T, TException>(exceptionFactory(value));
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Optional
         /// </summary>
         /// <param name="value">The value to wrap.</param>
         /// <param name="predicate">The predicate.</param>
-        /// <param name="exceptionFactory">A factory function to extract the exception from the value.</param>
+        /// <param name="exceptionFactory">A factory function to create an exceptional value.</param>
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> NoneWhen<T, TException>(this T value, Func<T, bool> predicate, Func<T, TException> exceptionFactory)
         {
