@@ -198,6 +198,12 @@ var anotherValue = option.ValueOrFailure("An error message");
 
 In case of failure an `OptionValueMissingException` is thrown.
 
+Should you want to throw a custom Exception, the recommended approach is to simply use `.ValueOr()` alongside a throw expressions:
+
+```csharp
+var value = option.ValueOr(() => throw new InvalidOperationException("Something went wrong"));
+```
+
 In a lot of interop scenarios, it might be necessary to convert an option into a potentially null value. Once the Unsafe namespace is imported, this can be done relatively concisely as:
 
 ```csharp
