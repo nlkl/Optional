@@ -12,7 +12,7 @@ namespace Optional
     [Serializable]
 #endif
     [DebuggerTypeProxy(typeof(OptionDebugView<>))]
-    public struct Option<T> : IEquatable<Option<T>>, IComparable<Option<T>>
+    public readonly struct Option<T> : IEquatable<Option<T>>, IComparable<Option<T>>
     {
         private readonly bool hasValue;
         private readonly T value;

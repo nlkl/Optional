@@ -8,6 +8,7 @@
     <Authors>Nils Lück</Authors>
     <Copyright>Copyright © 2014</Copyright>
     <NoWarn>1591</NoWarn>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">

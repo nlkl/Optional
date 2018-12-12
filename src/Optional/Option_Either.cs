@@ -13,7 +13,7 @@ namespace Optional
     [Serializable]
 #endif
     [DebuggerTypeProxy(typeof(OptionDebugView<,>))]
-    public struct Option<T, TException> : IEquatable<Option<T, TException>>, IComparable<Option<T, TException>>
+    public readonly struct Option<T, TException> : IEquatable<Option<T, TException>>, IComparable<Option<T, TException>>
     {
         private readonly bool hasValue;
         private readonly T value;
