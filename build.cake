@@ -32,6 +32,7 @@ Task("Pack")
     .Does(() =>
     {
         Pack("Optional", new [] { "net35", "net45", "netstandard1.0", "netstandard2.0" });
+        Pack("Optional.Async", new [] { "net45", "netstandard1.0", "netstandard2.0" });
     });
     
 RunTarget(target);
