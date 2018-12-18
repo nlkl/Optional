@@ -5,6 +5,30 @@ namespace Optional.Async
 {
     public static partial class OptionTaskExtensions
     {
+        public static async Task<TResult> MatchAsync<T, TResult>(this Task<Option<T>> option, Func<T, Task<TResult>> some, Func<Task<TResult>> none) =>
+            await (await option).Match(some, none);
+
+        public static Task<TResult> MatchAsync<T, TResult>(this Option<T> option, Func<T, Task<TResult>> some, Func<TResult> none) =>
+            option.Match(some, none: () => Task.FromResult(none()));
+
+        public static async Task<Option<T>> SomeNotNullAsync<T>(this Task<T> task) =>
+            (await task).SomeNotNull();
+
+        public static Task MatchSomeAsync<T>(this Option<T> option, Func<T, Task> some) =>
+            Task.Run(() => option.MatchSome(v => some(v)));
+
+        public static Task MatchNoneAsync<T>(this Option<T> option, Func<Task> none) =>
+            Task.Run(() => option.MatchNone(() => none()));
+
+        public static Task<TResult> MatchAsync<T, TResult>(this Option<T> option, Func<T, Task<TResult>> some, Func<Task<TResult>> none) =>
+            option.Match(some, none);
+
+        public static Task MatchAsync<T>(this Option<T> option, Func<T, Task> some, Func<Task> none) =>
+            Task.Run(() => option.Match(some, none));
+
+        public static Task MatchAsync<T>(this Option<T> option, Func<T, Task> some, Action none) =>
+            Task.Run(() => option.Match(v => some(v), none));
+
         public static Task<Option<TResult>> MapAsync<T, TResult>(this Option<T> option, Func<T, Task<TResult>> mapping)
         {
             if (mapping == null) throw new ArgumentNullException(nameof(mapping));
