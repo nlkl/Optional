@@ -5,136 +5,81 @@ namespace Optional.Async
 {
     public static partial class OptionTaskExtensions
     {
-        public static Task<Option<TResult, TException>> FlatMapAsync<T, TException, TResult>(this Option<T> option, Func<T, Task<Option<TResult, TException>>> mapping, TException exception) =>
-            option.MatchAsync(
-                some: async val => await mapping(val),
-                none: async () => Option.None<TResult, TException>(exception));
-
-        public static async Task<Option<T, TException>> FilterAsync<T, TException>(this Task<Option<T>> optionTask, Func<T, Task<bool>> predicate, TException exception) =>
-            await (await optionTask).FilterAsync(predicate).WithException(exception);
-
-        public static Task<TResult> MatchAsync<T, TException, TResult>(this Option<T, TException> option, Func<T, Task<TResult>> some, Func<TException, Task<TResult>> none) =>
-            option.Match(some, none);
-
-        public static async Task<TResult> MatchAsync<T, TException, TResult>(this Task<Option<T, TException>> option, Func<T, Task<TResult>> some, Func<TException, Task<TResult>> none) =>
-            await (await option).Match(some, none);
-
-        public static Task<TResult> MatchAsync<T, TException, TResult>(this Option<T, TException> option, Func<T, Task<TResult>> some, Func<TException, TResult> none) =>
-            option.Match(
-                some: x => some(x),
-                none: e => Task.FromResult(none(e)));
-
-        public static async Task<Option<T, TException>> SomeNotNullAsync<T, TException>(this Task<T> task, TException exception) =>
-            (await task).SomeNotNull(exception);
-
-        public static Task MatchSomeAsync<T, TException>(this Option<T, TException> option, Func<T, Task> some) =>
-            Task.Run(() => option.MatchSome(v => some(v)));
-
-        public static Task MatchNoneAsync<T, TException>(this Option<T, TException> option, Func<TException, Task> none) =>
-            Task.Run(() => option.MatchNone(e => none(e)));
-
-        public static async Task<Option<T, TException>> SomeWhenAsync<T, TException>(
-            this Task<T> valueTask,
-            Func<T, bool> predicate,
-            Func<T, TException> exceptionFactory)
+        public static async Task<Option<T, TException>> ElseAsync<T, TException>(this Option<T, TException> option, Func<Task<Option<T, TException>>> alternativeOptionFactory)
         {
-            var value = await valueTask;
-            var result = predicate(value);
+            if (alternativeOptionFactory == null) throw new ArgumentNullException(nameof(alternativeOptionFactory));
 
-            return result ?
-                value.Some<T, TException>() :
-                Option.None<T, TException>(exceptionFactory(value));
+            if (option.HasValue) return option;
+
+            var alternativeOptionTask = alternativeOptionFactory();
+            if (alternativeOptionTask == null) throw new InvalidOperationException($"{nameof(alternativeOptionFactory)} must not return a null task.");
+
+            return await alternativeOptionTask.ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public static async Task<Option<T, TException>> SomeWhenAsync<T, TException>(this Task<T> task, Func<T, bool> predicate, TException exception) =>
-            (await task).SomeWhen(predicate, exception);
-
-        public static async Task<Option<T, TException>> SomeWhenAsync<T, TException>(
-            this T value,
-            Func<T, Task<bool>> predicate,
-            TException exception)
+        public static async Task<Option<T, TException>> ElseAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<Option<T, TException>> alternativeOptionFactory, bool executeOnCapturedContext = false)
         {
-            var result = await predicate(value);
+            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
+            if (alternativeOptionFactory == null) throw new ArgumentNullException(nameof(alternativeOptionFactory));
 
-            return result ?
-                value.Some<T, TException>() :
-                Option.None<T, TException>(exception);
+            var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
+            return option.Else(alternativeOptionFactory);
         }
 
-        public static async Task<Option<T, TException>> SomeWhenAsync<T, TException>(
-            this T value,
-            Func<T, Task<bool>> predicate,
-            Func<T, TException> exceptionFactory)
+        public static async Task<Option<T, TException>> ElseAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<Task<Option<T, TException>>> alternativeOptionFactory, bool executeOnCapturedContext = false)
         {
-            var result = await predicate(value);
+            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
+            if (alternativeOptionFactory == null) throw new ArgumentNullException(nameof(alternativeOptionFactory));
 
-            return result ?
-                value.Some<T, TException>() :
-                Option.None<T, TException>(exceptionFactory(value));
+            var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
+            return await option.ElseAsync(alternativeOptionFactory).ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public static Task<Option<TResult, TException>> MapAsync<T, TException, TResult>(this Option<T, TException> option, Func<T, Task<TResult>> mapping)
-        {
-            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
+        public static Task<Option<T, TException>> FilterAsync<T, TException>(this Option<T, TException> option, Func<T, Task<bool>> predicate, TException exception) =>
+            option.FilterAsync(predicate, () => exception);
 
-            return option.Map(mapping).Match(
-                some: async valueTask =>
+        public static Task<Option<T, TException>> FilterAsync<T, TException>(this Option<T, TException> option, Func<T, Task<bool>> predicate, Func<TException> exceptionFactory)
+        {
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+
+            return option.Match(
+                some: async value =>
                 {
-                    if (valueTask == null) throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
-                    var value = await valueTask.ConfigureAwait(continueOnCapturedContext: false);
-                    return value.Some<TResult, TException>();
+                    var predicateTask = predicate(value);
+                    if (predicateTask == null) throw new InvalidOperationException($"{nameof(predicate)} must not return a null task.");
+
+                    var condition = await predicateTask.ConfigureAwait(continueOnCapturedContext: false);
+                    return option.Filter(condition, exceptionFactory);
                 },
-                none: exception => Task.FromResult(Option.None<TResult, TException>(exception))
+                none: _ => Task.FromResult(option)
             );
         }
 
-        public static async Task<Option<TResult, TException>> MapAsync<T, TException, TResult>(this Task<Option<T, TException>> optionTask, Func<T, TResult> mapping, bool executeOnCapturedContext = false)
+        public static Task<Option<T, TException>> FilterAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<T, bool> predicate, TException exception, bool executeOnCapturedContext = false) =>
+            optionTask.FilterAsync(predicate, () => exception, executeOnCapturedContext);
+
+        public static async Task<Option<T, TException>> FilterAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<T, bool> predicate, Func<TException> exceptionFactory, bool executeOnCapturedContext = false)
         {
             if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
-            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
 
             var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
-            return option.Map(mapping);
+            return option.Filter(predicate, exceptionFactory);
         }
 
-        public static async Task<Option<TResult, TException>> MapAsync<T, TException, TResult>(this Task<Option<T, TException>> optionTask, Func<T, Task<TResult>> mapping, bool executeOnCapturedContext = false)
+        public static Task<Option<T, TException>> FilterAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<T, Task<bool>> predicate, TException exception, bool executeOnCapturedContext = false) =>
+            optionTask.FilterAsync(predicate, () => exception, executeOnCapturedContext);
+
+        public static async Task<Option<T, TException>> FilterAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<T, Task<bool>> predicate, Func<TException> exceptionFactory, bool executeOnCapturedContext = false)
         {
             if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
-            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
 
             var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
-            return await option.MapAsync(mapping).ConfigureAwait(continueOnCapturedContext: false);
-        }
-
-        public static Task<Option<T, TExceptionResult>> MapExceptionAsync<T, TException, TExceptionResult>(this Option<T, TException> option, Func<TException, Task<TExceptionResult>> mapping)
-        {
-            return option.MapException(mapping).Match(
-                some: value => Task.FromResult(Option.Some<T, TExceptionResult>(value)),
-                none: async exceptionTask =>
-                {
-                    if (exceptionTask == null) throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
-                    var exception = await exceptionTask.ConfigureAwait(continueOnCapturedContext: false);
-                    return Option.None<T, TExceptionResult>(exception);
-                }
-            );
-        }
-
-        public static async Task<Option<T, TExceptionResult>> MapExceptionAsync<T, TException, TExceptionResult>(this Task<Option<T, TException>> optionTask, Func<TException, TExceptionResult> mapping, bool executeOnCapturedContext = false)
-        {
-            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
-            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
-
-            var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
-            return option.MapException(mapping);
-        }
-
-        public static async Task<Option<T, TExceptionResult>> MapExceptionAsync<T, TException, TExceptionResult>(this Task<Option<T, TException>> optionTask, Func<TException, Task<TExceptionResult>> mapping, bool executeOnCapturedContext = false)
-        {
-            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
-            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
-
-            var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
-            return await option.MapExceptionAsync(mapping).ConfigureAwait(false);
+            return await option.FilterAsync(predicate, exceptionFactory).ConfigureAwait(continueOnCapturedContext: false);
         }
 
         public static Task<Option<TResult, TException>> FlatMapAsync<T, TException, TResult>(this Option<T, TException> option, Func<T, Task<Option<TResult, TException>>> mapping)
@@ -211,51 +156,76 @@ namespace Optional.Async
             return await option.FlatMapAsync(mapping, exceptionFactory).ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public static Task<Option<T, TException>> FilterAsync<T, TException>(this Option<T, TException> option, Func<T, Task<bool>> predicate, TException exception) =>
-            option.FilterAsync(predicate, () => exception);
-
-        public static Task<Option<T, TException>> FilterAsync<T, TException>(this Option<T, TException> option, Func<T, Task<bool>> predicate, Func<TException> exceptionFactory)
+        public static async Task<Option<T, TException>> FlattenAsync<T, TException>(this Task<Option<Option<T, TException>, TException>> optionTask)
         {
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
 
-            return option.Match(
-                some: async value =>
+            var option = await optionTask.ConfigureAwait(continueOnCapturedContext: false);
+            return option.Flatten();
+        }
+
+        public static Task<Option<TResult, TException>> MapAsync<T, TException, TResult>(this Option<T, TException> option, Func<T, Task<TResult>> mapping)
+        {
+            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
+
+            return option.Map(mapping).Match(
+                some: async valueTask =>
                 {
-                    var predicateTask = predicate(value);
-                    if (predicateTask == null) throw new InvalidOperationException($"{nameof(predicate)} must not return a null task.");
-
-                    var condition = await predicateTask.ConfigureAwait(continueOnCapturedContext: false);
-                    return option.Filter(condition, exceptionFactory);
+                    if (valueTask == null) throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
+                    var value = await valueTask.ConfigureAwait(continueOnCapturedContext: false);
+                    return value.Some<TResult, TException>();
                 },
-                none: _ => Task.FromResult(option)
+                none: exception => Task.FromResult(Option.None<TResult, TException>(exception))
             );
         }
 
-        public static Task<Option<T, TException>> FilterAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<T, bool> predicate, TException exception, bool executeOnCapturedContext = false) =>
-            optionTask.FilterAsync(predicate, () => exception, executeOnCapturedContext);
-
-        public static async Task<Option<T, TException>> FilterAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<T, bool> predicate, Func<TException> exceptionFactory, bool executeOnCapturedContext = false)
+        public static async Task<Option<TResult, TException>> MapAsync<T, TException, TResult>(this Task<Option<T, TException>> optionTask, Func<T, TResult> mapping, bool executeOnCapturedContext = false)
         {
             if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
 
             var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
-            return option.Filter(predicate, exceptionFactory);
+            return option.Map(mapping);
         }
 
-        public static Task<Option<T, TException>> FilterAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<T, Task<bool>> predicate, TException exception, bool executeOnCapturedContext = false) =>
-            optionTask.FilterAsync(predicate, () => exception, executeOnCapturedContext);
-
-        public static async Task<Option<T, TException>> FilterAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<T, Task<bool>> predicate, Func<TException> exceptionFactory, bool executeOnCapturedContext = false)
+        public static async Task<Option<TResult, TException>> MapAsync<T, TException, TResult>(this Task<Option<T, TException>> optionTask, Func<T, Task<TResult>> mapping, bool executeOnCapturedContext = false)
         {
             if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
-            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
-            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
 
             var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
-            return await option.FilterAsync(predicate, exceptionFactory).ConfigureAwait(continueOnCapturedContext: false);
+            return await option.MapAsync(mapping).ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public static Task<Option<T, TExceptionResult>> MapExceptionAsync<T, TException, TExceptionResult>(this Option<T, TException> option, Func<TException, Task<TExceptionResult>> mapping)
+        {
+            return option.MapException(mapping).Match(
+                some: value => Task.FromResult(Option.Some<T, TExceptionResult>(value)),
+                none: async exceptionTask =>
+                {
+                    if (exceptionTask == null) throw new InvalidOperationException($"{nameof(mapping)} must not return a null task.");
+                    var exception = await exceptionTask.ConfigureAwait(continueOnCapturedContext: false);
+                    return Option.None<T, TExceptionResult>(exception);
+                }
+            );
+        }
+
+        public static async Task<Option<T, TExceptionResult>> MapExceptionAsync<T, TException, TExceptionResult>(this Task<Option<T, TException>> optionTask, Func<TException, TExceptionResult> mapping, bool executeOnCapturedContext = false)
+        {
+            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
+            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
+
+            var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
+            return option.MapException(mapping);
+        }
+
+        public static async Task<Option<T, TExceptionResult>> MapExceptionAsync<T, TException, TExceptionResult>(this Task<Option<T, TException>> optionTask, Func<TException, Task<TExceptionResult>> mapping, bool executeOnCapturedContext = false)
+        {
+            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
+            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
+
+            var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
+            return await option.MapExceptionAsync(mapping).ConfigureAwait(false);
         }
 
         public static Task<Option<T, TException>> NotNullAsync<T, TException>(this Task<Option<T, TException>> optionTask, TException exception) =>
@@ -299,35 +269,23 @@ namespace Optional.Async
             return await option.OrAsync(alternativeFactory).ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public static async Task<Option<T, TException>> ElseAsync<T, TException>(this Option<T, TException> option, Func<Task<Option<T, TException>>> alternativeOptionFactory)
+        public static async Task<Option<T, TException>> SomeNotNullAsync<T, TException>(this Task<T> task, TException exception) =>
+                                                                                                                                                                                                                                                            (await task).SomeNotNull(exception);
+
+        public static async Task<Option<T, TException>> SomeWhenAsync<T, TException>(this Task<T> valueTask, Func<T, bool> predicate, Func<T, TException> exceptionFactory)
         {
-            if (alternativeOptionFactory == null) throw new ArgumentNullException(nameof(alternativeOptionFactory));
+            var value = await valueTask;
+            var result = predicate(value);
 
-            if (option.HasValue) return option;
-
-            var alternativeOptionTask = alternativeOptionFactory();
-            if (alternativeOptionTask == null) throw new InvalidOperationException($"{nameof(alternativeOptionFactory)} must not return a null task.");
-
-            return await alternativeOptionTask.ConfigureAwait(continueOnCapturedContext: false);
+            return result ?
+                value.Some<T, TException>() :
+                Option.None<T, TException>(exceptionFactory(value));
         }
 
-        public static async Task<Option<T, TException>> ElseAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<Option<T, TException>> alternativeOptionFactory, bool executeOnCapturedContext = false)
-        {
-            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
-            if (alternativeOptionFactory == null) throw new ArgumentNullException(nameof(alternativeOptionFactory));
+        public static async Task<Option<T, TException>> SomeWhenAsync<T, TException>(this Task<T> task, Func<T, bool> predicate, TException exception) =>
+            (await task).SomeWhen(predicate, exception);
 
-            var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
-            return option.Else(alternativeOptionFactory);
-        }
-
-        public static async Task<Option<T, TException>> ElseAsync<T, TException>(this Task<Option<T, TException>> optionTask, Func<Task<Option<T, TException>>> alternativeOptionFactory, bool executeOnCapturedContext = false)
-        {
-            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
-            if (alternativeOptionFactory == null) throw new ArgumentNullException(nameof(alternativeOptionFactory));
-
-            var option = await optionTask.ConfigureAwait(executeOnCapturedContext);
-            return await option.ElseAsync(alternativeOptionFactory).ConfigureAwait(continueOnCapturedContext: false);
-        }
+        public static Task<Option<T, TException>> ToAsync<T, TException>(this Option<T, TException> option) => Task.FromResult(option);
 
         public static async Task<Option<T>> WithoutExceptionAsync<T, TException>(this Task<Option<T, TException>> optionTask)
         {
@@ -335,14 +293,6 @@ namespace Optional.Async
 
             var option = await optionTask.ConfigureAwait(false);
             return option.WithoutException();
-        }
-
-        public static async Task<Option<T, TException>> FlattenAsync<T, TException>(this Task<Option<Option<T, TException>, TException>> optionTask)
-        {
-            if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
-
-            var option = await optionTask.ConfigureAwait(continueOnCapturedContext: false);
-            return option.Flatten();
         }
     }
 }

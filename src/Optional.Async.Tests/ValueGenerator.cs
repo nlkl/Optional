@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Optional.Async.Tests
 {
@@ -9,6 +10,10 @@ namespace Optional.Async.Tests
             await Task.Delay(100).ConfigureAwait(false);
             return value;
         }
+
+        public static string RandomString() => Guid.NewGuid().ToString();
+        public static Func<T, Task<TResult>> AsyncOperation<T, TResult>(TResult result) => _ => Task.FromResult(result);
+        public static Func<T, TResult> SynchronousOperation<T, TResult>(TResult result) => _ => result;
 
         public static Task<Option<T>> DelayedSome<T>(T value) => DelayedValue(value.Some());
         public static Task<Option<T, TException>> DelayedSome<T, TException>(T value) => DelayedValue(value.Some<T, TException>());
