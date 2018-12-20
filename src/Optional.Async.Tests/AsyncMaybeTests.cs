@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Optional.Unsafe;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,6 +10,89 @@ namespace Optional.Async.Tests
     [TestClass]
     public class AsyncMaybeTests
     {
+        [TestMethod]
+        public async Task AsyncMaybe_ToAsync()
+        {
+            // Arrange
+            var option = 10.Some();
+
+            // Act
+            var result = option.ToAsync();
+
+            // Assert
+            (await result).Should().Be(option);
+        }
+
+        [TestMethod]
+        public async Task AsyncMaybe_FlatMapAsync_To_Exceptional()
+        {
+            // Arrange
+            var option = Option.None<int>();
+            var exceptionalOption = Option.None<int, string>(ValueGenerator.RandomString());
+            var error = "Error";
+
+            // Act
+            var result = await option.FlatMapAsync(_ => Task.FromResult(exceptionalOption), error);
+
+            // Assert
+            var expected = Option.None<int, string>(error);
+
+            result.Should().Be(expected);
+        }
+
+        [TestMethod]
+        public async Task AsyncMaybe_FilterAsync_Should_Return_Exception()
+        {
+            // Arrange
+            var optionTask = ValueGenerator.DelayedSome(10);
+
+            Func<int, Task<bool>> predicate = _ => Task.FromResult(false);
+            var exception = "Error";
+
+            // Act
+            var result = await optionTask.FilterAsync(predicate, exception);
+
+            // Assert
+            var expected = Option.None<int, string>(exception);
+
+            result.Should().Be(expected);
+        }
+
+        [TestMethod]
+        public async Task AsyncMaybe_FilterAsync_Should_Return_Value()
+        {
+            // Arrange
+            var value = 10;
+            var optionTask = ValueGenerator.DelayedSome(value);
+
+            Func<int, Task<bool>> predicate = _ => Task.FromResult(true);
+            var exception = "Error";
+
+            // Act
+            var result = await optionTask.FilterAsync(predicate, exception);
+
+            // Assert
+            var expected = Option.Some<int, string>(value);
+
+            result.Should().Be(expected);
+        }
+
+        [TestMethod]
+        public async Task AsyncMaybe_SomeNotNull()
+        {
+            // Arrange
+            object nullObject = null;
+            var nullTask = Task.FromResult(nullObject);
+
+            // Act
+            var result = await nullTask.SomeNotNullAsync();
+
+            // Assert
+            var expected = nullObject.SomeNotNull();
+
+            result.Should().Be(expected);
+        }
+
         [TestMethod]
         public async Task AsyncMaybe_CanMapAsync()
         {
