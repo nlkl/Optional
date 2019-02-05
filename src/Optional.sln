@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Optional.Tests", "Optional.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Optional.Sandbox", "Optional.Sandbox\Optional.Sandbox.csproj", "{9ADFB283-560D-4FD1-981C-3348BF1DDAF4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Optional.Async.Tests", "Optional.Async.Tests\Optional.Async.Tests.csproj", "{89D005BD-46B2-4E79-8267-AAB77C818998}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,10 +29,6 @@ Global
 		{9ADFB283-560D-4FD1-981C-3348BF1DDAF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9ADFB283-560D-4FD1-981C-3348BF1DDAF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9ADFB283-560D-4FD1-981C-3348BF1DDAF4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{89D005BD-46B2-4E79-8267-AAB77C818998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89D005BD-46B2-4E79-8267-AAB77C818998}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{89D005BD-46B2-4E79-8267-AAB77C818998}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{89D005BD-46B2-4E79-8267-AAB77C818998}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,7 +36,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{12606143-9C9B-4A92-81D5-CEA814AC64AC} = {F5DC1A78-11B4-40F6-9E8A-E69F03B9C9CB}
 		{9ADFB283-560D-4FD1-981C-3348BF1DDAF4} = {F5DC1A78-11B4-40F6-9E8A-E69F03B9C9CB}
-		{89D005BD-46B2-4E79-8267-AAB77C818998} = {F5DC1A78-11B4-40F6-9E8A-E69F03B9C9CB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {20E7152D-FA2B-41B6-BF86-F02570EC8550}
