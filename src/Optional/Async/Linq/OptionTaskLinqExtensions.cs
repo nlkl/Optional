@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !NET35
+
+using System;
 using System.Threading.Tasks;
 
 namespace Optional.Async.Linq
@@ -65,3 +67,5 @@ namespace Optional.Async.Linq
         }
     }
 }
+
+#endif

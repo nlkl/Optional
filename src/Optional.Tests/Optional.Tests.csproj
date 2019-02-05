@@ -18,8 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Optional.Async\Optional.Async.csproj" />
-    <ProjectReference Include="..\Optional.Utilities\Optional.Utilities.csproj" />
     <ProjectReference Include="..\Optional\Optional.csproj" />
   </ItemGroup>
 

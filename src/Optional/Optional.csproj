@@ -4,19 +4,19 @@
     <TargetFrameworks>net35;net45;netstandard1.0;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Version>4.1.0</Version>
+    <Version>5.0.0</Version>
     <Authors>Nils Lück</Authors>
     <Copyright>Copyright © 2014</Copyright>
     <NoWarn>1591</NoWarn>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
     <DefineConstants>NET35</DefineConstants>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
     <DefineConstants>NETSTANDARD10</DefineConstants>
   </PropertyGroup>
-  
+
 </Project>
