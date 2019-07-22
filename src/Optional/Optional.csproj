@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;netstandard1.0</TargetFrameworks>
+    <TargetFrameworks>net35;net45;netstandard1.0;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Version>3.2.0</Version>
@@ -10,12 +10,12 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
+    <DefineConstants>NET35</DefineConstants>
+  </PropertyGroup>
+  
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
     <DefineConstants>NETSTANDARD10</DefineConstants>
   </PropertyGroup>
-    
-  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.0' ">
-    <Reference Include="System" />
-  </ItemGroup>
   
 </Project>

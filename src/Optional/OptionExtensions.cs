@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Optional
 {
@@ -200,7 +197,6 @@ namespace Optional
         /// <param name="option">The specified optional.</param>
         /// <returns>The existing or exceptional value.</returns>
         public static T ValueOrException<T>(this Option<T, T> option) => option.HasValue ? option.Value : option.Exception;
-
 
         /// <summary>
         /// Flattens two nested optionals into one. The resulting optional

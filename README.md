@@ -2,7 +2,7 @@
 
 Optional is a robust option/maybe type for C#.
 
-Version: 3.2.0
+Version: 4.0.0
 
 ## What and Why?
 
@@ -137,7 +137,7 @@ var value = option.ValueOr(10);
 var value = option.ValueOr(() => SlowOperation());  // Lazy variant
 ```
 
-In more elobarate scenarios, the `Match` method evaluates a specified function:
+In more elaborate scenarios, the `Match` method evaluates a specified function:
 
 ```csharp
 // Evaluates one of the provided functions and returns the result
@@ -197,6 +197,14 @@ var anotherValue = option.ValueOrFailure("An error message");
 ```
 
 In case of failure an `OptionValueMissingException` is thrown.
+
+In a lot of interop scenarios, it might be necessary to convert an option into a potentially null value. Once the Unsafe namespace is imported, this can be done relatively concisely as:
+
+```csharp
+var value = option.ValueOrDefault(); // value will be default(T) if the option is empty.
+```
+
+As a rule of thumb, such conversions should be performed only just before the nullable value is needed (e.g. passed to an external library), to minimize and localize the potential for null reference exceptions and the like. 
 
 ### Transforming and filtering values
 
@@ -286,7 +294,7 @@ An option implements `GetEnumerator`, allowing you to loop over the value, as if
 ```csharp
 foreach (var value in option)
 {
-	Console.WriteLine(value);
+    Console.WriteLine(value);
 }
 ```
 
@@ -323,7 +331,7 @@ var personWithGreenHair =
 
 In general, this closely resembles a sequence of calls to `FlatMap` and `Filter`. However, using query syntax can be a lot easier to read in complex cases.
 
-### Equivalence
+### Equivalence and comparison
 
 Two optional values are equal if the following is satisfied:
 
@@ -333,6 +341,11 @@ Two optional values are equal if the following is satisfied:
 An option both overrides `object.Equals` and implements `IEquatable<T>`, allowing efficient use in both generic and untyped scenarios. The `==` and `!=` operators are also provided for convenience. In each case, the semantics are identical.
 
 The generated hashcodes also reflect the semantics described above.
+
+Further, options implement `IComparable<T>` and overload the corresponding comparison operators (`< > <= >=`). The implementation is consistent with the above described equality semantics, and comparison itself is based on the following rules:
+
+* An empty option is considered less than a non-empty option
+* For non-empty options comparison is delegated to the default comparer and applied on the contained value
 
 ### Options with exceptional values
 
@@ -402,6 +415,7 @@ And again, when `Optional.Unsafe` is imported, it is possible to retrieve the va
 ```csharp
 var value = option.ValueOrFailure();
 var anotherValue = option.ValueOrFailure("An error message"); 
+var potentiallyNullValue = option.ValueOrDefault();
 ```
 
 Values can be conveniently transformed using similar operations to that of the `Option<T>`. It is however important to note, that these transformations are all **short-circuiting**! That is, if an option is already none, the current exceptional value will remain, and not be replaced by any subsequent filtering. In this respect, this exceptional value is very similar to actual exceptions (hence the name).
@@ -454,7 +468,7 @@ Enumeration works identically to that of `Option<T>`:
 ```csharp
 foreach (var value in option)
 {
-	// Do something
+    // Do something
 }
 
 var enumerable = option.ToEnumerable();
@@ -504,4 +518,45 @@ var none = some.FlatMap(x => x.None(ErrorCode.GeneralError));
 var some = Option.Some<string, ErrorCode>("This is a string");
 var none = some.FlatMap(x => Option.None<string>(), ErrorCode.GeneralError);
 var none = some.FlatMap(x => Option.None<string>(), () => SlowOperation()); // Lazy variant
+```
+
+### Working with collections
+
+Optional provides a few convenience methods to ease interoperability with common .NET collections, and improve null safety a bit in the process.
+
+LINQ provides a lot of useful methods when working with enumerables, but methods such as `FirstOrDefault`, `LastOrDefault`, `SingleOrDefault`, and `ElementAtOrDefault`, all return null (more precisely `default(T)`) to indicate that no value was found (e.g. if the enumerable was empty). Optional provides a safer alternative to all these methods, returning an option to indicate success/failure instead of nulls. As an added benefit, these methods work unambiguously for non-nullable/structs types as well, unlike their LINQ counterparts. 
+
+```csharp
+var option = values.FirstOrNone();
+var option = values.FirstOrNone(v => v != 0);
+var option = values.LastOrNone();
+var option = values.LastOrNone(v => v != 0);
+var option = values.SingleOrNone();
+var option = values.SingleOrNone(v => v != 0);
+var option = values.ElementAtOrNone(10);
+```
+
+(Note that unlike `SingleOrDefault`, `SingleOrNone` never throws an exception but returns None in all "invalid" cases. This slight deviation in semantics was considered a safer alternative to the existing behavior, and is easy to work around in practice, if the finer granularity is needed.)
+
+Optional provides a safe way to retrieve values from a dictionary:
+
+```csharp
+var option = dictionary.GetValueOrNone("key");
+```
+
+`GetValueOrNone` behaves similarly to `TryGetValue` on an `IDictionary<TKey, TValue>` or `IReadOnlyDictionary<TKey, TValue>`, but actually supports any `IEnumerable<KeyValuePair<TKey, TValue>>` (falling back to iteration, when a direct lookup is not possible).
+
+Another common scenario, is to perform various transformations on an enumerable and ending up with a sequence of options (e.g. `IEnumerable<Option<T>>`). In many cases, only the non-empty options are relevant, and as such Optional provides a convenient method to flatten a sequence of options into a sequence containing all the inner values (whereas empty options are simply thrown away):
+
+```csharp
+var options = new List<Option<int>> { Option.Some(1), Option.Some(2), Option.None<int>() };
+var values = option.Values(); // IEnumerable<int> { 1, 2 }
+```
+
+When working with a sequence of `Option<T, TException>` a similar method is provided, as well a way to extract all the exceptional values:
+
+```csharp
+var options = GetOptions(); // IEnumerable<Option<int, string>> { Some(1), None("error"), Some(2) }
+var values = options.Values(); // IEnumerable<int> { 1, 2 }
+var exceptions = options.Exceptions(); // IEnumerable<string> { "error" }
 ```

@@ -136,6 +136,73 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+        public void Maybe_CompareTo()
+        {
+            void LessThan<TValue>(Option<TValue> lesser, Option<TValue> greater)
+            {
+                Assert.IsTrue(lesser.CompareTo(greater) < 0);
+                Assert.IsTrue(greater.CompareTo(lesser) > 0);
+                Assert.IsTrue(lesser < greater);
+                Assert.IsTrue(lesser <= greater);
+                Assert.IsTrue(greater > lesser);
+                Assert.IsTrue(greater >= lesser);
+            }
+
+            void EqualTo<TValue>(Option<TValue> left, Option<TValue> right)
+            {
+                Assert.IsTrue(left.CompareTo(right) == 0);
+                Assert.IsTrue(right.CompareTo(left) == 0);
+                Assert.IsTrue(left <= right);
+                Assert.IsTrue(left >= right);
+                Assert.IsTrue(right <= left);
+                Assert.IsTrue(right >= left);
+            }
+
+            // Value type comparisons
+            var noneStruct = Option.None<int>();
+            var someStruct1 = Option.Some<int>(1);
+            var someStruct2 = Option.Some<int>(2);
+
+            LessThan(noneStruct, someStruct1);
+            LessThan(someStruct1, someStruct2);
+
+            EqualTo(noneStruct, noneStruct);
+            EqualTo(someStruct1, someStruct1);
+
+            // IComparable comparisons
+            var noneComparable = Option.None<string>();
+            var someComparableNull = Option.Some<string>(null);
+            var someComparable1 = Option.Some<string>("1");
+            var someComparable2 = Option.Some<string>("2");
+
+            LessThan(noneComparable, someComparable1);
+            LessThan(noneComparable, someComparableNull);
+            LessThan(someComparableNull, someComparable1);
+            LessThan(someComparable1, someComparable2);
+
+            EqualTo(noneComparable, noneComparable);
+            EqualTo(someComparableNull, someComparableNull);
+            EqualTo(someComparable1, someComparable1);
+
+            // Non-IComparable comparisons
+            var noneNotComparable = Option.None<Dictionary<string, string>>();
+            var someNotComparableNull = Option.Some<Dictionary<string, string>>(null);
+            var someNotComparable1 = Option.Some<Dictionary<string, string>>(new Dictionary<string, string>());
+            var someNotComparable2 = Option.Some<Dictionary<string, string>>(new Dictionary<string, string>());
+
+            Assert.ThrowsException<ArgumentException>(() => someNotComparable1.CompareTo(someNotComparable2));
+            Assert.ThrowsException<ArgumentException>(() => someNotComparable2.CompareTo(someNotComparable1));
+
+            LessThan(noneNotComparable, someNotComparable1);
+            LessThan(noneNotComparable, someNotComparableNull);
+            LessThan(someNotComparableNull, someNotComparable1);
+
+            EqualTo(noneNotComparable, noneNotComparable);
+            EqualTo(someNotComparableNull, someNotComparableNull);
+            EqualTo(someNotComparable1, someNotComparable1);
+        }
+
+        [TestMethod]
         public void Maybe_Hashing()
         {
             Assert.AreEqual(Option.None<string>().GetHashCode(), Option.None<string>().GetHashCode());

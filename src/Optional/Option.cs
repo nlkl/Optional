@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Optional
+﻿namespace Optional
 {
     /// <summary>
     /// Provides a set of functions for creating optional values.
