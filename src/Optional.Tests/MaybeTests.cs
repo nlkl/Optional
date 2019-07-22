@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.IO;
 
@@ -220,23 +221,54 @@ namespace Optional.Tests
         [TestMethod]
         public void Maybe_StringRepresentation()
         {
-            Assert.AreEqual(Option.None<int>().ToString(), "None");
-            Assert.AreEqual(Option.None<int?>().ToString(), "None");
-            Assert.AreEqual(Option.None<string>().ToString(), "None");
+            Assert.AreEqual(Option.None<int>().ToString(), "");
+            Assert.AreEqual(Option.None<int?>().ToString(), "");
+            Assert.AreEqual(Option.None<string>().ToString(), "");
 
-            Assert.AreEqual(Option.Some<int?>(null).ToString(), "Some(null)");
-            Assert.AreEqual(Option.Some<string>(null).ToString(), "Some(null)");
+            Assert.AreEqual(Option.Some<int?>(null).ToString(), "");
+            Assert.AreEqual(Option.Some<string>(null).ToString(), "");
 
-            Assert.AreEqual(Option.Some<int>(1).ToString(), "Some(1)");
-            Assert.AreEqual(Option.Some<int?>(1).ToString(), "Some(1)");
-            Assert.AreEqual(Option.Some<string>("1").ToString(), "Some(1)");
+            Assert.AreEqual(Option.Some<int>(1).ToString(), "1");
+            Assert.AreEqual(Option.Some<int?>(1).ToString(), "1");
+            Assert.AreEqual(Option.Some<string>("1").ToString(), "1");
 
             var now = DateTime.Now;
-            Assert.AreEqual(Option.Some<DateTime>(now).ToString(), "Some(" + now.ToString() + ")");
+            Assert.AreEqual(Option.Some<DateTime>(now).ToString(), now.ToString());
         }
 
         [TestMethod]
-        public void Maybe_GetValue()
+        public void Maybe_Format()
+        {
+            Assert.AreEqual("", ((IFormattable) Option.None<int>()).ToString(null, null));
+            Assert.AreEqual("", ((IFormattable) Option.None<int?>()).ToString(null, null));
+            Assert.AreEqual("", ((IFormattable) Option.None<string>()).ToString(null, null));
+
+            Assert.AreEqual("", ((IFormattable) Option.Some<int?>(null)).ToString(null, null));
+            Assert.AreEqual("", ((IFormattable) Option.Some<string>(null)).ToString(null, null));
+
+            // Test number formatting using a culture that uses a different
+            // separator for grouping than the current culture.
+
+            var numberFormatProvider =
+                CultureInfo.GetCultures(CultureTypes.SpecificCultures)
+                           .First(ci => ci.NumberFormat.NumberGroupSeparator != NumberFormatInfo.CurrentInfo.NumberGroupSeparator);
+
+            Assert.AreEqual(int.MaxValue.ToString("N0", numberFormatProvider), ((IFormattable) Option.Some<int>(int.MaxValue)).ToString("N0", numberFormatProvider));
+            Assert.AreEqual(int.MaxValue.ToString("N0", numberFormatProvider), ((IFormattable) Option.Some<int?>(int.MaxValue)).ToString("N0", numberFormatProvider));
+
+            // Test date formatting using a culture that would yield a
+            // different result than the current culture.
+
+            var now = DateTime.Now;
+            var dateFormatProvider =
+                CultureInfo.GetCultures(CultureTypes.SpecificCultures)
+                           .First(ci => now.ToString("D", ci) != now.ToLongDateString());
+
+            Assert.AreEqual(now.ToString("D", dateFormatProvider), ((IFormattable) Option.Some<DateTime>(now)).ToString("D", dateFormatProvider));
+        }
+
+        [TestMethod]
+    public void Maybe_GetValue()
         {
             var noneStruct = Option.None<int>();
             var noneNullable = Option.None<int?>();

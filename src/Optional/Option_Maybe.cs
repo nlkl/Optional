@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
 
 namespace Optional
 {
@@ -10,7 +13,8 @@ namespace Optional
 #if !NETSTANDARD10
     [Serializable]
 #endif
-    public struct Option<T> : IEquatable<Option<T>>, IComparable<Option<T>>
+    [DebuggerDisplay("{" + nameof(DebugString) + "}")]
+    public struct Option<T> : IEquatable<Option<T>>, IComparable<Option<T>>, IFormattable
     {
         private readonly bool hasValue;
         private readonly T value;
@@ -134,23 +138,31 @@ namespace Optional
         /// <returns>A boolean indicating whether or not the left optional is greater than or equal the right optional.</returns>
         public static bool operator >=(Option<T> left, Option<T> right) => left.CompareTo(right) >= 0;
 
+        string DebugString
+        {
+            get
+            {
+                if (hasValue)
+                {
+                    if (value == null)
+                    {
+                        return "Some(null)";
+                    }
+
+                    return string.Format("Some({0})", value);
+                }
+
+                return "None";
+            }
+        }
+
         /// <summary>
         /// Returns a string that represents the current optional.
         /// </summary>
         /// <returns>A string that represents the current optional.</returns>
         public override string ToString()
         {
-            if (hasValue)
-            {
-                if (value == null)
-                {
-                    return "Some(null)";
-                }
-
-                return string.Format("Some({0})", value);
-            }
-
-            return "None";
+            return hasValue && value != null ? value.ToString() : string.Empty;
         }
 
         /// <summary>
@@ -424,5 +436,10 @@ namespace Optional
         /// </summary>
         /// <returns>The filtered optional.</returns>
         public Option<T> NotNull() => hasValue && value == null ? Option.None<T>() : this;
+
+        string IFormattable.ToString(string format, IFormatProvider formatProvider) =>
+            !hasValue
+            ? string.Empty
+            : (value as IFormattable)?.ToString(format, formatProvider) ?? ToString();
     }
 }
