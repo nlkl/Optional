@@ -424,5 +424,11 @@ namespace Optional
         /// </summary>
         /// <returns>The filtered optional.</returns>
         public Option<T> NotNull() => hasValue && value == null ? Option.None<T>() : this;
+
+        /// <summary>
+        /// Implicitly wraps an existing value in an Option&lt;T&gt; instance. 
+        /// </summary>
+        /// <param name="value">The value to be wrapped.</param>
+        public static implicit operator Option<T>(T value) => Option.Some(value);
     }
 }

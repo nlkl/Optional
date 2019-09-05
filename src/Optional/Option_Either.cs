@@ -537,5 +537,11 @@ namespace Optional
             if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
             return hasValue && value == null ? Option.None<T, TException>(exceptionFactory()) : this;
         }
+
+        /// <summary>
+        /// Implicitly wraps an existing value in an Option&lt;T&gt; instance. 
+        /// </summary>
+        /// <param name="value">The value to be wrapped.</param>
+        public static implicit operator Option<T, TException>(T value) => Option.Some<T, TException>(value);
     }
 }

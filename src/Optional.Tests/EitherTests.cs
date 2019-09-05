@@ -966,5 +966,23 @@ namespace Optional.Tests
             }
         }
 #endif
+
+        [TestMethod]
+        public void Maybe_CastValueToSome()
+        {
+            Option<int, Exception> some = 1;
+
+            Assert.IsTrue(some.HasValue);
+            Assert.AreEqual(1, some.ValueOr(-1));
+        }
+
+        [TestMethod]
+        public void Maybe_CastNullToSome()
+        {
+            Option<string, Exception> some = null;
+
+            Assert.IsTrue(some.HasValue);
+            Assert.AreEqual(null, some.ValueOr("Wrong"));
+        }
     }
 }
