@@ -520,6 +520,20 @@ namespace Optional
         }
 
         /// <summary>
+        /// Empties an optional, and attaches an exceptional value using the unmatched value,
+        /// if a specified predicate is not satisfied.
+        /// </summary>
+        /// <param name="predicate">The predicate.</param>
+        /// <param name="exceptionFactory">A factory function to create an exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public Option<T, TException> Filter(Func<T, bool> predicate, Func<T, TException> exceptionFactory)
+        {
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            return hasValue && !predicate(value) ? Option.None<T, TException>(exceptionFactory(value)) : this;
+        }
+
+        /// <summary>
         /// Empties an optional, and attaches an exceptional value, 
         /// if the value is null.
         /// </summary>

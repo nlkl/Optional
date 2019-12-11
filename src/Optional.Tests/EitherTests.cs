@@ -843,6 +843,70 @@ namespace Optional.Tests
         }
 
         [TestMethod]
+        public void Either_Filtering_With_Unmatched_Value()
+        {
+            var none = "val".None("ex");
+            var some = "val".Some<string, string>();
+
+            var noneNotVal = none.Filter(x => x != "val", x => $"{x}ex1");
+            var someNotVal = some.Filter(x => x != "val", x => $"{x}ex1");
+            var noneVal = none.Filter(x => x == "val", x => $"{x}ex1");
+            var someVal = some.Filter(x => x == "val", x => { Assert.Fail(); return "ex1"; });
+
+            Assert.IsFalse(noneNotVal.HasValue);
+            Assert.IsFalse(someNotVal.HasValue);
+            Assert.IsFalse(noneVal.HasValue);
+            Assert.IsTrue(someVal.HasValue);
+            Assert.AreEqual(noneNotVal.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(someNotVal.Match(val => val, ex => ex), "valex1");
+            Assert.AreEqual(noneVal.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(someVal.Match(val => val, ex => ex), "val");
+
+            var noneFalse = none.Filter(false, () => "valex1");
+            var someFalse = some.Filter(false, () => "valex1");
+            var noneTrue = none.Filter(true, () => "valex1");
+            var someTrue = some.Filter(true, () => { Assert.Fail(); return "valex1"; });
+
+            Assert.IsFalse(noneFalse.HasValue);
+            Assert.IsFalse(someFalse.HasValue);
+            Assert.IsFalse(noneTrue.HasValue);
+            Assert.IsTrue(someTrue.HasValue);
+            Assert.AreEqual(noneFalse.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(someFalse.Match(val => val, ex => ex), "valex1");
+            Assert.AreEqual(noneTrue.Match(val => val, ex => ex), "ex");
+            Assert.AreEqual(someTrue.Match(val => val, ex => ex), "val");
+
+            var someNull = Option.Some<string, string>(null);
+            Assert.IsTrue(someNull.HasValue);
+            Assert.IsFalse(someNull.NotNull(() => "ex").HasValue);
+            Assert.AreEqual(someNull.NotNull(() => "ex").ValueOrException(), "ex");
+
+            var someNullableNull = Option.Some<int?, int?>(null);
+            Assert.IsTrue(someNullableNull.HasValue);
+            Assert.IsFalse(someNullableNull.NotNull(() => -1).HasValue);
+            Assert.AreEqual(someNullableNull.NotNull(() => -1).ValueOrException(), -1);
+
+            var someStructNull = Option.Some<int, int>(default(int));
+            Assert.IsTrue(someStructNull.HasValue);
+            Assert.IsTrue(someStructNull.NotNull(() => -1).HasValue);
+            Assert.AreEqual(someStructNull.NotNull(() => -1).ValueOrException(), default(int));
+
+            Assert.IsTrue(some.HasValue);
+            Assert.IsTrue(some.NotNull(() => "ex").HasValue);
+            Assert.AreEqual(some.NotNull(() => "ex").ValueOrException(), "val");
+
+            Assert.IsFalse(none.HasValue);
+            Assert.IsFalse(none.NotNull(() => "valex1").HasValue);
+            Assert.AreEqual(none.NotNull(() => "valex1").ValueOrException(), "ex");
+
+            var someNotNull = some.NotNull(() => { Assert.Fail(); return "valex1"; });
+            Assert.IsTrue(someNotNull.HasValue);
+
+            var noneNotNull = none.NotNull(() => { Assert.Fail(); return "valex1"; });
+            Assert.IsFalse(noneNotNull.HasValue);
+        }
+
+        [TestMethod]
         public void Either_Filtering_ExceptionPropagation()
         {
             var none = "val".None("ex");
