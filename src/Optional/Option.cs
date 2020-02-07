@@ -18,13 +18,13 @@
         /// <param name="value">The value to be wrapped.</param>
         /// <returns>An optional containing the specified value.</returns>
         public static Option<T, TException> Some<T, TException>(T value) =>
-            new Option<T, TException>(value, default(TException), true);
+            new Option<T, TException>(value, default, true);
 
         /// <summary>
         /// Creates an empty Option&lt;T&gt; instance.
         /// </summary>
         /// <returns>An empty optional.</returns>
-        public static Option<T> None<T>() => new Option<T>(default(T), false);
+        public static Option<T> None<T>() => new Option<T>(default, false);
 
         /// <summary>
         /// Creates an empty Option&lt;T, TException&gt; instance, 
@@ -33,6 +33,6 @@
         /// <param name="exception">The exceptional value.</param>
         /// <returns>An empty optional.</returns>
         public static Option<T, TException> None<T, TException>(TException exception) =>
-            new Option<T, TException>(default(T), exception, false);
+            new Option<T, TException>(default, exception, false);
     }
 }

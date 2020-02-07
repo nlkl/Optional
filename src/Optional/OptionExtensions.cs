@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Optional
 {
@@ -164,7 +165,7 @@ namespace Optional
         /// </summary>
         /// <param name="value">The value to wrap.</param>
         /// <returns>An optional containing the specified value.</returns>
-        public static Option<T> SomeNotNull<T>(this T value) => value.SomeWhen(val => val != null);
+        public static Option<T> SomeNotNull<T>([AllowNull] this T value) => value.SomeWhen(val => val != null);
 
         /// <summary>
         /// Creates an Option&lt;T&gt; instance from a specified value. 
@@ -174,7 +175,7 @@ namespace Optional
         /// <param name="value">The value to wrap.</param>
         /// <param name="exception">The exceptional value.</param>
         /// <returns>An optional containing the specified value.</returns>
-        public static Option<T, TException> SomeNotNull<T, TException>(this T value, TException exception) =>
+        public static Option<T, TException> SomeNotNull<T, TException>([AllowNull] this T value, TException exception) =>
             value.SomeWhen(val => val != null, exception);
 
         /// <summary>
@@ -185,7 +186,7 @@ namespace Optional
         /// <param name="value">The value to wrap.</param>
         /// <param name="exceptionFactory">A factory function to create an exceptional value.</param>
         /// <returns>An optional containing the specified value.</returns>
-        public static Option<T, TException> SomeNotNull<T, TException>(this T value, Func<TException> exceptionFactory)
+        public static Option<T, TException> SomeNotNull<T, TException>([AllowNull] this T value, Func<TException> exceptionFactory)
         {
             if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
             return value.SomeWhen(val => val != null, exceptionFactory);
@@ -247,5 +248,67 @@ namespace Optional
         /// <returns>A flattened optional.</returns>
         public static Option<T, TException> Flatten<T, TException>(this Option<Option<T, TException>, TException> option) =>
             option.FlatMap(innerOption => innerOption);
+
+        /// <summary>
+        /// Empties an optional if the value is null.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <returns>The filtered optional.</returns>
+        public static Option<T> NotNull<T>(this Option<T?> option) where T : class =>
+            option.HasValue && option.Value is null ? Option.None<T>() : option!;
+
+        /// <summary>
+        /// Empties an optional if the value is null.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <returns>The filtered optional.</returns>
+        public static Option<T> NotNull<T>(this Option<T?> option) where T : struct =>
+            option.HasValue && option.Value is null ? Option.None<T>() : option.Map(value => value!.Value);
+
+        /// <summary>
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if the value is null.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <param name="exception">The exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public static Option<T, TException> NotNull<T, TException>(this Option<T?, TException> option, TException exception) where T : class =>
+            option.HasValue && option.Value is null ? Option.None<T, TException>(exception) : option!;
+
+        /// <summary>
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if the value is null.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <param name="exception">The exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public static Option<T, TException> NotNull<T, TException>(this Option<T?, TException> option, TException exception) where T : struct =>
+            option.HasValue && option.Value is null ? Option.None<T, TException>(exception) : option.Map(value => value!.Value);
+
+        /// <summary>
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if the value is null.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <param name="exceptionFactory">A factory function to create an exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public static Option<T, TException> NotNull<T, TException>(this Option<T?, TException> option, Func<TException> exceptionFactory) where T : class
+        {
+            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            return option.HasValue && option.Value is null ? Option.None<T, TException>(exceptionFactory()) : option!;
+        }
+
+        /// <summary>
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if the value is null.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <param name="exceptionFactory">A factory function to create an exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public static Option<T, TException> NotNull<T, TException>(this Option<T?, TException> option, Func<TException> exceptionFactory) where T : struct
+        {
+            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            return option.HasValue && option.Value is null ? Option.None<T, TException>(exceptionFactory()) : option.Map(value => value!.Value);
+        }
     }
 }

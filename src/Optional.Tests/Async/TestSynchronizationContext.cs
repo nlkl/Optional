@@ -8,13 +8,13 @@ namespace Optional.Async.Tests
 
         public int Called => _called;
 
-        public override void Post(SendOrPostCallback d, object state)
+        public override void Post(SendOrPostCallback d, object? state)
         {
             Interlocked.Increment(ref _called);
             base.Post(d, state);
         }
 
-        public override void Send(SendOrPostCallback d, object state)
+        public override void Send(SendOrPostCallback d, object? state)
         {
             Interlocked.Increment(ref _called);
             base.Send(d, state);

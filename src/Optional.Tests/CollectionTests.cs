@@ -13,17 +13,17 @@ namespace Optional.Tests
         [TestMethod]
         public void Collections_Enumerable_ValuesMaybe()
         {
-            var list1 = new List<Option<string>>
+            var list1 = new List<Option<string?>>
             {
-                Option.Some<string>("a"),
-                Option.None<string>(),
-                Option.None<string>(),
-                Option.Some<string>("b"),
-                Option.Some<string>(null),
-                Option.None<string>(),
-                Option.Some<string>("c"),
+                Option.Some<string?>("a"),
+                Option.None<string?>(),
+                Option.None<string?>(),
+                Option.Some<string?>("b"),
+                Option.Some<string?>(null),
+                Option.None<string?>(),
+                Option.Some<string?>("c"),
             };
-            var list1Expected = new List<string> { "a", "b", null, "c" };
+            var list1Expected = new List<string?> { "a", "b", null, "c" };
 
             var list2 = new List<Option<string>>();
             var list2Expected = new List<string>();
@@ -44,17 +44,17 @@ namespace Optional.Tests
         [TestMethod]
         public void Collections_Enumerable_ValuesEither()
         {
-            var list1 = new List<Option<string, string>>
+            var list1 = new List<Option<string?, string>>
             {
-                Option.Some<string, string>("a"),
-                Option.None<string, string>("error"),
-                Option.None<string, string>("error"),
-                Option.Some<string, string>("b"),
-                Option.Some<string, string>(null),
-                Option.None<string, string>("error"),
-                Option.Some<string, string>("c"),
+                Option.Some<string?, string>("a"),
+                Option.None<string?, string>("error"),
+                Option.None<string?, string>("error"),
+                Option.Some<string?, string>("b"),
+                Option.Some<string?, string>(null),
+                Option.None<string?, string>("error"),
+                Option.Some<string?, string>("c"),
             };
-            var list1Expected = new List<string> { "a", "b", null, "c" };
+            var list1Expected = new List<string?> { "a", "b", null, "c" };
 
             var list2 = new List<Option<string, string>>();
             var list2Expected = new List<string>();
@@ -75,17 +75,17 @@ namespace Optional.Tests
         [TestMethod]
         public void Collections_Enumerable_ExceptionsEither()
         {
-            var list1 = new List<Option<string, string>>
+            var list1 = new List<Option<string, string?>>
             {
-                Option.None<string, string>("a"),
-                Option.Some<string, string>("value"),
-                Option.Some<string, string>("value"),
-                Option.None<string, string>("b"),
-                Option.None<string, string>(null),
-                Option.Some<string, string>("value"),
-                Option.None<string, string>("c"),
+                Option.None<string, string?>("a"),
+                Option.Some<string, string?>("value"),
+                Option.Some<string, string?>("value"),
+                Option.None<string, string?>("b"),
+                Option.None<string, string?>(null),
+                Option.Some<string, string?>("value"),
+                Option.None<string, string?>("c"),
             };
-            var list1Expected = new List<string> { "a", "b", null, "c" };
+            var list1Expected = new List<string?> { "a", "b", null, "c" };
 
             var list2 = new List<Option<string, string>>();
             var list2Expected = new List<string>();
@@ -296,7 +296,7 @@ namespace Optional.Tests
             foreach (var pair in dictionary)
             {
                 Assert.IsTrue(dictionary.GetValueOrNone(pair.Key).HasValue);
-                Assert.AreEqual(dictionary.GetValueOrNone(pair.Key).ValueOr(default(TValue)), pair.Value);
+                Assert.AreEqual(dictionary.GetValueOrNone(pair.Key).ValueOr(default(TValue)!), pair.Value);
             }
 
             foreach (var key in excludedKeys)
@@ -306,6 +306,7 @@ namespace Optional.Tests
         }
 
         private class TestReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+            where TKey : notnull
         {
             private readonly Dictionary<TKey, TValue> dictionary;
 
@@ -340,6 +341,7 @@ namespace Optional.Tests
         }
 
         private class TestDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+            where TKey : notnull
         {
             private readonly Dictionary<TKey, TValue> dictionary;
 

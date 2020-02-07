@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Optional.Unsafe
 {
@@ -24,6 +25,7 @@ namespace Optional.Unsafe
         /// </summary>
         /// <param name="option">The specified optional.</param>
         /// <returns>The existing value or a default value.</returns>
+        [return: MaybeNull]
         public static T ValueOrDefault<T>(this Option<T> option)
         {
             if (option.HasValue)
@@ -31,7 +33,7 @@ namespace Optional.Unsafe
                 return option.Value;
             }
 
-            return default(T);
+            return default!;
         }
 
         /// <summary>
@@ -70,6 +72,7 @@ namespace Optional.Unsafe
         /// </summary>
         /// <param name="option">The specified optional.</param>
         /// <returns>The existing value or a default value.</returns>
+        [return: MaybeNull]
         public static T ValueOrDefault<T, TException>(this Option<T, TException> option)
         {
             if (option.HasValue)
@@ -77,7 +80,7 @@ namespace Optional.Unsafe
                 return option.Value;
             }
 
-            return default(T);
+            return default!;
         }
 
         /// <summary>

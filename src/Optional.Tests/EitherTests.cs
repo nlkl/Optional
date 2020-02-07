@@ -25,7 +25,7 @@ namespace Optional.Tests
             var someNullable = Option.Some<int?, string>(1);
             var someNullableEmpty = Option.Some<int?, string>(null);
             var someClass = Option.Some<string, string>("1");
-            var someClassNull = Option.Some<string, string>(null);
+            var someClassNull = Option.Some<string?, string>(null);
 
             Assert.IsTrue(someStruct.HasValue);
             Assert.IsTrue(someNullable.HasValue);
@@ -39,7 +39,7 @@ namespace Optional.Tests
         {
             var noneStruct = Option.None<int, string>("ex");
             var noneNullable = Option.None<int?, string>("ex");
-            var noneClass = Option.None<string, string>("ex");
+            var noneClass = Option.None<string?, string>("ex");
 
             Assert.IsFalse(noneStruct.Contains(0));
             Assert.IsFalse(noneNullable.Contains(null));
@@ -53,7 +53,7 @@ namespace Optional.Tests
             var someNullable = Option.Some<int?, string>(1);
             var someNullableEmpty = Option.Some<int?, string>(null);
             var someClass = Option.Some<string, string>("1");
-            var someClassNull = Option.Some<string, string>(null);
+            var someClassNull = Option.Some<string?, string>(null);
 
             Assert.IsTrue(someStruct.Contains(1));
             Assert.IsTrue(someNullable.Contains(1));
@@ -85,15 +85,15 @@ namespace Optional.Tests
         {
             // Basic equality
             Assert.AreEqual(Option.None<string, string>("ex"), Option.None<string, string>("ex"));
-            Assert.AreEqual(Option.None<string, string>(null), Option.None<string, string>(null));
-            Assert.AreNotEqual(Option.None<string, string>("ex"), Option.None<string, string>(null));
-            Assert.AreNotEqual(Option.None<string, string>(null), Option.None<string, string>("ex"));
+            Assert.AreEqual(Option.None<string, string?>(null), Option.None<string, string?>(null));
+            Assert.AreNotEqual(Option.None<string, string?>("ex"), Option.None<string, string?>(null));
+            Assert.AreNotEqual(Option.None<string, string?>(null), Option.None<string, string?>("ex"));
             Assert.AreNotEqual(Option.None<string, string>("ex"), Option.None<string, string>("ex1"));
 
             Assert.AreEqual(Option.Some<string, string>("val"), Option.Some<string, string>("val"));
-            Assert.AreEqual(Option.Some<string, string>(null), Option.Some<string, string>(null));
-            Assert.AreNotEqual(Option.Some<string, string>("val"), Option.Some<string, string>(null));
-            Assert.AreNotEqual(Option.Some<string, string>(null), Option.Some<string, string>("val"));
+            Assert.AreEqual(Option.Some<string?, string>(null), Option.Some<string?, string>(null));
+            Assert.AreNotEqual(Option.Some<string?, string>("val"), Option.Some<string?, string>(null));
+            Assert.AreNotEqual(Option.Some<string?, string>(null), Option.Some<string?, string>("val"));
             Assert.AreNotEqual(Option.Some<string, string>("val"), Option.Some<string, string>("val1"));
 
             // Must have same types
@@ -104,7 +104,7 @@ namespace Optional.Tests
 
             // Some and None are different
             Assert.AreNotEqual(Option.Some<string, string>("ex"), Option.None<string, string>("ex"));
-            Assert.AreNotEqual(Option.Some<string, string>(null), Option.None<string, string>(null));
+            Assert.AreNotEqual(Option.Some<string?, string?>(null), Option.None<string?, string?>(null));
 
             // Works for val. types, nullables and ref. types
             Assert.AreEqual(Option.None<int, int>(1), Option.None<int, int>(1));
@@ -184,12 +184,12 @@ namespace Optional.Tests
             EqualTo(someStruct1, someStruct1);
 
             // IComparable comparisons
-            var noneComparableNull = Option.None<string, string>(null);
-            var noneComparable1 = Option.None<string, string>("1");
-            var noneComparable2 = Option.None<string, string>("2");
-            var someComparableNull = Option.Some<string, string>(null);
-            var someComparable1 = Option.Some<string, string>("1");
-            var someComparable2 = Option.Some<string, string>("2");
+            var noneComparableNull = Option.None<string?, string?>(null);
+            var noneComparable1 = Option.None<string?, string?>("1");
+            var noneComparable2 = Option.None<string?, string?>("2");
+            var someComparableNull = Option.Some<string?, string?>(null);
+            var someComparable1 = Option.Some<string?, string?>("1");
+            var someComparable2 = Option.Some<string?, string?>("2");
 
             LessThan(noneComparableNull, noneComparable1);
             LessThan(noneComparable1, noneComparable2);
@@ -211,12 +211,12 @@ namespace Optional.Tests
             EqualTo(someComparable1, someComparable1);
 
             // Non-IComparable comparisons
-            var noneNotComparableNull = Option.None<Dictionary<string, string>, Dictionary<string, string>>(null);
-            var noneNotComparable1 = Option.None<Dictionary<string, string>, Dictionary<string, string>>(new Dictionary<string, string>());
-            var noneNotComparable2 = Option.None<Dictionary<string, string>, Dictionary<string, string>>(new Dictionary<string, string>());
-            var someNotComparableNull = Option.Some<Dictionary<string, string>, Dictionary<string, string>>(null);
-            var someNotComparable1 = Option.Some<Dictionary<string, string>, Dictionary<string, string>>(new Dictionary<string, string>());
-            var someNotComparable2 = Option.Some<Dictionary<string, string>, Dictionary<string, string>>(new Dictionary<string, string>());
+            var noneNotComparableNull = Option.None<Dictionary<string, string>?, Dictionary<string, string>?>(null);
+            var noneNotComparable1 = Option.None<Dictionary<string, string>?, Dictionary<string, string>?>(new Dictionary<string, string>());
+            var noneNotComparable2 = Option.None<Dictionary<string, string>?, Dictionary<string, string>?>(new Dictionary<string, string>());
+            var someNotComparableNull = Option.Some<Dictionary<string, string>?, Dictionary<string, string>?>(null);
+            var someNotComparable1 = Option.Some<Dictionary<string, string>?, Dictionary<string, string>?>(new Dictionary<string, string>());
+            var someNotComparable2 = Option.Some<Dictionary<string, string>?, Dictionary<string, string>?>(new Dictionary<string, string>());
 
             Assert.ThrowsException<ArgumentException>(() => someNotComparable1.CompareTo(someNotComparable2));
             Assert.ThrowsException<ArgumentException>(() => someNotComparable2.CompareTo(someNotComparable1));
@@ -250,28 +250,28 @@ namespace Optional.Tests
             Assert.AreEqual(Option.Some<string, string>("val").GetHashCode(), Option.Some<string, string>("val").GetHashCode());
             Assert.AreEqual(Option.Some<object, string>("val").GetHashCode(), Option.Some<object, string>("val").GetHashCode());
 
-            Assert.AreEqual(Option.None<string, string>(null).GetHashCode(), Option.None<string, string>(null).GetHashCode());
-            Assert.AreEqual(Option.None<object, string>(null).GetHashCode(), Option.None<object, string>(null).GetHashCode());
+            Assert.AreEqual(Option.None<string, string?>(null).GetHashCode(), Option.None<string, string?>(null).GetHashCode());
+            Assert.AreEqual(Option.None<object, string?>(null).GetHashCode(), Option.None<object, string?>(null).GetHashCode());
 
-            Assert.AreEqual(Option.Some<string, string>(null).GetHashCode(), Option.Some<string, string>(null).GetHashCode());
-            Assert.AreEqual(Option.Some<object, string>(null).GetHashCode(), Option.Some<object, string>(null).GetHashCode());
+            Assert.AreEqual(Option.Some<string?, string>(null).GetHashCode(), Option.Some<string?, string>(null).GetHashCode());
+            Assert.AreEqual(Option.Some<object?, string>(null).GetHashCode(), Option.Some<object?, string>(null).GetHashCode());
 
-            Assert.AreNotEqual(Option.Some<string, string>(null).GetHashCode(), Option.None<string, string>(null).GetHashCode());
-            Assert.AreNotEqual(Option.Some<object, string>(null).GetHashCode(), Option.None<object, string>(null).GetHashCode());
+            Assert.AreNotEqual(Option.Some<string?, string?>(null).GetHashCode(), Option.None<string?, string?>(null).GetHashCode());
+            Assert.AreNotEqual(Option.Some<object?, string?>(null).GetHashCode(), Option.None<object?, string?>(null).GetHashCode());
         }
 
         [TestMethod]
         public void Either_StringRepresentation()
         {
             Assert.AreEqual(Option.None<int?, int?>(null).ToString(), "None(null)");
-            Assert.AreEqual(Option.None<string, string>(null).ToString(), "None(null)");
+            Assert.AreEqual(Option.None<string, string?>(null).ToString(), "None(null)");
 
             Assert.AreEqual(Option.None<int, int>(1).ToString(), "None(1)");
             Assert.AreEqual(Option.None<int?, int?>(1).ToString(), "None(1)");
             Assert.AreEqual(Option.None<string, string>("ex").ToString(), "None(ex)");
 
             Assert.AreEqual(Option.Some<int?, string>(null).ToString(), "Some(null)");
-            Assert.AreEqual(Option.Some<string, string>(null).ToString(), "Some(null)");
+            Assert.AreEqual(Option.Some<string?, string>(null).ToString(), "Some(null)");
 
             Assert.AreEqual(Option.Some<int, string>(1).ToString(), "Some(1)");
             Assert.AreEqual(Option.Some<int?, string>(1).ToString(), "Some(1)");
@@ -297,7 +297,7 @@ namespace Optional.Tests
             var someNullable = Option.Some<int?, string>(1);
             var someNullableEmpty = Option.Some<int?, string>(null);
             var someClass = Option.Some<string, string>("1");
-            var someClassNull = Option.Some<string, string>(null);
+            var someClassNull = Option.Some<string?, string?>(null);
 
             Assert.AreEqual(someStruct.ValueOr(-1), 1);
             Assert.AreEqual(someNullable.ValueOr(-1), 1);
@@ -330,7 +330,7 @@ namespace Optional.Tests
             var someNullable = Option.Some<int?, string>(1);
             var someNullableEmpty = Option.Some<int?, string>(null);
             var someClass = Option.Some<string, string>("1");
-            var someClassNull = Option.Some<string, string>(null);
+            var someClassNull = Option.Some<string?, string>(null);
 
             Assert.AreEqual(someStruct.ValueOr(() => -1), 1);
             Assert.AreEqual(someNullable.ValueOr(() => -1), 1);
@@ -545,7 +545,7 @@ namespace Optional.Tests
             Assert.AreEqual(someNotLargerThanTen.ValueOr(-1), 1);
             Assert.AreEqual(noneNotLargerThanTen.ValueOr(-1), -1);
 
-            var noneNotNull = ((string)null).SomeNotNull<string, string>("ex");
+            var noneNotNull = ((string?)null).SomeNotNull<string, string>("ex");
             var someNotNull = "1".SomeNotNull<string, string>("ex");
 
             Assert.AreEqual(noneNotNull.ValueOr("-1"), "-1");
@@ -595,7 +595,7 @@ namespace Optional.Tests
             Assert.AreEqual(someIsNotTen2.ValueOrException(), "1");
             Assert.AreEqual(noneIsNotTen2.ValueOrException(), "10ex");
 
-            var noneNotNull = ((string)null).SomeNotNull<string, string>(() => "ex");
+            var noneNotNull = ((string?)null).SomeNotNull<string, string>(() => "ex");
             var someNotNull = "1".SomeNotNull<string, string>(() => "ex");
 
             Assert.AreEqual(noneNotNull.ValueOrException(), "ex");
@@ -666,8 +666,8 @@ namespace Optional.Tests
             var none = "val".None("ex");
             var some = "val".Some<string, string>();
 
-            var noneNull = ((string)null).None("ex");
-            var someNull = ((string)null).Some<string, string>();
+            var noneNull = ((string?)null).None("ex");
+            var someNull = ((string?)null).Some<string?, string>();
 
             var noneUpper = none.Map(x => x.ToUpper());
             var someUpper = some.Map(x => x.ToUpper());
@@ -720,8 +720,8 @@ namespace Optional.Tests
         [TestMethod]
         public void Either_Filtering()
         {
-            var none = "val".None("ex");
-            var some = "val".Some<string, string>();
+            var none = "val".None<string?, string>("ex");
+            var some = "val".Some<string?, string>();
 
             var noneNotVal = none.Filter(x => x != "val", "ex1");
             var someNotVal = some.Filter(x => x != "val", "ex1");
@@ -751,20 +751,15 @@ namespace Optional.Tests
             Assert.AreEqual(noneTrue.Match(val => val, ex => ex), "ex");
             Assert.AreEqual(someTrue.Match(val => val, ex => ex), "val");
 
-            var someNull = Option.Some<string, string>(null);
+            var someNull = Option.Some<string?, string>(null);
             Assert.IsTrue(someNull.HasValue);
             Assert.IsFalse(someNull.NotNull("ex").HasValue);
             Assert.AreEqual(someNull.NotNull("ex").ValueOrException(), "ex");
 
-            var someNullableNull = Option.Some<int?, int?>(null);
+            var someNullableNull = Option.Some<int?, int>(null);
             Assert.IsTrue(someNullableNull.HasValue);
             Assert.IsFalse(someNullableNull.NotNull(-1).HasValue);
             Assert.AreEqual(someNullableNull.NotNull(-1).ValueOrException(), -1);
-
-            var someStructNull = Option.Some<int, int>(default(int));
-            Assert.IsTrue(someStructNull.HasValue);
-            Assert.IsTrue(someStructNull.NotNull(-1).HasValue);
-            Assert.AreEqual(someStructNull.NotNull(-1).ValueOrException(), default(int));
 
             Assert.IsTrue(some.HasValue);
             Assert.IsTrue(some.NotNull("ex").HasValue);
@@ -778,8 +773,8 @@ namespace Optional.Tests
         [TestMethod]
         public void Either_Filtering_Lazy()
         {
-            var none = "val".None("ex");
-            var some = "val".Some<string, string>();
+            var none = "val".None<string?, string>("ex");
+            var some = "val".Some<string?, string>();
 
             var noneNotVal = none.Filter(x => x != "val", () => "ex1");
             var someNotVal = some.Filter(x => x != "val", () => "ex1");
@@ -809,20 +804,15 @@ namespace Optional.Tests
             Assert.AreEqual(noneTrue.Match(val => val, ex => ex), "ex");
             Assert.AreEqual(someTrue.Match(val => val, ex => ex), "val");
 
-            var someNull = Option.Some<string, string>(null);
+            var someNull = Option.Some<string?, string>(null);
             Assert.IsTrue(someNull.HasValue);
             Assert.IsFalse(someNull.NotNull(() => "ex").HasValue);
             Assert.AreEqual(someNull.NotNull(() => "ex").ValueOrException(), "ex");
 
-            var someNullableNull = Option.Some<int?, int?>(null);
+            var someNullableNull = Option.Some<int?, int>(null);
             Assert.IsTrue(someNullableNull.HasValue);
             Assert.IsFalse(someNullableNull.NotNull(() => -1).HasValue);
             Assert.AreEqual(someNullableNull.NotNull(() => -1).ValueOrException(), -1);
-
-            var someStructNull = Option.Some<int, int>(default(int));
-            Assert.IsTrue(someStructNull.HasValue);
-            Assert.IsTrue(someStructNull.NotNull(() => -1).HasValue);
-            Assert.AreEqual(someStructNull.NotNull(() => -1).ValueOrException(), default(int));
 
             Assert.IsTrue(some.HasValue);
             Assert.IsTrue(some.NotNull(() => "ex").HasValue);

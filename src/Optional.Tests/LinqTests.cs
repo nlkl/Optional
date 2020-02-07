@@ -13,8 +13,8 @@ namespace Optional.Tests
             var none = "a".None();
             var some = "a".Some();
 
-            var noneNull = ((string)null).None();
-            var someNull = ((string)null).Some();
+            var noneNull = ((string?)null).None();
+            var someNull = ((string?)null).Some();
 
             var noneUpper =
                 from x in none
@@ -86,8 +86,8 @@ namespace Optional.Tests
             var none = "a".None<string, string>("ex");
             var some = "a".Some<string, string>();
 
-            var noneNull = ((string)null).None<string, string>("ex");
-            var someNull = ((string)null).Some<string, string>();
+            var noneNull = ((string?)null).None<string?, string>("ex");
+            var someNull = ((string?)null).Some<string?, string>();
 
             var noneUpper =
                 from x in none

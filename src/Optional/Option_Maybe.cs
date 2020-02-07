@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Optional
 {
@@ -20,9 +21,10 @@ namespace Optional
         /// </summary>
         public bool HasValue => hasValue;
 
+        [MaybeNull]
         internal T Value => value;
 
-        internal Option(T value, bool hasValue)
+        internal Option([AllowNull] T value, bool hasValue)
         {
             this.value = value;
             this.hasValue = hasValue;
@@ -418,12 +420,6 @@ namespace Optional
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
             return hasValue && !predicate(value) ? Option.None<T>() : this;
         }
-
-        /// <summary>
-        /// Empties an optional if the value is null.
-        /// </summary>
-        /// <returns>The filtered optional.</returns>
-        public Option<T> NotNull() => hasValue && value == null ? Option.None<T>() : this;
     }
 
     internal sealed class OptionDebugView<T>
