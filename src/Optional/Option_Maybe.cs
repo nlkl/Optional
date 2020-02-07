@@ -8,9 +8,7 @@ namespace Optional
     /// Represents an optional value.
     /// </summary>
     /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
-#if !NETSTANDARD10
     [Serializable]
-#endif
     [DebuggerTypeProxy(typeof(OptionDebugView<>))]
     public readonly struct Option<T> : IEquatable<Option<T>>, IComparable<Option<T>>
     {

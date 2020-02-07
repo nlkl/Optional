@@ -1,6 +1,4 @@
-﻿#if !NET35
-
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace Optional.Async
@@ -225,5 +223,3 @@ namespace Optional.Async
         }
     }
 }
-
-#endif

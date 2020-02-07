@@ -9,9 +9,7 @@ namespace Optional
     /// </summary>
     /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
     /// <typeparam name="TException">A exceptional value describing the lack of an actual value.</typeparam>
-#if !NETSTANDARD10
     [Serializable]
-#endif
     [DebuggerTypeProxy(typeof(OptionDebugView<,>))]
     public readonly struct Option<T, TException> : IEquatable<Option<T, TException>>, IComparable<Option<T, TException>>
     {
