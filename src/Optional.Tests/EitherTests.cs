@@ -653,6 +653,9 @@ namespace Optional.Tests
 
             var noneExUpper = none.MapException(x => x.ToUpper());
             var someExUpper = some.MapException(x => x.ToUpper());
+            
+            var noneBothUpper = none.Map(x => string.Concat(x.Reverse()), x => x.ToUpper());
+            var someBothReverse = some.Map(x => string.Concat(x.Reverse()), x => x.ToUpper());
 
             Assert.IsFalse(noneUpper.HasValue);
             Assert.IsTrue(someUpper.HasValue);
@@ -660,6 +663,8 @@ namespace Optional.Tests
             Assert.AreEqual(someUpper.ValueOr("ex"), "VAL");
             Assert.AreEqual(noneExUpper.Match(val => val, ex => ex), "EX");
             Assert.AreEqual(someExUpper.Match(val => val, ex => ex), "val");
+            Assert.AreEqual(noneBothUpper.Match(val => val, ex => ex), "EX");
+            Assert.AreEqual(someBothReverse.Match(val => val, ex => ex), "lav");
 
             var noneNotNull = none.FlatMap(x => x.SomeNotNull<string, string>("ex1"));
             var someNotNull = some.FlatMap(x => x.SomeNotNull<string, string>("ex1"));
