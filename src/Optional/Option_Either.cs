@@ -404,6 +404,23 @@ namespace Optional
         }
 
         /// <summary>
+        /// Transforms both, the inner value or the exceptional value in an optional.
+        /// </summary>
+        /// <param name="valueMapping">The transformation function for the inner value.</param>
+        /// <param name="exceptionMapping">The transformation function for the exceptional value.</param>
+        /// <returns>The transformed optional.</returns>
+        public Option<TResult, TExceptionResult> Map<TResult, TExceptionResult>(Func<T, TResult> valueMapping, Func<TException, TExceptionResult> exceptionMapping)
+        {
+            if (valueMapping == null) throw new ArgumentNullException(nameof(valueMapping));
+            if (exceptionMapping == null) throw new ArgumentNullException(nameof(exceptionMapping));
+
+            return Match(
+                some: value => Option.Some<TResult, TExceptionResult>(valueMapping(value)),
+                none: exception => Option.None<TResult, TExceptionResult>(exceptionMapping(exception))
+            );
+        }
+
+        /// <summary>
         /// Transforms the exceptional value in an optional.
         /// If the instance is not empty, no transformation is carried out.
         /// </summary>
