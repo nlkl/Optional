@@ -183,7 +183,7 @@ option.MatchNone(() =>
 
 In some cases you might be absolutely sure that a value is present. Alternatively, the lack of a value might be fatal to your program, in which case you just want to indicate such a failure.
 
-In such scenarios, Optional allows you to drive without a seatbelt. However, to stress the lack safety, another namespace needs to be imported:
+In such scenarios, Optional allows you to drive without a seatbelt. However, to stress the lack of safety, another namespace needs to be imported:
 
 ```csharp
 using Optional.Unsafe;
