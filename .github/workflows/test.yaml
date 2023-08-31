@@ -1,0 +1,25 @@
+name: Test
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ develop, new-develop, master ]
+defaults:
+  run:
+    working-directory: ./src
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.413
+
+    - name: Test
+      run: dotnet test --configuration Debug --verbosity normal Optional.Tests
