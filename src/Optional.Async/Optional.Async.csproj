@@ -8,6 +8,8 @@
     <Authors>Nils Lück</Authors>
     <Copyright>Copyright © 2016</Copyright>
     <NoWarn>1591</NoWarn>
+    <LangVersion>11</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">

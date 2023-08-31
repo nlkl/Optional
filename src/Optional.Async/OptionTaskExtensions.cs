@@ -136,10 +136,10 @@ namespace Optional.Async
             return await option.FilterAsync(predicate).ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public static Task<Option<T>> NotNullAsync<T>(this Task<Option<T>> optionTask)
+        public static Task<Option<T>> NotNullAsync<T>(this Task<Option<T?>> optionTask)
         {
             if (optionTask == null) throw new ArgumentNullException(nameof(optionTask));
-            return optionTask.FilterAsync(value => value != null);
+            return optionTask.FilterAsync(value => value != null)!;
         }
 
         public static async Task<Option<T>> OrAsync<T>(this Option<T> option, Func<Task<T>> alternativeFactory)
