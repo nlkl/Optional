@@ -132,7 +132,7 @@ namespace Optional
         /// </summary>
         /// <param name="value">The value to wrap.</param>
         /// <returns>An optional containing the specified value.</returns>
-        public static Option<T> SomeNotNull<T>(this T value) => value.SomeWhen(val => val != null);
+        public static Option<T> SomeNotNull<T>(this T? value) => value is null ? Option.None<T>() : Some(value);
 
         /// <summary>
         /// Creates an Option&lt;T&gt; instance from a specified value. 
@@ -142,8 +142,8 @@ namespace Optional
         /// <param name="value">The value to wrap.</param>
         /// <param name="exception">The exceptional value.</param>
         /// <returns>An optional containing the specified value.</returns>
-        public static Option<T, TException> SomeNotNull<T, TException>(this T value, TException exception) =>
-            value.SomeWhen(val => val != null, exception);
+        public static Option<T, TException> SomeNotNull<T, TException>(this T? value, TException exception) =>
+            value.SomeNotNull().WithException(exception);
 
         /// <summary>
         /// Creates an Option&lt;T&gt; instance from a specified value. 
@@ -153,11 +153,8 @@ namespace Optional
         /// <param name="value">The value to wrap.</param>
         /// <param name="exceptionFactory">A factory function to create an exceptional value.</param>
         /// <returns>An optional containing the specified value.</returns>
-        public static Option<T, TException> SomeNotNull<T, TException>(this T value, Func<TException> exceptionFactory)
-        {
-            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
-            return value.SomeWhen(val => val != null, exceptionFactory);
-        }
+        public static Option<T, TException> SomeNotNull<T, TException>(this T? value, Func<TException> exceptionFactory) =>
+            value.SomeNotNull().WithException(exceptionFactory);
 
         /// <summary>
         /// Converts a Nullable&lt;T&gt; to an Option&lt;T&gt; instance.
@@ -215,5 +212,91 @@ namespace Optional
         /// <returns>A flattened optional.</returns>
         public static Option<T, TException> Flatten<T, TException>(this Option<Option<T, TException>, TException> option) =>
             option.FlatMap(innerOption => innerOption);
+
+        /// <summary>
+        /// Empties an optional if the value is null.
+        /// </summary>
+        /// <returns>The filtered optional.</returns>
+        public static Option<T> NotNull<T>(this Option<T?> option)
+            => option is { HasValue: true, Value: { } value }
+                ? Some(value)
+                : Option.None<T>();
+
+        /// <summary>
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if the value is null.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <param name="exception">The exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public static Option<T, TException> NotNull<T, TException>(this Option<T?, TException> option, TException exception) =>
+            option switch
+            {
+                { HasValue: true, Value: null } => Option.None<T, TException>(exception), 
+                { HasValue: true, Value: { } value } =>Some<T, TException>(value),
+                _ => Option.None<T, TException>(option.Exception)
+            };
+
+        /// <summary>
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if the value is null.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <param name="exceptionFactory">A factory function to create an exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public static Option<T, TException> NotNull<T, TException>(this Option<T?, TException> option, Func<TException> exceptionFactory)
+        {
+            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            return option switch
+            {
+                { HasValue: true, Value: null } => Option.None<T, TException>(exceptionFactory()),
+                { HasValue: true, Value: { } value } =>Some<T, TException>(value),
+                _ => Option.None<T, TException>(option.Exception)
+            };
+        }
+
+        /// <summary>
+        /// Empties an optional if the value is null.
+        /// </summary>
+        /// <returns>The filtered optional.</returns>
+        public static Option<T> NotDefault<T>(this Option<T?> option) where T : struct =>
+            option is { HasValue: true, Value: { } value }
+                ? Some(value)
+                : Option.None<T>();
+
+        /// <summary>
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if the value is null.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <param name="exception">The exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public static Option<T, TException> NotDefault<T, TException>(this Option<T?, TException> option, TException exception) 
+            where T : struct =>
+            option switch
+            {
+                { HasValue: true, Value: null } => Option.None<T, TException>(exception), 
+                { HasValue: true, Value: { } value } =>Some<T, TException>(value),
+                _ => Option.None<T, TException>(option.Exception)
+            };
+
+        /// <summary>
+        /// Empties an optional, and attaches an exceptional value, 
+        /// if the value is null.
+        /// </summary>
+        /// <param name="option">The specified optional.</param>
+        /// <param name="exceptionFactory">A factory function to create an exceptional value to attach.</param>
+        /// <returns>The filtered optional.</returns>
+        public static Option<T, TException> NotDefault<T, TException>(this Option<T?, TException> option, Func<TException> exceptionFactory)
+            where T : struct
+        {
+            if (exceptionFactory == null) throw new ArgumentNullException(nameof(exceptionFactory));
+            return option switch
+            {
+                { HasValue: true, Value: null } => Option.None<T, TException>(exceptionFactory()),
+                { HasValue: true, Value: { } value } =>Some<T, TException>(value),
+                _ => Option.None<T, TException>(option.Exception)
+            };
+        }
     }
 }
